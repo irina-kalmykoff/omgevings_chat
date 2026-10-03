@@ -334,11 +334,11 @@ def _attach_boundary(tx, geojson_text, bbox):
 
 def main():
     parser = argparse.ArgumentParser(description="Load a STOP/TPOD package into Neo4j")
-    parser.add_argument("--package", required=True, help="delivery-package root directory")
+    parser.add_argument("--package", default="../source_data/Maastricht-DSO-production-2026-10-02", help="delivery-package root directory")
     parser.add_argument("--uri", default="bolt://localhost:7687")
     parser.add_argument("--user", default="neo4j")
     parser.add_argument("--password", default="testpassword")
-    parser.add_argument("--boundary", help="RD boundary GeoJSON for the ambtsgebied")
+    parser.add_argument("--boundary", default="../source_data/Maastricht-boundary-RD.geojson", help="RD boundary GeoJSON for the ambtsgebied")
     args = parser.parse_args()
 
     driver = GraphDatabase.driver(args.uri, auth=(args.user, args.password))

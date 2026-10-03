@@ -218,11 +218,15 @@ teammate can reproduce it end to end:
 
 ### Load
 
-With the container running (steps 2–4) and the `.venv` active:
+With the container running (steps 2–4) and the `.venv` active, from this folder:
 
 ```bash
-python build_graph.py --package "../../Maastricht-DSO-production-2026-10-02"
+python build_graph.py
 ```
+
+The source files are committed in [`../source_data`](../source_data), which is
+the default `--package` / `--boundary` location, so no arguments are needed.
+Pass `--package` / `--boundary` only to load data from elsewhere.
 
 On success it prints `loaded: 876 structure nodes, 597 regelteksten, ...`.
 It is idempotent: the load uses `MERGE`, so re-running does not duplicate nodes.
@@ -265,16 +269,9 @@ coordinates. Every rule in this package applies to the whole municipality
 (`ambtsgebied`), so attaching this one polygon to that Locatie node makes
 "point -> which rules apply" possible at the municipal level.
 
-Load it by passing `--boundary` to the load script:
-
-```bash
-python build_graph.py \
-  --package "../../Maastricht-DSO-production-2026-10-02" \
-  --boundary "../../Maastricht-boundary-RD.geojson"
-```
-
-The ambtsgebied `Locatie` node then carries `geometry_geojson`, `srid` (28992)
-and a bounding box.
+The boundary loads automatically as part of `python build_graph.py` (it is the
+default `--boundary`), so after a normal load the ambtsgebied `Locatie` node
+already carries `geometry_geojson`, `srid` (28992) and a bounding box.
 
 `spatial.py` does the point-in-polygon test (ray casting, no extra dependency)
 and returns the rules that apply at an RD point:

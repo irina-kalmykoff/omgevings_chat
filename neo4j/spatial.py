@@ -80,7 +80,7 @@ def main():
     parser = argparse.ArgumentParser(description="Which rules apply at an RD point?")
     parser.add_argument("x", type=float, help="RD x coordinate")
     parser.add_argument("y", type=float, help="RD y coordinate")
-    parser.add_argument("--boundary", default="../../Maastricht-boundary-RD.geojson")
+    parser.add_argument("--boundary", default="../source_data/Maastricht-boundary-RD.geojson")
     parser.add_argument("--uri", default="bolt://localhost:7687")
     parser.add_argument("--user", default="neo4j")
     parser.add_argument("--password", default="testpassword")
