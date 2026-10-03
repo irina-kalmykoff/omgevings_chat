@@ -205,84 +205,10 @@ The container was created without `NEO4J_PLUGINS='["apoc"]'`. Remove it and crea
 
 ---
 
-## 7. Load and query the graph (reproducible)
+## 7. Loading, querying and the prototype
 
-Everything needed to rebuild the graph from scratch lives in this folder, so a
-teammate can reproduce it end to end:
-
-| File | What it is |
-| --- | --- |
-| `build_graph.py` | parses a STOP/TPOD delivery package and loads the full graph |
-| `constraints.cypher` | the schema (uniqueness constraints); applied automatically by `build_graph.py`, kept here as the canonical definition |
-| `queries.cypher` | exploration and demo queries, one block each |
-
-### Load
-
-With the container running (steps 2–4) and the `.venv` active, from this folder:
-
-```bash
-python build_graph.py
-```
-
-The source files are committed in [`../source_data`](../source_data), which is
-the default `--package` / `--boundary` location, so no arguments are needed.
-Pass `--package` / `--boundary` only to load data from elsewhere.
-
-On success it prints `loaded: 876 structure nodes, 597 regelteksten, ...`.
-It is idempotent: the load uses `MERGE`, so re-running does not duplicate nodes.
-
-### Query
-
-Open `queries.cypher` and run one block at a time in Neo4j Browser
-(copy a block, Cmd/Ctrl+Enter). Run them individually so node-returning queries
-render as a graph rather than a table of statements.
-
-To run a whole `.cypher` file headless (tabular output, good for a sanity check
-in CI or a script):
-
-```bash
-docker exec -i neo4j-omgeving cypher-shell -u neo4j -p testpassword < queries.cypher
-```
-
-### Reset
-
-To wipe the data and reload (constraints are kept):
-
-```cypher
-MATCH (n) DETACH DELETE n;
-```
-
-then re-run the load command above.
-
-### Known gap
-
-`Locatie` nodes are reference ids only — the geometry (GIO) files are not in the
-current delivery package, so point/polygon → applicable-rules queries are not yet
-possible. Everything else (structure, rules, activities, cross-references) is loaded.
-
----
-
-## 8. Geographic boundary (RD / EPSG:28992)
-
-`Maastricht-boundary-RD.geojson` is the municipal boundary polygon in Rijksdriehoek
-coordinates. Every rule in this package applies to the whole municipality
-(`ambtsgebied`), so attaching this one polygon to that Locatie node makes
-"point -> which rules apply" possible at the municipal level.
-
-The boundary loads automatically as part of `python build_graph.py` (it is the
-default `--boundary`), so after a normal load the ambtsgebied `Locatie` node
-already carries `geometry_geojson`, `srid` (28992) and a bounding box.
-
-`spatial.py` does the point-in-polygon test (ray casting, no extra dependency)
-and returns the rules that apply at an RD point:
-
-```bash
-python spatial.py 177088 318726     # a point in Maastricht
-```
-
-### Limitation
-
-This is municipal-level only. Selecting rules by *zone* (a specific
-gebiedsaanwijzing or bestemmingsvlak) needs the per-rule GIO geometries, which
-are not in the current delivery package. Those would attach to additional
-`Locatie` nodes the same way.
+The graph loader (`build_graph.py`), the schema, the Cypher queries, the
+spatial lookup and the interactive visualization live in
+[`../prototype`](../prototype). Once Neo4j is running (steps 2–4 above) and the
+Python environment is set up (step 4), follow
+[`../prototype/README.md`](../prototype/README.md) to load and explore the graph.

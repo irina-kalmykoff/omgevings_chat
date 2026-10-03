@@ -11,5 +11,5 @@ graph after cloning.
 - `Maastricht-boundary-RD.geojson` — the municipal boundary polygon in
   RD / EPSG:28992.
 
-These are the default inputs for `../neo4j/build_graph.py` (`--package`,
-`--boundary`) and `../neo4j/spatial.py`.
+These are the default inputs for `../prototype/build_graph.py` (`--package`,
+`--boundary`) and `../prototype/spatial.py`.
