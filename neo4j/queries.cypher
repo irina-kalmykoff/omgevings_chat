@@ -81,3 +81,19 @@ MATCH (loc:Locatie)<-[:OP_LOCATIE]-(:RegelVoorIedereen)
       -[:VAN_REGELTEKST]->(:Regeltekst)-[:IS_TEKST_VAN]->(art:Artikel)
 WHERE loc.id CONTAINS 'ambtsgebied'
 RETURN loc, art LIMIT 50;
+
+
+// ===========================================================================
+// 9. SHOWCASE — article 22.28 and everything it connects to, all relation
+//    types at once (not just the BEVAT hierarchy). The best single live view
+//    of what the graph adds: cross-references to 22.27 / 22.22, and the chain
+//    out to the activity the rule governs.
+//    BEVAT*0..1 reaches one level down because the cross-references live on
+//    22.28's leden, not on the article node itself.
+// ===========================================================================
+MATCH (a:Artikel {nummer: '22.28'})
+OPTIONAL MATCH leden = (a)-[:BEVAT]->(:Lid)
+OPTIONAL MATCH kruis = (a)-[:BEVAT*0..1]->()-[:VERWIJST_NAAR]->(:Artikel)
+OPTIONAL MATCH regel = (a)-[:BEVAT*0..1]->()<-[:IS_TEKST_VAN]-(:Regeltekst)
+                       <-[:VAN_REGELTEKST]-(:RegelVoorIedereen)-[:GELDT_VOOR]->(:Activiteit)
+RETURN a, leden, kruis, regel;
