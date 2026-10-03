@@ -202,3 +202,56 @@ The virtual environment is not active, or Jupyter is using a different kernel. R
 
 **`Unknown function 'apoc.version'`**
 The container was created without `NEO4J_PLUGINS='["apoc"]'`. Remove it and create it again with the command from step 2.
+
+---
+
+## 7. Load and query the graph (reproducible)
+
+Everything needed to rebuild the graph from scratch lives in this folder, so a
+teammate can reproduce it end to end:
+
+| File | What it is |
+| --- | --- |
+| `build_graph.py` | parses a STOP/TPOD delivery package and loads the full graph |
+| `constraints.cypher` | the schema (uniqueness constraints); applied automatically by `build_graph.py`, kept here as the canonical definition |
+| `queries.cypher` | exploration and demo queries, one block each |
+
+### Load
+
+With the container running (steps 2–4) and the `.venv` active:
+
+```bash
+python build_graph.py --package "../../Maastricht-DSO-production-2026-10-02"
+```
+
+On success it prints `loaded: 876 structure nodes, 597 regelteksten, ...`.
+It is idempotent: the load uses `MERGE`, so re-running does not duplicate nodes.
+
+### Query
+
+Open `queries.cypher` and run one block at a time in Neo4j Browser
+(copy a block, Cmd/Ctrl+Enter). Run them individually so node-returning queries
+render as a graph rather than a table of statements.
+
+To run a whole `.cypher` file headless (tabular output, good for a sanity check
+in CI or a script):
+
+```bash
+docker exec -i neo4j-omgeving cypher-shell -u neo4j -p testpassword < queries.cypher
+```
+
+### Reset
+
+To wipe the data and reload (constraints are kept):
+
+```cypher
+MATCH (n) DETACH DELETE n;
+```
+
+then re-run the load command above.
+
+### Known gap
+
+`Locatie` nodes are reference ids only — the geometry (GIO) files are not in the
+current delivery package, so point/polygon → applicable-rules queries are not yet
+possible. Everything else (structure, rules, activities, cross-references) is loaded.
