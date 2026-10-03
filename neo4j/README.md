@@ -255,3 +255,37 @@ then re-run the load command above.
 `Locatie` nodes are reference ids only — the geometry (GIO) files are not in the
 current delivery package, so point/polygon → applicable-rules queries are not yet
 possible. Everything else (structure, rules, activities, cross-references) is loaded.
+
+---
+
+## 8. Geographic boundary (RD / EPSG:28992)
+
+`Maastricht-boundary-RD.geojson` is the municipal boundary polygon in Rijksdriehoek
+coordinates. Every rule in this package applies to the whole municipality
+(`ambtsgebied`), so attaching this one polygon to that Locatie node makes
+"point -> which rules apply" possible at the municipal level.
+
+Load it by passing `--boundary` to the load script:
+
+```bash
+python build_graph.py \
+  --package "../../Maastricht-DSO-production-2026-10-02" \
+  --boundary "../../Maastricht-boundary-RD.geojson"
+```
+
+The ambtsgebied `Locatie` node then carries `geometry_geojson`, `srid` (28992)
+and a bounding box.
+
+`spatial.py` does the point-in-polygon test (ray casting, no extra dependency)
+and returns the rules that apply at an RD point:
+
+```bash
+python spatial.py 177088 318726     # a point in Maastricht
+```
+
+### Limitation
+
+This is municipal-level only. Selecting rules by *zone* (a specific
+gebiedsaanwijzing or bestemmingsvlak) needs the per-rule GIO geometries, which
+are not in the current delivery package. Those would attach to additional
+`Locatie` nodes the same way.

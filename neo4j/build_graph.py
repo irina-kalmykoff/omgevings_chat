@@ -20,6 +20,7 @@ Usage:
 """
 
 import argparse
+import json
 from collections import defaultdict
 from pathlib import Path
 
@@ -191,7 +192,7 @@ def _merge_edges(tx, src_label, src_key, rel, dst_label, dst_key, pairs):
     )
 
 
-def load(driver, package):
+def load(driver, package, boundary=None):
     """Parse the package and load the full graph into Neo4j.
 
     Args:
@@ -230,9 +231,21 @@ def load(driver, package):
                         [{"id": r} for r in rvi_nodes])
         locaties = {t for r, rel, t in rvi_links if rel == "OP_LOCATIE"}
         s.execute_write(_merge_simple, "Locatie", "id", [{"id": x} for x in locaties])
+        if boundary:
+            geojson_text = Path(boundary).read_text(encoding="utf-8")
+            ring = json.loads(geojson_text)["coordinates"][0]
+            xs = [pt[0] for pt in ring]
+            ys = [pt[1] for pt in ring]
+            bbox = {"minx": min(xs), "miny": min(ys), "maxx": max(xs), "maxy": max(ys)}
+            s.execute_write(_attach_boundary, geojson_text, bbox)
+            print(f"attached RD boundary to ambtsgebied Locatie (bbox {bbox})")
 
         # structural containment: attach each child to its nearest structural parent
         s.execute_write(_bevat_edges, bevat, nodes)
+        # connect the Regeling root to its top-level (parentless) chapters
+        child_wids = {t for _, t in bevat}
+        roots = [w for w in nodes if w not in child_wids]
+        s.execute_write(_regeling_roots, package.name, roots)
         # cross references (split by whether the target is a real node or a Component)
         real = [(s_, t) for s_, t in verwijst_resolved if not t.startswith("component:")]
         comp = [(s_, t.split("component:", 1)[1]) for s_, t in verwijst_resolved if t.startswith("component:")]
@@ -289,18 +302,49 @@ def _istekstvan(tx, rt_rows, nodes):
     )
 
 
+def _regeling_roots(tx, regeling_id, roots):
+    """Link the Regeling node to each top-level (parentless) structural node."""
+    tx.run(
+        """
+        MATCH (r:Regeling {id: $rid})
+        UNWIND $roots AS w
+        MATCH (n {wId: w})
+        MERGE (r)-[:BEVAT]->(n)
+        """,
+        rid=regeling_id, roots=roots,
+    )
+
+
+def _attach_boundary(tx, geojson_text, bbox):
+    """Attach the RD boundary polygon to the ambtsgebied Locatie node(s)."""
+    tx.run(
+        """
+        MATCH (loc:Locatie)
+        WHERE loc.id CONTAINS 'ambtsgebied'
+        SET loc.naam = 'Ambtsgebied gemeente Maastricht',
+            loc.srid = 28992,
+            loc.geometry_geojson = $geo,
+            loc.bbox_minx = $minx, loc.bbox_miny = $miny,
+            loc.bbox_maxx = $maxx, loc.bbox_maxy = $maxy
+        """,
+        geo=geojson_text, minx=bbox["minx"], miny=bbox["miny"],
+        maxx=bbox["maxx"], maxy=bbox["maxy"],
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description="Load a STOP/TPOD package into Neo4j")
     parser.add_argument("--package", required=True, help="delivery-package root directory")
     parser.add_argument("--uri", default="bolt://localhost:7687")
     parser.add_argument("--user", default="neo4j")
     parser.add_argument("--password", default="testpassword")
+    parser.add_argument("--boundary", help="RD boundary GeoJSON for the ambtsgebied")
     args = parser.parse_args()
 
     driver = GraphDatabase.driver(args.uri, auth=(args.user, args.password))
     try:
         driver.verify_connectivity()
-        load(driver, args.package)
+        load(driver, args.package, args.boundary)
     finally:
         driver.close()
 

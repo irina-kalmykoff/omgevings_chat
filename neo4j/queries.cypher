@@ -61,3 +61,23 @@ MATCH (a:Artikel)<-[:VERWIJST_NAAR]-()
 RETURN a.nummer AS artikel, a.opschrift AS titel, count(*) AS inkomend
 ORDER BY inkomend DESC
 LIMIT 10;
+
+
+// ===========================================================================
+// 7. The whole plan from the root — Regeling down through its chapters.
+//    The final structural visualization: run alone to see the tree fan out
+//    from one root node.
+// ===========================================================================
+MATCH p = (:Regeling)-[:BEVAT*1..2]->()
+RETURN p LIMIT 300;
+
+
+// ===========================================================================
+// 8. Location context: the ambtsgebied (now carrying the RD boundary geometry)
+//    and a sample of the rules that apply there. The point-in-polygon test
+//    itself runs in spatial.py, since Neo4j Community has no polygon PIP.
+// ===========================================================================
+MATCH (loc:Locatie)<-[:OP_LOCATIE]-(:RegelVoorIedereen)
+      -[:VAN_REGELTEKST]->(:Regeltekst)-[:IS_TEKST_VAN]->(art:Artikel)
+WHERE loc.id CONTAINS 'ambtsgebied'
+RETURN loc, art LIMIT 50;
