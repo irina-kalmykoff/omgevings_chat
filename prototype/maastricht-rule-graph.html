@@ -1,0 +1,207 @@
+<title>Maastricht Rule Graph</title>
+<style>
+  /* layout: full-bleed graph canvas under a compact title + control strip */
+  :root{
+    --bg:#fcfcfb; --surface:#ffffff; --ink:#1b2430; --muted:#5b6572; --line:#d9dee5;
+    --art:#2f6db0; --act:#1a9b8a; --warn:#c77d1e; --dim:0.16;
+    --serif:'Spectral',Georgia,'Times New Roman',serif;
+    --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#111621; --surface:#1a2130; --ink:#e7ecf3; --muted:#9aa7b6; --line:#2c3545;
+    --art:#6aa6e0; --act:#4fc9b7; --warn:#e6b24d; --dim:0.14; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#111621; --surface:#1a2130; --ink:#e7ecf3; --muted:#9aa7b6; --line:#2c3545;
+    --art:#6aa6e0; --act:#4fc9b7; --warn:#e6b24d; --dim:0.14; color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);margin:0}
+  .wrap{min-height:100%;display:flex;flex-direction:column}
+  header{padding-block:18px;padding-inline:20px;border-bottom:1px solid var(--line);
+    display:flex;flex-direction:column;gap:12px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(20px,3vw,27px);margin:0;
+    letter-spacing:-.01em;text-wrap:balance}
+  .sub{margin:0;color:var(--muted);font-size:14px;max-width:70ch;line-height:1.45}
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .seg button{appearance:none;border:0;background:var(--surface);color:var(--muted);
+    font:inherit;font-size:13px;font-weight:600;padding:8px 14px;cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--art);color:#fff}
+  :root[data-theme="dark"] .seg button[aria-pressed="true"],
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0c1118}}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;color:var(--muted);align-items:center}
+  .key{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .dot.art{background:var(--art)} .dot.act{background:var(--act)}
+  .ln{width:22px;height:0;border-top:2px solid var(--muted)}
+  .ln.dash{border-top-style:dashed}
+  .stage{position:relative;flex:1;min-height:60vh}
+  svg{display:block;width:100%;height:100%}
+  .edge{stroke:var(--muted);stroke-opacity:.5;fill:none}
+  .edge.dash{stroke-dasharray:4 4;stroke-opacity:.4}
+  .node circle,.node path{cursor:grab;stroke:var(--surface);stroke-width:2}
+  .label{font-size:11px;fill:var(--ink);font-weight:600;pointer-events:none;
+    paint-order:stroke;stroke:var(--bg);stroke-width:3px}
+  .caption{padding:14px 20px;border-top:1px solid var(--line);background:var(--surface);
+    font-size:13.5px;line-height:1.5;color:var(--ink);min-height:2.6em}
+  .caption b{color:var(--warn)}
+  .tip{position:absolute;pointer-events:none;max-width:300px;background:var(--surface);
+    border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;
+    line-height:1.45;box-shadow:0 6px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .12s}
+  .tip .num{font-family:var(--serif);font-weight:600;color:var(--art);font-size:14px}
+  .tip .op{color:var(--ink);margin:3px 0 5px;font-weight:600}
+  .tip .tx{color:var(--muted)}
+  @media (max-width:520px){header{padding-inline:16px}.caption{padding-inline:16px}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Inter:wght@400;600;700&display=swap">
+
+<div class="wrap">
+  <header>
+    <h1>Maastricht Rule Graph</h1>
+    <p class="sub">One slice of the Omgevingsplan Maastricht as a knowledge graph: articles linked by their own
+      cross-references (solid) and to the activities they govern (dashed). The toggle shows why structure matters
+      for a monument question.</p>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="retrieval mode">
+        <button id="mVec" aria-pressed="true">Vector retrieval</button>
+        <button id="mGraph" aria-pressed="false">Graph expansion</button>
+      </div>
+      <div class="legend">
+        <span class="key"><span class="dot art"></span>Artikel</span>
+        <span class="key"><span class="dot act"></span>Activiteit</span>
+        <span class="key"><span class="ln"></span>verwijst&nbsp;naar</span>
+        <span class="key"><span class="ln dash"></span>geldt&nbsp;voor</span>
+      </div>
+    </div>
+  </header>
+  <div class="stage">
+    <svg id="svg" aria-label="rule cross-reference graph"></svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <div class="caption" id="cap"></div>
+</div>
+
+<script>
+const GRAPH = {"nodes": [{"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27", "type": "Artikel", "nummer": "22.27", "opschrift": "Uitzonderingen op vergunningplicht artikel 22.26 - omgevingsplan onverminderd van toepassing", "tekst": "Het verbod, bedoeld in Artikel 22.26, geldt niet voor de activiteiten, bedoeld in dat artikel, als die betrekking hebben op een van de volgende bouwwerken: een bijbehorend bouwwerk of een uitbreiding daarvan, als wordt voldaan aan de volgende eisen: op de grond staand; gelegen in achtererfgebied; op", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.34", "type": "Artikel", "nummer": "22.34", "opschrift": "Voorschriften over archeologische monumentenzorg binnenplanse omgevingsvergunning omgevingsplanactiviteit bouwwerken", "tekst": "Als dat in het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet, is bepaald, kunnen aan een omgevingsvergunning voor een bouwactiviteit in het belang van de archeologische monumentenzorg voorschriften worden verbonden. Artikel 22.303, eerste lid, is op het", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.30", "type": "Artikel", "nummer": "22.30", "opschrift": "Nadere invulling beoordelingsregel omgevingsplanactiviteit bouwwerken bodemgevoelig gebouw op bodemgevoelige locatie", "tekst": "De toelaatbare kwaliteit van de bodem, bedoeld in Artikel 22.29, eerste lid, onder c, is de interventiewaarde bodemkwaliteit, bedoeld in bijlage II A bij het Besluit activiteiten leefomgeving. Er is sprake van overschrijding van de toelaatbare kwaliteit als voor ten minste één stof de gemiddelde gem", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.287", "type": "Artikel", "nummer": "22.287", "opschrift": "Omgevingsplanactiviteit gemeentelijk monument: algemeen", "tekst": "Bij een aanvraag om een omgevingsvergunning voor een activiteit die betrekking heeft op een gemeentelijk monument worden de volgende gegevens en bescheiden verstrekt: het monumentnummer en, voor zover van toepassing, de naam van het monument of de plaatselijke aanduiding van het archeologisch monume", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.38", "type": "Artikel", "nummer": "22.38", "opschrift": "Inperkingen artikel 22.36 vanwege cultureel erfgoed", "tekst": "Artikel 22.36 is niet van toepassing op een activiteit die wordt verricht: in, aan, op of bij een gemeentelijk monument, voorbeschermd gemeentelijk monument, provinciaal monument, voorbeschermd provinciaal monument, rijksmonument of voorbeschermd rijksmonument; of op een locatie waaraan in dit omgev", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.31", "type": "Artikel", "nummer": "22.31", "opschrift": "Voorschrift omgevingsvergunning omgevingsplanactiviteit bouwwerken bodemgevoelig gebouw op bodemgevoelige locatie: na einde activiteit", "tekst": "Aan een omgevingsvergunning voor een bodemgevoelig gebouw op een bodemgevoelige locatie die is verleend met toepassing van Artikel 22.29, eerste lid, aanhef en onder c, onder 2, wordt in ieder geval het voorschrift verbonden dat het gebouw, of een gedeelte daarvan, alleen in gebruik wordt genomen na", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.33", "type": "Artikel", "nummer": "22.33", "opschrift": "Specifieke beoordelingsregels aanvraag binnenplanse omgevingsvergunning omgevingsplanactiviteit bouwwerken bij voorbereidingsbesluit of aanwijzing als beschermd stads- of dorpsgezicht", "tekst": "In afwijking van Artikel 22.29 wordt de omgevingsvergunning geweigerd, als voor de locatie waarop de aanvraag betrekking heeft van kracht is: een voorbereidingsbesluit als bedoeld in artikel 4.103 of 4.104 van de Invoeringswet Omgevingswet, een als voorbereidingsbesluit geldend tracébesluit als bedo", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.288", "type": "Artikel", "nummer": "22.288", "opschrift": "Omgevingsplanactiviteit gemeentelijk monument voor zover het gaat om een archeologisch monument", "tekst": "Bij een aanvraag als bedoeld in Artikel 22.287, worden, voor zover het gaat om een archeologisch monument, de volgende gegevens en bescheiden verstrekt: een omschrijving van de aard van de activiteit, met vermelding van: de omvang in vierkante meters; en de diepte, in centimeters ten opzichte van he", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.23", "type": "Artikel", "nummer": "22.23", "opschrift": "Algemene afbakeningseisen", "tekst": "Artikel 22.27 en Artikel 22.36 zijn niet van toepassing op een activiteit die wordt verricht in, aan, op of bij een bouwwerk dat is gebouwd of in stand wordt gehouden of wordt gebruikt zonder de daarvoor vereiste omgevingsvergunning. Bij de toepassing van Artikel 22.27 en Artikel 22.36 blijft het aa", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.290", "type": "Artikel", "nummer": "22.290", "opschrift": "Omgevingsplanactiviteit: slopen van een gemeentelijk monument voor zover het gaat om een monument", "tekst": "Bij de aanvraag, bedoeld in Artikel 22.287, worden, voor zover het gaat om het slopen van een monument, de volgende gegevens en bescheiden verstrekt: de volgende kleurenfoto's die een duidelijke indruk geven van het monument in relatie tot de voorgenomen sloop: overzichtsfoto's van de bestaande situ", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.295", "type": "Artikel", "nummer": "22.295", "opschrift": "Overeenkomstige toepassing voorbeschermd gemeentelijk monument", "tekst": "Artikel 22.287 tot en met Artikel 22.294 zijn van overeenkomstige toepassing op een aanvraag om een omgevingsvergunning die betrekking heeft op een voorbeschermd gemeentelijk monument.", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.26", "type": "Artikel", "nummer": "22.26", "opschrift": "Binnenplanse vergunning omgevingsplanactiviteit bouwwerken", "tekst": "Het is verboden zonder omgevingsvergunning een bouwactiviteit te verrich​​ten en het te bouwen bouwwerk in stand te houden en te gebruiken.", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.1__art_22.3", "type": "Artikel", "nummer": "22.3", "opschrift": "Overgangsrecht: rijksbeschermde stads- en dorpsgezichten", "tekst": "Het Artikel 22.28, derde lid, en Artikel 22.38, aanhef en onder b, zijn van overeenkomstige toepassing op een activiteit als bedoeld in die artikelonderdelen die wordt verricht op een locatie waarvoor een op grond van artikel 4.35, eerste lid, van de Invoeringswet Omgevingswet als instructie geldend", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.1__art_22.2", "type": "Artikel", "nummer": "22.2", "opschrift": "Overgangsrecht: gemeentelijke monumenten en voorbeschermde gemeentelijke monumenten", "tekst": "Voor de toepassing van het Artikel 22.28, eerste lid en Artikel 22.28, tweede lid, Artikel 22.38, Artikel 22.287, Artikel 22.288, Artikel 22.290 tot en met Artikel 22.293 en Artikel 22.295 wordt onder gemeentelijk monument respectievelijk voorbeschermd gemeentelijk monument ook verstaan een monument", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.32", "type": "Artikel", "nummer": "22.32", "opschrift": "Specifieke beoordelingsregel aanvraag binnenplanse omgevingsvergunning omgevingsplanactiviteit bouwwerken bij regels over een wijzigingsbevoegdheid of uitwerkingsplicht", "tekst": "In afwijking van Artikel 22.29, eerste lid, aanhef en onder a, kan de omgevingsvergunning voor een activiteit die in strijd is met de in dat onderdeel bedoelde regels toch worden verleend als de activiteit niet in strijd is met regels voor de toepassing van een wijzigingsbevoegdheid of het voldoen a", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.35", "type": "Artikel", "nummer": "22.35", "opschrift": "Aanvraagvereisten binnenplanse omgevingsvergunning omgevingsplanactiviteit bouwwerken", "tekst": "Bij een aanvraag om een omgevingsvergunning voor een omgevingsplanactiviteit met betrekking tot een bouwwerk worden voor de toetsing aan dit omgevingsplan in ieder geval de volgende gegevens en bescheiden verstrekt: een opgave van de bouwkosten; het beoogde en het huidige gebruik van het bouwwerk en", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28", "type": "Artikel", "nummer": "22.28", "opschrift": "Inperkingen artikel 22.27 vanwege cultureel erfgoed", "tekst": "Op een activiteit die wordt verricht in, aan of op een gemeentelijk monument, voorbeschermd gemeentelijk monument, provinciaal monument, voorbeschermd provinciaal monument, rijksmonument of voorbeschermd rijksmonument is Artikel 22.27 niet van toepassing. Op een activiteit die wordt verricht bij een", "seed": true}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.29", "type": "Artikel", "nummer": "22.29", "opschrift": "Beoordelingsregels aanvraag binnenplanse omgevingsvergunning omgevingsplanactiviteit bouwwerken algemeen", "tekst": "Voor zover een aanvraag om een omgevingsvergunning betrekking heeft op een bouwactiviteit en het in stand houden en gebruiken van het te bouwen bouwwerk, wordt de omgevingsvergunning alleen verleend als: de activiteit niet in strijd is met de in dit omgevingsplan gestelde regels over het bouwen, in ", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.36", "type": "Artikel", "nummer": "22.36", "opschrift": "Binnenplanse vergunningvrije activiteiten van rechtswege in overeenstemming met dit omgevingsplan", "tekst": "Onverminderd de overige bepalingen van deze afdeling en de bepalingen van Afdeling 22.3 zijn in ieder geval in overeenstemming met dit omgevingsplan: het bouwen, in stand houden en gebruiken van een bijbehorend bouwwerk of een uitbreiding daarvan als bedoeld in Artikel 22.27, onder a, als in aanvull", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.6__art_22.22", "type": "Artikel", "nummer": "22.22", "opschrift": "Vrijstelling van archeologisch onderzoek", "tekst": "Als er in het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet, regels worden gesteld over het verrichten van archeologisch onderzoek in het kader van een aanvraag om een omgevingsvergunning voor een bouwactiviteit of het uitvoeren van een werk, geen bouww", "seed": false}, {"id": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.293", "type": "Artikel", "nummer": "22.293", "opschrift": "Omgevingsplanactiviteit gemeentelijk monument: monument door gebruik ontsieren of in gevaar brengen", "tekst": "Bij een aanvraag als bedoeld in Artikel 22.287 wordt, voor zover het gaat om het gebruiken van een monument waardoor het kan worden ontsierd of in gevaar gebracht, een opgave verstrekt van de maatregelen die worden getroffen om deze nadelige gevolgen te voorkomen of zoveel mogelijk te beperken.", "seed": false}, {"id": "nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege", "type": "Activiteit", "nummer": "", "opschrift": "Activiteit gereguleerd in omgevingsplanregels", "tekst": "", "seed": false}, {"id": "nl.imow-gm0935.activiteit.ActBetrGemMonument", "type": "Activiteit", "nummer": "", "opschrift": "Activiteit die betrekking heeft op een gemeentelijk monument", "tekst": "", "seed": false}, {"id": "nl.imow-gm0935.activiteit.AanvraagOpBouwwerken", "type": "Activiteit", "nummer": "", "opschrift": "Aanvraagvereisten binnenplanse omgevingsvergunning omgevingsplanactiviteit bouwwerken", "tekst": "", "seed": false}, {"id": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "Activiteit", "nummer": "", "opschrift": "Bouwactiviteit (omgevingsplan)", "tekst": "", "seed": false}], "edges": [{"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.38", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.287", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.288", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.290", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.293", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.295", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.3", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.3", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.38", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.23", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.23", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.36", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.26", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.6__art_22.22", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.30", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.29", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.31", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.29", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.32", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.29", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.33", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.29", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.35", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.30", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.36", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.38", "target": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.36", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.288", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.287", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.290", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.287", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.293", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.287", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.295", "target": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.287", "type": "VERWIJST_NAAR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.2", "target": "nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.1__art_22.3", "target": "nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.6__art_22.22", "target": "nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.23", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.26", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.29", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.30", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.31", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.32", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.33", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.34", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.35", "target": "nl.imow-gm0935.activiteit.AanvraagOpBouwwerken", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.36", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.38", "target": "nl.imow-gm0935.activiteit.BouwwerkBouwen", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.287", "target": "nl.imow-gm0935.activiteit.ActBetrGemMonument", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.288", "target": "nl.imow-gm0935.activiteit.ActBetrGemMonument", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.290", "target": "nl.imow-gm0935.activiteit.ActBetrGemMonument", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.293", "target": "nl.imow-gm0935.activiteit.ActBetrGemMonument", "type": "GELDT_VOOR"}, {"source": "gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.295", "target": "nl.imow-gm0935.activiteit.ActBetrGemMonument", "type": "GELDT_VOOR"}]};
+const svg = document.getElementById('svg'), tip = document.getElementById('tip'), cap = document.getElementById('cap');
+const SVGNS = 'http://www.w3.org/2000/svg';
+const byNum = n => GRAPH.nodes.find(d => d.nummer === n);
+
+// the demonstrated story, selected by article number so it is data-driven
+const VEC = ['22.27'];                       // what a similarity search for a vergunningvrij dakkapel returns
+const CHAIN = ['22.26','22.27','22.28'];     // base rule -> exception -> monument restriction
+
+let W = 0, H = 0;
+const nodes = GRAPH.nodes.map(d => ({...d}));
+const id2n = Object.fromEntries(nodes.map(n => [n.id, n]));
+const links = GRAPH.edges.map(e => ({...e, s: id2n[e.source], t: id2n[e.target]})).filter(l => l.s && l.t);
+
+function size(){ const r = svg.getBoundingClientRect(); W = r.width; H = r.height; }
+size();
+// seed positions on a circle
+nodes.forEach((n,i) => { const a = i/nodes.length*Math.PI*2; n.x = W/2 + Math.cos(a)*Math.min(W,H)*0.3; n.y = H/2 + Math.sin(a)*Math.min(W,H)*0.3; n.vx=0; n.vy=0; });
+
+function tick(){
+  const k = 0.02;
+  for(const n of nodes){ n.vx += (W/2 - n.x)*k*0.04; n.vy += (H/2 - n.y)*k*0.04; }
+  for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+    const a=nodes[i],b=nodes[j]; let dx=a.x-b.x,dy=a.y-b.y; let d2=dx*dx+dy*dy||1; let f=2600/d2;
+    const d=Math.sqrt(d2); dx/=d;dy/=d; a.vx+=dx*f;a.vy+=dy*f;b.vx-=dx*f;b.vy-=dy*f;
+  }
+  for(const l of links){
+    let dx=l.t.x-l.s.x,dy=l.t.y-l.s.y; const d=Math.sqrt(dx*dx+dy*dy)||1; const f=(d-96)*0.012;
+    dx/=d;dy/=d; l.s.vx+=dx*f;l.s.vy+=dy*f; l.t.vx-=dx*f;l.t.vy-=dy*f;
+  }
+  for(const n of nodes){ if(n===drag) continue; n.x+=n.vx*=0.82; n.y+=n.vy*=0.82;
+    n.x=Math.max(34,Math.min(W-34,n.x)); n.y=Math.max(34,Math.min(H-34,n.y)); }
+}
+
+let edgeEls=[], nodeEls=[], drag=null, mode='vec';
+function build(){
+  svg.innerHTML=''; edgeEls=[]; nodeEls=[];
+  for(const l of links){
+    const p=document.createElementNS(SVGNS,'line');
+    p.setAttribute('class','edge'+(l.type==='GELDT_VOOR'?' dash':''));
+    l.el=p; svg.appendChild(p); edgeEls.push(l);
+  }
+  for(const n of nodes){
+    const gm=document.createElementNS(SVGNS,'g'); gm.setAttribute('class','node');
+    let shape;
+    if(n.type==='Activiteit'){ shape=document.createElementNS(SVGNS,'path');
+      shape.setAttribute('fill','var(--act)'); n.r=7; }
+    else { shape=document.createElementNS(SVGNS,'circle');
+      shape.setAttribute('fill','var(--art)'); n.r=CHAIN.includes(n.nummer)?13:9;
+      shape.setAttribute('r',n.r); }
+    gm.appendChild(shape);
+    if(n.type==='Artikel'){
+      const t=document.createElementNS(SVGNS,'text'); t.setAttribute('class','label');
+      t.setAttribute('text-anchor','middle'); t.textContent=n.nummer; n.tx=t; gm.appendChild(t);
+    }
+    n.shape=shape; n.g=gm; svg.appendChild(gm);
+    gm.addEventListener('pointerenter',e=>showTip(e,n));
+    gm.addEventListener('pointermove',e=>moveTip(e));
+    gm.addEventListener('pointerleave',()=>{tip.style.opacity=0});
+    gm.addEventListener('pointerdown',e=>{drag=n;gm.setPointerCapture(e.pointerId);});
+    gm.addEventListener('pointerup',e=>{drag=null;});
+    gm.addEventListener('pointermove',e=>{ if(drag===n){ const r=svg.getBoundingClientRect();
+      n.x=e.clientX-r.left; n.y=e.clientY-r.top; } });
+    nodeEls.push(n);
+  }
+}
+
+function render(){
+  for(const l of edgeEls){ l.el.setAttribute('x1',l.s.x);l.el.setAttribute('y1',l.s.y);
+    l.el.setAttribute('x2',l.t.x);l.el.setAttribute('y2',l.t.y); }
+  for(const n of nodeEls){
+    if(n.type==='Activiteit'){ const r=7;
+      n.shape.setAttribute('d',`M${n.x} ${n.y-r} L${n.x+r} ${n.y} L${n.x} ${n.y+r} L${n.x-r} ${n.y} Z`);
+    } else { n.shape.setAttribute('cx',n.x); n.shape.setAttribute('cy',n.y); }
+    if(n.tx){ n.tx.setAttribute('x',n.x); n.tx.setAttribute('y',n.y-n.r-4); }
+  }
+  applyMode();
+}
+
+function lit(){
+  if(mode==='vec') return new Set(nodes.filter(n=>VEC.includes(n.nummer)).map(n=>n.id));
+  const base=new Set(nodes.filter(n=>CHAIN.includes(n.nummer)).map(n=>n.id));
+  for(const l of links){ if(base.has(l.s.id)||base.has(l.t.id)){ base.add(l.s.id); base.add(l.t.id);} }
+  return base;
+}
+function applyMode(){
+  const on=lit();
+  for(const n of nodeEls){ n.g.style.opacity = on.has(n.id)?1:'var(--dim)'; }
+  for(const l of edgeEls){
+    const act = on.has(l.s.id)&&on.has(l.t.id);
+    l.el.style.stroke = act? 'var(--warn)':'var(--muted)';
+    l.el.style.strokeWidth = act?3:1.4;
+    l.el.style.strokeOpacity = act?0.95:0.12;
+  }
+}
+
+function showTip(e,n){ tip.innerHTML = n.type==='Activiteit'
+  ? `<div class="op">${n.opschrift}</div><div class="tx">activiteit</div>`
+  : `<div class="num">Artikel ${n.nummer}</div><div class="op">${n.opschrift}</div><div class="tx">${n.tekst||''}</div>`;
+  tip.style.opacity=1; moveTip(e); }
+function moveTip(e){ const r=svg.getBoundingClientRect(); let x=e.clientX-r.left+14,y=e.clientY-r.top+14;
+  if(x>W-290)x-=300; tip.style.left=x+'px'; tip.style.top=y+'px'; }
+
+function setMode(m){ mode=m;
+  mVec.setAttribute('aria-pressed', m==='vec'); mGraph.setAttribute('aria-pressed', m==='graph');
+  cap.innerHTML = m==='vec'
+    ? 'Vector search for a <i>vergunningvrije dakkapel</i> surfaces <b>article 22.27</b> — the exceptions to the permit requirement. Read alone, it says: no permit needed.'
+    : 'Following the graph edges, <b>22.27</b> sits between <b>22.26</b> (the permit rule it excepts) and <b>22.28</b> — <i>"Inperkingen artikel 22.27 vanwege cultureel erfgoed"</i>, which claws the exception back for a monument. The edge is what keeps the answer correct.';
+  applyMode();
+}
+document.getElementById('mVec').onclick=()=>setMode('vec');
+document.getElementById('mGraph').onclick=()=>setMode('graph');
+
+build();
+let ticks=0;
+function loop(){ for(let i=0;i<2;i++) tick(); render(); if(++ticks<600||drag) requestAnimationFrame(loop); }
+window.addEventListener('resize',()=>{size();});
+setMode('vec');
+loop();
+// keep it live for dragging
+svg.addEventListener('pointerdown',()=>{ if(ticks>=600){ticks=0;loop();} });
+</script>
