@@ -316,6 +316,17 @@ const STRUCT_LEVEL = {Regeling:0, Hoofdstuk:1, Afdeling:2, Paragraaf:3, Subparag
 const GREYS = {light:['#2f2e2b','#4f4d48','#6e6c66','#8d8b84','#aaa8a0'],
                dark: ['#f2f1ec','#d3d1c8','#b3b1a8','#94928a','#78766f']};
 const OTHER = {light:'#898781', dark:'#898781'};
+// English glosses shown next to the Dutch names in the legend and tooltips
+const ENGLISH = {
+  Regeling:'Regulation', Hoofdstuk:'Chapter', Afdeling:'Division', Paragraaf:'Section',
+  Subparagraaf:'Subsection', Artikel:'Article', Lid:'Paragraph', Regeltekst:'Rule text',
+  RegelVoorIedereen:'Rule for everyone', Activiteit:'Activity', Locatie:'Location',
+  Component:'Referenced component',
+  BEVAT:'contains', VERWIJST_NAAR:'refers to', IS_TEKST_VAN:'is text of',
+  VAN_REGELTEKST:'from rule text', GELDT_VOOR:'applies to', OP_LOCATIE:'at location',
+  VALT_ONDER:'falls under',
+};
+const gloss = (name, shown = name) => name in ENGLISH ? `${shown} (${ENGLISH[name]})` : shown;
 const SHAPE = {Activiteit:'diamond', Regeltekst:'square', RegelVoorIedereen:'triangle', Locatie:'hexagon'};
 const THEME = {
   light:{bg:'#fcfcfb', ink:'#1b2430', muted:'#5b6572', edge:'#8a9099', hi:'#c77d1e', ring:'#ffffff'},
@@ -547,17 +558,18 @@ function buildLegend(){
   const box = document.getElementById('legend'); box.innerHTML = '';
   const count = l => nodes.filter(n => n.label === l).length;
   for (const l of labels){ const k = document.createElement('span'); k.className = 'key';
-    k.append(swatch(l), `${l} (${count(l)})`); box.append(k); }
+    k.append(swatch(l), `${gloss(l)} · ${count(l)}`); box.append(k); }
   for (const t of types){ const k = document.createElement('span'); k.className = 'key';
     k.append(lineSwatch(t), typeName(t)); box.append(k); }
 }
-const typeName = t => t === MERGED && COLLAPSED ? 'connection (hover for relationship types)' : t.toLowerCase().replaceAll('_', ' ');
+const typeName = t => t === MERGED && COLLAPSED ? 'connection (hover for relationship types)'
+  : gloss(t, t.toLowerCase().replaceAll('_', ' '));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function propList(p, skip){ const rows = Object.entries(p).filter(([k, v]) => !skip.includes(k) && v !== '' && v != null).slice(0, 6);
   return rows.length ? '<dl>' + rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(String(v).slice(0, 90))}</dd>`).join('') + '</dl>' : ''; }
 function nodeTip(n){ const p = n.props;
   const head = n.label === 'Artikel' || n.label === 'Lid' ? `${n.label} ${p.nummer || ''}` : n.caption;
-  return `<div class="lb">${esc(n.labels.join(' · '))} · ${n.deg} connection${n.deg === 1 ? '' : 's'}</div>
+  return `<div class="lb">${esc(n.labels.map(l => gloss(l)).join(' · '))} · ${n.deg} connection${n.deg === 1 ? '' : 's'}</div>
     <div class="hd">${esc(head)}</div>${p.opschrift ? `<div>${esc(p.opschrift)}</div>` : ''}
     ${p.tekst ? `<div class="tx">${esc(p.tekst.slice(0, 280))}${p.tekst.length > 280 ? '…' : ''}</div>` : ''}
     ${propList(p, ['opschrift', 'tekst', 'nummer', 'label'])}`; }
@@ -602,7 +614,7 @@ function exportSVG(){
   measure.font = `12px ${font}`;
   let x = pad, y = pad + 8;
   for (const it of items){
-    const text = it.kind === 'node' ? it.l : COLLAPSED ? 'connection (relationship types merged)' : typeName(it.ty);
+    const text = it.kind === 'node' ? gloss(it.l) : COLLAPSED ? 'connection (relationship types merged)' : typeName(it.ty);
     const w = (it.kind === 'node' ? 18 : 30) + measure.measureText(text).width + 20;
     if (x + w > W - pad && x > pad){ x = pad; y += row; }
     if (it.kind === 'node') el('path', {d:shapePath(SHAPE[it.l] || 'circle', x + 6, y, 6), fill:colorOf(it.l)}, legend);
