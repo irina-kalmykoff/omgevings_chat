@@ -1,0 +1,651 @@
+"""Render the result of a Cypher query as a clean, self-contained graph page.
+
+Runs the query against Neo4j, collects every node, relationship and path in the
+result, and writes one HTML file that opens in any browser without a server.
+The page has a force layout and a radial tree layout, hover details, a legend,
+and buttons that download the current view as SVG or PNG for slides and
+documents.
+
+Colours follow the node label, not its position in the result, so the same
+label looks the same in every visualisation this script produces.
+
+Usage:
+    python generate_visualisation.py "MATCH p = (:Regeling)-[:BEVAT*1..2]->() RETURN p LIMIT 300" \
+        --title "Structure of the omgevingsplan" --out plan-structure.html --open
+"""
+
+import argparse
+import html
+import json
+import re
+import webbrowser
+from pathlib import Path
+
+from neo4j import GraphDatabase
+from neo4j.graph import Node, Path as GraphPath, Relationship
+
+MAX_STRING = 400                   # longer property values are cut in the tooltip data
+HIDDEN_PROPS = {"geometry_geojson"}  # bulky values replaced by a size note
+
+
+def _clean_props(entity):
+    """Return the entity's properties as JSON-safe values, trimming bulky ones."""
+    props = {}
+    for key, value in dict(entity).items():
+        if key in HIDDEN_PROPS:
+            props[key] = f"[{len(str(value))} characters]"
+        elif isinstance(value, str) and len(value) > MAX_STRING:
+            props[key] = value[:MAX_STRING].rstrip() + "…"
+        elif isinstance(value, (str, int, float, bool)) or value is None:
+            props[key] = value
+        else:
+            props[key] = str(value)
+    return props
+
+
+def _short(text, limit=28):
+    text = " ".join(str(text).split())
+    return text if len(text) <= limit else text[:limit - 1].rstrip() + "…"
+
+
+def _caption(label, props):
+    """Pick the short text drawn next to a node."""
+    if props.get("nummer"):
+        return str(props["nummer"])
+    for key in ("naam", "opschrift"):
+        if props.get(key):
+            return _short(props[key])
+    for key in ("id", "eId", "wId"):
+        if props.get(key):
+            # identifiers look like nl.imow-gm0935.regeltekst.abc or a__b__c: keep the tail
+            tail = re.split(r"__|\.", str(props[key]))[-1]
+            return tail if len(tail) <= 14 else "…" + tail[-8:]
+    return label
+
+
+def collect_graph(records):
+    """Gather the distinct nodes and relationships from query records.
+
+    Args:
+        records: Records returned by the Neo4j driver.
+
+    Returns:
+        A tuple (nodes, edges) of JSON-ready dicts.
+    """
+    nodes, edges = {}, {}
+
+    def add_node(node):
+        known = nodes.get(node.element_id)
+        if known and known["labels"]:
+            return
+        labels = sorted(node.labels)
+        label = labels[0] if labels else "Node"
+        props = _clean_props(node)
+        nodes[node.element_id] = {"id": node.element_id, "label": label, "labels": labels,
+                                  "caption": _caption(label, props), "props": props}
+
+    def add_rel(rel):
+        add_node(rel.start_node)
+        add_node(rel.end_node)
+        edges[rel.element_id] = {"id": rel.element_id, "source": rel.start_node.element_id,
+                                 "target": rel.end_node.element_id, "type": rel.type,
+                                 "props": _clean_props(rel)}
+
+    def walk(value):
+        if isinstance(value, GraphPath):
+            for node in value.nodes:
+                add_node(node)
+            for rel in value.relationships:
+                add_rel(rel)
+        elif isinstance(value, Node):
+            add_node(value)
+        elif isinstance(value, Relationship):
+            add_rel(value)
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                walk(item)
+        elif isinstance(value, dict):
+            for item in value.values():
+                walk(item)
+
+    for record in records:
+        for value in record.values():
+            walk(value)
+    return list(nodes.values()), list(edges.values())
+
+
+def collapse_edges(edges):
+    """Merge all relationships between the same two nodes into one edge.
+
+    The merged edge points from the first relationship's start node to its end
+    node; `both` is set when any relationship runs the other way. Its props
+    hold the count per relationship type and direction for the tooltip.
+
+    Args:
+        edges: Edge dicts from collect_graph.
+
+    Returns:
+        A list of merged edge dicts.
+    """
+    groups = {}
+    for edge in edges:
+        groups.setdefault(frozenset((edge["source"], edge["target"])), []).append(edge)
+    merged = []
+    for group in groups.values():
+        source, target = group[0]["source"], group[0]["target"]
+        counts = {}
+        for edge in group:
+            arrow = "→" if edge["source"] == source else "←"
+            per_type = counts.setdefault(edge["type"], {"→": 0, "←": 0})
+            per_type[arrow] += 1
+        props = {rel_type: ", ".join(f"{arrow} {n}" for arrow, n in c.items() if n)
+                 for rel_type, c in sorted(counts.items())}
+        merged.append({"id": "|".join(sorted(e["id"] for e in group)), "source": source,
+                       "target": target, "type": " · ".join(sorted(counts)),
+                       "count": len(group), "both": any(c["←"] for c in counts.values()),
+                       "props": props})
+    return merged
+
+
+def render_html(nodes, edges, query, title, subtitle, layout, collapsed=False):
+    """Fill the page template with the graph data."""
+    data = {"nodes": nodes, "edges": edges, "query": query, "layout": layout,
+            "collapsed": collapsed}
+    payload = json.dumps(data, ensure_ascii=False, default=str).replace("</", "<\\/")
+    page = TEMPLATE
+    page = page.replace("__TITLE__", html.escape(title))
+    page = page.replace("__SUBTITLE__", html.escape(subtitle))
+    page = page.replace("__QUERY__", html.escape(query))
+    return page.replace("__DATA__", payload)
+
+
+def _slug(text):
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-") or "visualisation"
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Visualise the result of a Cypher query")
+    parser.add_argument("query", help="Cypher query that returns nodes, relationships or paths")
+    parser.add_argument("--title", default="Graph visualisation", help="heading shown on the page")
+    parser.add_argument("--subtitle", default="", help="one-line description under the heading")
+    parser.add_argument("--out", help="output HTML file (default: derived from the title)")
+    parser.add_argument("--layout", choices=["auto", "force", "tree"], default="auto",
+                        help="starting layout; auto picks tree for hierarchies")
+    parser.add_argument("--collapse-connections", "--collapse_connections", action="store_true",
+                        dest="collapse", help="draw all relationships between two nodes as one edge")
+    parser.add_argument("--json", help="also write the collected nodes and edges to this JSON file")
+    parser.add_argument("--open", action="store_true", help="open the page in the browser")
+    parser.add_argument("--uri", default="bolt://localhost:7687")
+    parser.add_argument("--user", default="neo4j")
+    parser.add_argument("--password", default="testpassword")
+    parser.add_argument("--database", default=None, help="database name (default: the server default)")
+    args = parser.parse_args()
+
+    driver = GraphDatabase.driver(args.uri, auth=(args.user, args.password))
+    try:
+        driver.verify_connectivity()
+        with driver.session(database=args.database) as session:
+            records = list(session.run(args.query))
+    finally:
+        driver.close()
+
+    nodes, edges = collect_graph(records)
+    if not records:
+        raise SystemExit("the query returned no rows")
+    if not nodes:
+        raise SystemExit(f"the query returned {len(records)} rows but no nodes, relationships or "
+                         "paths; return graph elements (e.g. RETURN p or RETURN n, r, m) to draw them")
+
+    relationship_count = len(edges)
+    if args.collapse:
+        edges = collapse_edges(edges)
+
+    out = Path(args.out or f"{_slug(args.title)}.html")
+    out.write_text(render_html(nodes, edges, args.query, args.title, args.subtitle, args.layout,
+                               args.collapse), encoding="utf-8")
+    if args.json:
+        Path(args.json).write_text(json.dumps({"nodes": nodes, "edges": edges},
+                                              ensure_ascii=False, indent=1, default=str),
+                                   encoding="utf-8")
+    merged = f" merged into {len(edges)} edges" if args.collapse else ""
+    print(f"wrote {out} ({len(nodes)} nodes, {relationship_count} relationships{merged})")
+    if args.open:
+        webbrowser.open(out.resolve().as_uri())
+
+
+TEMPLATE = r"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@600&family=Inter:wght@400;600&display=swap">
+<style>
+  :root{
+    --bg:#fcfcfb; --surface:#ffffff; --ink:#1b2430; --muted:#5b6572; --line:#d9dee5; --accent:#2a78d6;
+    --serif:'Spectral',Georgia,serif; --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#1a1a19; --surface:#222321; --ink:#eceae4; --muted:#a9a79f; --line:#383835; --accent:#3987e5; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#1a1a19; --surface:#222321; --ink:#eceae4; --muted:#a9a79f; --line:#383835; --accent:#3987e5; color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  .wrap{height:100%;display:flex;flex-direction:column}
+  header{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(20px,3vw,27px);margin:0;letter-spacing:-.01em}
+  .sub{margin:0;color:var(--muted);font-size:14px;max-width:80ch;line-height:1.45}
+  .sub:empty{display:none}
+  .controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;font-size:13px}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button,.btn{appearance:none;border:0;background:var(--surface);color:var(--muted);font:inherit;
+    font-weight:600;padding:7px 12px;cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+  .btn{border:1px solid var(--line);border-radius:8px}
+  .btn:hover,.seg button:hover{color:var(--ink)}
+  .seg button[aria-pressed="true"]:hover{color:#fff}
+  label.chk{display:inline-flex;gap:6px;align-items:center;color:var(--muted);cursor:pointer}
+  .spacer{flex:1}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--muted);align-items:center}
+  .key{display:inline-flex;align-items:center;gap:7px}
+  .key svg{display:block}
+  .stage{position:relative;flex:1;min-height:420px;overflow:hidden}
+  #svg{position:absolute;inset:0;display:block;touch-action:none}
+  .tip{position:absolute;pointer-events:none;max-width:340px;background:var(--surface);border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.45;box-shadow:0 6px 24px rgba(0,0,0,.18);
+    opacity:0;transition:opacity .12s;z-index:2}
+  .tip .lb{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+  .tip .hd{font-family:var(--serif);font-weight:600;font-size:15px;margin:2px 0 4px}
+  .tip .tx{color:var(--muted);margin-top:4px}
+  .tip dl{margin:6px 0 0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px}
+  .tip dt{color:var(--muted)} .tip dd{margin:0;word-break:break-word}
+  footer{padding:10px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
+  footer details{flex:1;min-width:240px}
+  footer summary{cursor:pointer}
+  footer pre{white-space:pre-wrap;word-break:break-word;margin:6px 0 0;font-size:12px;color:var(--ink)}
+  @media (max-width:520px){header,footer{padding-inline:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>__TITLE__</h1>
+    <p class="sub">__SUBTITLE__</p>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="layout">
+        <button id="lForce" aria-pressed="false">Force</button>
+        <button id="lTree" aria-pressed="false">Radial tree</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="cLabels"> Node labels</label>
+      <label class="chk"><input type="checkbox" id="cEdgeLabels"> Relationship names</label>
+      <span class="spacer"></span>
+      <button class="btn" id="bTheme">Dark</button>
+      <button class="btn" id="bSvg">Download SVG</button>
+      <button class="btn" id="bPng">Download PNG</button>
+    </div>
+    <div class="legend" id="legend"></div>
+  </header>
+  <div class="stage" id="stage">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg" aria-label="graph"></svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <footer>
+    <span id="counts"></span>
+    <details><summary>Query</summary><pre>__QUERY__</pre></details>
+  </footer>
+</div>
+<script>
+const DATA = __DATA__;
+const SVGNS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('svg'), stage = document.getElementById('stage'), tip = document.getElementById('tip');
+
+// ---- colour and shape encoding ------------------------------------------------
+// Categorical slots (validated light/dark palette). Known labels own a fixed slot so a
+// label keeps its colour across every generated page; unknown labels take free slots.
+const SLOTS = {
+  light:['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#4a3aa7','#008300','#e34948'],
+  dark: ['#3987e5','#d95926','#199e70','#c98500','#d55181','#9085e9','#008300','#e66767'],
+};
+const FIXED_SLOT = {Artikel:0, Regeltekst:1, Activiteit:2, Locatie:3, Lid:4, RegelVoorIedereen:5, Component:6};
+// the containers of the plan's text form an ordered hierarchy: one neutral ramp, dark = top
+const STRUCT_LEVEL = {Regeling:0, Hoofdstuk:1, Afdeling:2, Paragraaf:3, Subparagraaf:4};
+const GREYS = {light:['#2f2e2b','#4f4d48','#6e6c66','#8d8b84','#aaa8a0'],
+               dark: ['#f2f1ec','#d3d1c8','#b3b1a8','#94928a','#78766f']};
+const OTHER = {light:'#898781', dark:'#898781'};
+const SHAPE = {Activiteit:'diamond', Regeltekst:'square', RegelVoorIedereen:'triangle', Locatie:'hexagon'};
+const THEME = {
+  light:{bg:'#fcfcfb', ink:'#1b2430', muted:'#5b6572', edge:'#8a9099', hi:'#c77d1e', ring:'#ffffff'},
+  dark: {bg:'#1a1a19', ink:'#eceae4', muted:'#a9a79f', edge:'#6f7680', hi:'#e6b24d', ring:'#1a1a19'},
+};
+const DASHES = ['', '6 4', '2 4', '10 4 2 4', '1 3', '12 6'];
+const FIXED_DASH = {BEVAT:0, VERWIJST_NAAR:1, IS_TEKST_VAN:2, VAN_REGELTEKST:3, GELDT_VOOR:4, OP_LOCATIE:5, VALT_ONDER:2};
+
+const nodes = DATA.nodes.map(d => ({...d, x:0, y:0, vx:0, vy:0, deg:0}));
+const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
+const edges = DATA.edges.map(e => ({...e, s:byId[e.source], t:byId[e.target]})).filter(e => e.s && e.t);
+for (const e of edges){ e.s.deg++; e.t.deg++; }
+
+const labels = [...new Set(nodes.map(n => n.label))].sort((a, b) => order(a) - order(b) || a.localeCompare(b));
+function order(l){ return l in STRUCT_LEVEL ? STRUCT_LEVEL[l] : l in FIXED_SLOT ? 10 + FIXED_SLOT[l] : 100; }
+const slotOf = {};
+{ const used = new Set(labels.filter(l => l in FIXED_SLOT).map(l => FIXED_SLOT[l]));
+  for (const l of labels){
+    if (l in FIXED_SLOT){ slotOf[l] = FIXED_SLOT[l]; continue; }
+    if (l in STRUCT_LEVEL) continue;
+    const free = [0,1,2,3,4,5,6,7].find(i => !used.has(i));
+    if (free !== undefined){ slotOf[l] = free; used.add(free); } else slotOf[l] = -1;  // folds into "other"
+  } }
+// collapsed pages merge every relationship between two nodes into one solid edge
+const COLLAPSED = !!DATA.collapsed, MERGED = 'connection';
+const types = COLLAPSED ? [MERGED] : [...new Set(edges.map(e => e.type))];
+const dashOf = {};
+{ const used = new Set(types.filter(t => t in FIXED_DASH).map(t => FIXED_DASH[t]));
+  for (const t of types){
+    if (t in FIXED_DASH){ dashOf[t] = DASHES[FIXED_DASH[t]]; continue; }
+    const free = DASHES.findIndex((_, i) => !used.has(i));
+    dashOf[t] = DASHES[free < 0 ? 0 : free]; if (free >= 0) used.add(free);
+  } }
+
+let mode = 'light';
+function colorOf(label){
+  if (label in STRUCT_LEVEL) return GREYS[mode][STRUCT_LEVEL[label]];
+  const s = slotOf[label]; return s >= 0 ? SLOTS[mode][s] : OTHER[mode];
+}
+const radius = n => Math.min(18, 6 + 2.2 * Math.sqrt(n.deg)) + (n.label === 'Regeling' ? 4 : 0);
+for (const n of nodes) n.r = radius(n);
+
+function shapePath(shape, x, y, r){
+  if (shape === 'square'){ const a = r * 0.86; return `M${x-a} ${y-a}H${x+a}V${y+a}H${x-a}Z`; }
+  if (shape === 'diamond'){ const a = r * 1.15; return `M${x} ${y-a}L${x+a} ${y}L${x} ${y+a}L${x-a} ${y}Z`; }
+  if (shape === 'triangle'){ const a = r * 1.2; return `M${x} ${y-a}L${x+a*0.95} ${y+a*0.6}L${x-a*0.95} ${y+a*0.6}Z`; }
+  if (shape === 'hexagon'){ let d = ''; for (let i = 0; i < 6; i++){ const t = Math.PI/3*i;
+    d += (i ? 'L' : 'M') + (x + r*1.05*Math.cos(t)) + ' ' + (y + r*1.05*Math.sin(t)); } return d + 'Z'; }
+  return `M${x-r} ${y}a${r} ${r} 0 1 0 ${2*r} 0a${r} ${r} 0 1 0 ${-2*r} 0Z`;
+}
+
+// ---- layouts --------------------------------------------------------------------
+let sim = 0, settled = false;
+function forceLayout(){
+  nodes.forEach((n, i) => { const a = i * 2.39996, rr = 12 * Math.sqrt(i + 1);
+    n.x = Math.cos(a) * rr; n.y = Math.sin(a) * rr; n.vx = n.vy = 0; n.angle = null; });
+  sim = 1; settled = false;
+}
+function forceTick(){
+  const k = sim, N = nodes.length;
+  for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++){
+    const a = nodes[i], b = nodes[j]; let dx = a.x - b.x, dy = a.y - b.y;
+    const d2 = Math.max(dx*dx + dy*dy, 36), d = Math.sqrt(d2), f = 900 * k / d2;
+    dx /= d; dy /= d; a.vx += dx*f; a.vy += dy*f; b.vx -= dx*f; b.vy -= dy*f;
+  }
+  for (const e of edges){ if (e.s === e.t) continue;
+    let dx = e.t.x - e.s.x, dy = e.t.y - e.s.y; const d = Math.sqrt(dx*dx + dy*dy) || 1;
+    const f = (d - 46 - e.s.r - e.t.r) * 0.06 * k; dx /= d; dy /= d;
+    e.s.vx += dx*f; e.s.vy += dy*f; e.t.vx -= dx*f; e.t.vy -= dy*f; }
+  for (const n of nodes){ n.vx -= n.x * 0.008 * k; n.vy -= n.y * 0.008 * k;
+    if (n === drag) { n.vx = n.vy = 0; continue; }
+    n.vx *= 0.6; n.vy *= 0.6; n.x += n.vx; n.y += n.vy; }
+  sim *= 0.985; if (sim < 0.01){ sim = 0; settled = true; }
+}
+function treeLayout(){
+  const out = new Map(nodes.map(n => [n.id, []])), indeg = new Map(nodes.map(n => [n.id, 0]));
+  for (const e of edges){ if (e.s === e.t) continue; out.get(e.s.id).push(e.t); indeg.set(e.t.id, indeg.get(e.t.id) + 1); }
+  const kids = new Map(nodes.map(n => [n.id, []])), depth = new Map(), roots = [];
+  const bfs = r => { roots.push(r); depth.set(r.id, 0); const q = [r];
+    while (q.length){ const n = q.shift(); for (const c of out.get(n.id)) if (!depth.has(c.id)){
+      depth.set(c.id, depth.get(n.id) + 1); kids.get(n.id).push(c); q.push(c); } } };
+  nodes.filter(n => indeg.get(n.id) === 0).sort((a, b) => b.deg - a.deg).forEach(bfs);
+  for (const n of [...nodes].sort((a, b) => b.deg - a.deg)) if (!depth.has(n.id)) bfs(n);
+  const leaves = new Map();
+  const count = n => { const c = kids.get(n.id); const v = c.length ? c.reduce((s, k) => s + count(k), 0) : 1; leaves.set(n.id, v); return v; };
+  const total = roots.reduce((s, r) => s + count(r), 0);
+  const shift = roots.length > 1 ? 1 : 0;   // several roots sit on the first ring around an empty centre
+  const maxDepth = Math.max(1, ...[...depth.values()].map(d => d + shift));
+  const gap = Math.max(120, total * 26 / (2 * Math.PI * maxDepth));
+  const place = (n, a0, a1) => { const a = (a0 + a1) / 2, rr = (depth.get(n.id) + shift) * gap;
+    n.x = Math.cos(a) * rr; n.y = Math.sin(a) * rr; n.angle = rr ? a : null;
+    let s = a0; for (const c of kids.get(n.id)){ const w = (a1 - a0) * leaves.get(c.id) / leaves.get(n.id); place(c, s, s + w); s += w; } };
+  let s = -Math.PI / 2;
+  for (const r of roots){ const w = 2 * Math.PI * leaves.get(r.id) / total; place(r, s, s + w); s += w; }
+  sim = 0; settled = true;
+}
+function looksLikeTree(){
+  const indeg = new Map(); for (const e of edges) indeg.set(e.t.id, (indeg.get(e.t.id) || 0) + 1);
+  return nodes.length >= 20 && [...indeg.values()].every(v => v <= 1);
+}
+
+// ---- view transform: world coordinates are fitted into the stage ---------------
+let W = 0, H = 0, T = {s:1, ox:0, oy:0};
+function size(){ const r = stage.getBoundingClientRect(); W = r.width; H = r.height;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H); }
+function fit(){
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const n of nodes){ x0 = Math.min(x0, n.x); y0 = Math.min(y0, n.y); x1 = Math.max(x1, n.x); y1 = Math.max(y1, n.y); }
+  const m = showLabels ? 70 : 36, s = Math.min((W - 2*m) / Math.max(x1 - x0, 1), (H - 2*m) / Math.max(y1 - y0, 1), 3);
+  T = {s, ox: W/2 - s * (x0 + x1) / 2, oy: H/2 - s * (y0 + y1) / 2};
+}
+const sx = n => n.x * T.s + T.ox, sy = n => n.y * T.s + T.oy;
+
+// ---- drawing --------------------------------------------------------------------
+let showLabels = nodes.length <= 150, showEdgeLabels = edges.length <= 30, layout = 'force', drag = null, hover = null;
+const gEdges = document.createElementNS(SVGNS, 'g'), gNodes = document.createElementNS(SVGNS, 'g');
+const defs = document.createElementNS(SVGNS, 'defs');
+svg.append(defs, gEdges, gNodes);
+
+function el(tag, attrs, parent){ const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function marker(id){ const m = el('marker', {id, viewBox:'0 0 10 10', refX:9, refY:5, markerWidth:9, markerHeight:9,
+  markerUnits:'userSpaceOnUse', orient:'auto'}, defs); return el('path', {d:'M0 0L10 5L0 10z'}, m); }
+const arrow = marker('arrow'), arrowHi = marker('arrowHi');
+const arrowStart = marker('arrowStart'), arrowStartHi = marker('arrowStartHi');
+arrowStart.parentNode.setAttribute('orient', 'auto-start-reverse');
+arrowStartHi.parentNode.setAttribute('orient', 'auto-start-reverse');
+
+// parallel and opposite edges between the same pair get a slight bend so both stay visible
+{ const groups = {};
+  for (const e of edges){ const k = [e.source, e.target].sort().join('|'); (groups[k] = groups[k] || []).push(e); }
+  for (const g of Object.values(groups)) g.forEach((e, i) => {
+    const sign = e.source < e.target ? 1 : -1; e.bend = g.length > 1 ? (i - (g.length - 1) / 2) * 26 * sign : 0; }); }
+
+for (const e of edges){
+  e.width = 1.3 + Math.min(2.2, Math.log2(e.count || 1) * 0.5);
+  e.g = el('g', {}, gEdges);
+  e.path = el('path', {fill:'none', 'stroke-dasharray':dashOf[COLLAPSED ? MERGED : e.type]}, e.g);
+  e.hit = el('path', {fill:'none', stroke:'transparent', 'stroke-width':10, class:'hit'}, e.g);
+  e.text = el('text', {'font-size':10, 'text-anchor':'middle', 'dominant-baseline':'central', 'paint-order':'stroke', 'stroke-width':3}, e.g);
+  e.text.textContent = e.type;
+  e.hit.addEventListener('pointerenter', ev => showTip(ev, edgeTip(e)));
+  e.hit.addEventListener('pointermove', moveTip);
+  e.hit.addEventListener('pointerleave', hideTip);
+}
+for (const n of nodes){
+  n.g = el('g', {style:'cursor:grab'}, gNodes);
+  n.shapeEl = el('path', {'stroke-width':2}, n.g);
+  n.text = el('text', {'font-size':11, 'font-weight':600, 'paint-order':'stroke', 'stroke-width':3,
+    'stroke-linejoin':'round', 'pointer-events':'none'}, n.g);
+  n.text.textContent = n.caption;
+  n.g.addEventListener('pointerenter', ev => { hover = n; showTip(ev, nodeTip(n)); render(); });
+  n.g.addEventListener('pointermove', ev => { moveTip(ev);
+    if (drag === n){ const r = svg.getBoundingClientRect();
+      n.x = (ev.clientX - r.left - T.ox) / T.s; n.y = (ev.clientY - r.top - T.oy) / T.s;
+      if (layout === 'force' && settled){ sim = 0.08; settled = false; loop(); } else render(); } });
+  n.g.addEventListener('pointerleave', () => { hover = null; hideTip(); render(); });
+  n.g.addEventListener('pointerdown', ev => { drag = n; n.g.setPointerCapture(ev.pointerId); n.g.style.cursor = 'grabbing'; });
+  n.g.addEventListener('pointerup', () => { drag = null; n.g.style.cursor = 'grab'; });
+}
+
+function paint(){
+  const t = THEME[mode];
+  arrow.setAttribute('fill', t.edge); arrowHi.setAttribute('fill', t.hi);
+  arrowStart.setAttribute('fill', t.edge); arrowStartHi.setAttribute('fill', t.hi);
+  for (const e of edges){ e.text.setAttribute('fill', t.muted); e.text.setAttribute('stroke', t.bg); }
+  for (const n of nodes){ n.shapeEl.setAttribute('fill', colorOf(n.label)); n.shapeEl.setAttribute('stroke', t.ring);
+    n.text.setAttribute('fill', t.ink); n.text.setAttribute('stroke', t.bg); }
+  buildLegend();
+}
+
+function render(){
+  const t = THEME[mode];
+  const near = hover ? new Set([hover.id]) : null;
+  if (hover) for (const e of edges){ if (e.s === hover) near.add(e.t.id); if (e.t === hover) near.add(e.s.id); }
+  for (const e of edges){
+    const x1 = sx(e.s), y1 = sy(e.s), x2 = sx(e.t), y2 = sy(e.t);
+    let d, lx, ly;
+    if (e.s === e.t){ const r = e.s.r; d = `M${x1} ${y1-r}c18 -34 42 -6 ${r} ${r}`; lx = x1 + 22; ly = y1 - r - 16; }
+    else {
+      const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1;
+      const cx = (x1 + x2) / 2 - dy / len * e.bend, cy = (y1 + y2) / 2 + dx / len * e.bend;
+      const a = Math.atan2(y1 - cy, x1 - cx), b = Math.atan2(y2 - cy, x2 - cx);
+      const so = e.s.r + (e.both ? 2 : 0), sx1 = x1 - Math.cos(a) * so, sy1 = y1 - Math.sin(a) * so;
+      const ex = x2 + Math.cos(b) * (e.t.r + 2), ey = y2 + Math.sin(b) * (e.t.r + 2);
+      d = `M${sx1} ${sy1}Q${cx} ${cy} ${ex} ${ey}`; lx = 0.25*x1 + 0.5*cx + 0.25*x2; ly = 0.25*y1 + 0.5*cy + 0.25*y2;
+    }
+    const on = hover && (e.s === hover || e.t === hover);
+    e.path.setAttribute('d', d); e.hit.setAttribute('d', d);
+    e.path.setAttribute('stroke', on ? t.hi : t.edge);
+    e.path.setAttribute('stroke-width', on ? e.width + 1.1 : e.width);
+    e.path.setAttribute('marker-end', on ? 'url(#arrowHi)' : 'url(#arrow)');
+    if (e.both) e.path.setAttribute('marker-start', on ? 'url(#arrowStartHi)' : 'url(#arrowStart)');
+    e.g.setAttribute('opacity', hover && !on ? 0.12 : 0.85);
+    e.text.setAttribute('x', lx); e.text.setAttribute('y', ly);
+    e.text.setAttribute('display', showEdgeLabels || on ? 'inline' : 'none');
+  }
+  for (const n of nodes){
+    const x = sx(n), y = sy(n);
+    n.shapeEl.setAttribute('d', shapePath(SHAPE[n.label] || 'circle', x, y, n.r));
+    n.g.setAttribute('opacity', near && !near.has(n.id) ? 0.15 : 1);
+    if (n.angle != null && layout === 'tree'){
+      const c = Math.cos(n.angle), s = Math.sin(n.angle), o = n.r + 5;
+      n.text.setAttribute('x', x + c * o); n.text.setAttribute('y', y + s * o);
+      n.text.setAttribute('text-anchor', Math.abs(c) < 0.25 ? 'middle' : c > 0 ? 'start' : 'end');
+      n.text.setAttribute('dominant-baseline', Math.abs(c) < 0.25 ? (s > 0 ? 'hanging' : 'auto') : 'central');
+    } else {
+      n.text.setAttribute('x', x); n.text.setAttribute('y', y - n.r - 5);
+      n.text.setAttribute('text-anchor', 'middle'); n.text.setAttribute('dominant-baseline', 'auto');
+    }
+    n.text.setAttribute('display', showLabels || (near && near.has(n.id)) ? 'inline' : 'none');
+  }
+}
+
+function loop(){
+  if (layout !== 'force' || !sim) return;
+  for (let i = 0; i < 3 && sim; i++) forceTick();
+  if (!drag) fit();
+  render();
+  if (sim) requestAnimationFrame(loop);
+}
+
+// ---- legend, tooltip, controls -------------------------------------------------
+function swatch(label){ const s = el('svg', {width:16, height:16, viewBox:'0 0 16 16'});
+  el('path', {d:shapePath(SHAPE[label] || 'circle', 8, 8, 6), fill:colorOf(label)}, s); return s; }
+function lineSwatch(type){ const s = el('svg', {width:26, height:10, viewBox:'0 0 26 10'});
+  el('line', {x1:1, y1:5, x2:25, y2:5, stroke:THEME[mode].edge, 'stroke-width':1.6, 'stroke-dasharray':dashOf[type]}, s); return s; }
+function buildLegend(){
+  const box = document.getElementById('legend'); box.innerHTML = '';
+  const count = l => nodes.filter(n => n.label === l).length;
+  for (const l of labels){ const k = document.createElement('span'); k.className = 'key';
+    k.append(swatch(l), `${l} (${count(l)})`); box.append(k); }
+  for (const t of types){ const k = document.createElement('span'); k.className = 'key';
+    k.append(lineSwatch(t), typeName(t)); box.append(k); }
+}
+const typeName = t => t === MERGED && COLLAPSED ? 'connection (hover for relationship types)' : t.toLowerCase().replaceAll('_', ' ');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function propList(p, skip){ const rows = Object.entries(p).filter(([k, v]) => !skip.includes(k) && v !== '' && v != null).slice(0, 6);
+  return rows.length ? '<dl>' + rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(String(v).slice(0, 90))}</dd>`).join('') + '</dl>' : ''; }
+function nodeTip(n){ const p = n.props;
+  const head = n.label === 'Artikel' || n.label === 'Lid' ? `${n.label} ${p.nummer || ''}` : n.caption;
+  return `<div class="lb">${esc(n.labels.join(' · '))} · ${n.deg} connection${n.deg === 1 ? '' : 's'}</div>
+    <div class="hd">${esc(head)}</div>${p.opschrift ? `<div>${esc(p.opschrift)}</div>` : ''}
+    ${p.tekst ? `<div class="tx">${esc(p.tekst.slice(0, 280))}${p.tekst.length > 280 ? '…' : ''}</div>` : ''}
+    ${propList(p, ['opschrift', 'tekst', 'nummer', 'label'])}`; }
+function edgeTip(e){
+  if (COLLAPSED) return `<div class="lb">${e.count} relationship${e.count === 1 ? '' : 's'}</div>
+    <div class="hd">${esc(e.s.caption)} ${e.both ? '↔' : '→'} ${esc(e.t.caption)}</div>${propList(e.props, [])}`;
+  return `<div class="lb">relationship</div><div class="hd">${esc(e.type)}</div>
+  <div>${esc(e.s.caption)} → ${esc(e.t.caption)}</div>${propList(e.props, [])}`; }
+function showTip(ev, h){ tip.innerHTML = h; tip.style.opacity = 1; moveTip(ev); }
+function moveTip(ev){ const r = stage.getBoundingClientRect(); let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 14;
+  if (x > W - 350) x = Math.max(8, x - 370); if (y > H - 160) y = Math.max(8, y - 180);
+  tip.style.left = x + 'px'; tip.style.top = y + 'px'; }
+function hideTip(){ tip.style.opacity = 0; }
+
+function setLayout(l){
+  layout = l;
+  document.getElementById('lForce').setAttribute('aria-pressed', l === 'force');
+  document.getElementById('lTree').setAttribute('aria-pressed', l === 'tree');
+  if (l === 'tree'){ treeLayout(); fit(); render(); } else { forceLayout(); loop(); }
+}
+function setTheme(m){
+  mode = m; document.documentElement.setAttribute('data-theme', m);
+  document.getElementById('bTheme').textContent = m === 'dark' ? 'Light' : 'Dark';
+  paint(); render();
+}
+document.getElementById('lForce').onclick = () => setLayout('force');
+document.getElementById('lTree').onclick = () => setLayout('tree');
+document.getElementById('bTheme').onclick = () => setTheme(mode === 'dark' ? 'light' : 'dark');
+const cL = document.getElementById('cLabels'), cE = document.getElementById('cEdgeLabels');
+cL.checked = showLabels; cE.checked = showEdgeLabels;
+cL.onchange = () => { showLabels = cL.checked; fit(); render(); };
+cE.onchange = () => { showEdgeLabels = cE.checked; render(); };
+window.addEventListener('resize', () => { size(); fit(); render(); });
+
+// ---- export: the current view plus a legend band, with every colour inlined -----
+function exportSVG(){
+  hover = null; render();
+  const t = THEME[mode], pad = 16, row = 22, font = "Inter,'Segoe UI',Helvetica,Arial,sans-serif";
+  const items = [...labels.map(l => ({kind:'node', l})), ...types.map(ty => ({kind:'edge', ty}))];
+  const legend = document.createElementNS(SVGNS, 'g');
+  const measure = document.createElement('canvas').getContext('2d');
+  measure.font = `12px ${font}`;
+  let x = pad, y = pad + 8;
+  for (const it of items){
+    const text = it.kind === 'node' ? it.l : COLLAPSED ? 'connection (relationship types merged)' : typeName(it.ty);
+    const w = (it.kind === 'node' ? 18 : 30) + measure.measureText(text).width + 20;
+    if (x + w > W - pad && x > pad){ x = pad; y += row; }
+    if (it.kind === 'node') el('path', {d:shapePath(SHAPE[it.l] || 'circle', x + 6, y, 6), fill:colorOf(it.l)}, legend);
+    else el('line', {x1:x, y1:y, x2:x + 24, y2:y, stroke:t.edge, 'stroke-width':1.6, 'stroke-dasharray':dashOf[it.ty]}, legend);
+    const tx = el('text', {x:x + (it.kind === 'node' ? 18 : 30), y, 'font-size':12, fill:t.muted, 'dominant-baseline':'central'}, legend);
+    tx.textContent = text; x += w;
+  }
+  const band = y + row - 4;
+  const out = el('svg', {xmlns:SVGNS, width:W, height:H + band, viewBox:`0 0 ${W} ${H + band}`, 'font-family':font});
+  el('rect', {width:W, height:H + band, fill:t.bg}, out);
+  out.appendChild(legend);
+  const body = el('g', {transform:`translate(0 ${band})`}, out);
+  body.append(defs.cloneNode(true), gEdges.cloneNode(true), gNodes.cloneNode(true));
+  body.querySelectorAll('.hit').forEach(h => h.remove());
+  body.querySelectorAll('[style]').forEach(h => h.removeAttribute('style'));
+  return {text: new XMLSerializer().serializeToString(out), w: W, h: H + band};
+}
+const fileBase = (document.title || 'graph').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'graph';
+function download(blob, name){ const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+document.getElementById('bSvg').onclick = () => download(new Blob([exportSVG().text], {type:'image/svg+xml'}), fileBase + '.svg');
+document.getElementById('bPng').onclick = () => {
+  const {text, w, h} = exportSVG(), img = new Image(), scale = 2;
+  img.onload = () => { const c = document.createElement('canvas'); c.width = w * scale; c.height = h * scale;
+    const ctx = c.getContext('2d'); ctx.scale(scale, scale); ctx.drawImage(img, 0, 0);
+    c.toBlob(b => download(b, fileBase + '.png'), 'image/png'); };
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text);
+};
+
+// ---- start ----------------------------------------------------------------------
+document.getElementById('counts').textContent =
+  `${nodes.length} node${nodes.length === 1 ? '' : 's'} · ` + (COLLAPSED
+    ? `${edges.reduce((s, e) => s + e.count, 0)} relationships merged into ${edges.length} edges`
+    : `${edges.length} relationship${edges.length === 1 ? '' : 's'}`);
+size();
+setTheme(document.documentElement.getAttribute('data-theme') ||
+  (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+setLayout(DATA.layout === 'auto' ? (looksLikeTree() ? 'tree' : 'force') : DATA.layout);
+</script>
+</body>
+</html>
+"""
+
+
+if __name__ == "__main__":
+    main()
