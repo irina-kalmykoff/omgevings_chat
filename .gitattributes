@@ -1,0 +1,6 @@
+# LF everywhere (matches the OmgevingsChat formatter's endOfLine: lf and ruff's
+# line-ending setting), so Windows checkouts don't produce whole-file diffs.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary

@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    # Same step as the OmgevingsChat Bitbucket pipeline; see bitbucket-pipelines.yml.
+    name: Quality (lint, format, types, tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # setup-uv publishes no floating major tags; pin a release by commit SHA.
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --locked
+      - name: Lint, format check, type-check, test
+        run: uv run poe check
