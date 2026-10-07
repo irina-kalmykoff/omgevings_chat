@@ -1,0 +1,82 @@
+{
+  "snapshot_id": "maastricht-dso-2026-10-02",
+  "description": "STOP/TPOD delivery package (aanleverpakket) of the Omgevingsplan gemeente Maastricht: regulation text (Regeling/) and IMOW object files (OW-bestanden/), plus the municipal boundary in RD (EPSG:28992).",
+  "source": "DSO production environment",
+  "downloaded_on": "2026-10-02",
+  "authority": "gm0935",
+  "frbr_work": "/akn/nl/act/gm0935/2020/omgevingsplan",
+  "frbr_expression": "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34",
+  "root": "data/raw",
+  "files": [
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/Maastricht-boundary-RD.geojson",
+      "bytes": 41673,
+      "sha256": "7651520dbd6b1766a3350dc6ee2680f5792967bb29d023a9156358b6cd281e16"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/OW-bestanden/activiteiten.xml",
+      "bytes": 65727,
+      "sha256": "0b1d85c368b0fc8ce2cfe9c7ac55467442b8339189643275657bb30545fb5371"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/OW-bestanden/ambtsgebieden.xml",
+      "bytes": 2268,
+      "sha256": "1b798431dbc88be285b8980872ca7cd5dab7a2b9698ab98892077abfe93f3d11"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/OW-bestanden/manifest-ow.xml",
+      "bytes": 2068,
+      "sha256": "319bdc4d45adb282349abb6dd2eba53f0a81eb58119dab6a9380df03cc2b617b"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/OW-bestanden/regelingsgebieden.xml",
+      "bytes": 1970,
+      "sha256": "f0e3be16e54c8d47df5303f17c7bea8238a6d064e86bc9b91a0259ebceedae54"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/OW-bestanden/regelsvooriedereen.xml",
+      "bytes": 1042699,
+      "sha256": "035c4ed18d067d5d5f6c56c8fa6ef50de445207ec76ea01e27f9fd9468216b6d"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/OW-bestanden/regelteksten.xml",
+      "bytes": 219060,
+      "sha256": "dd766c1dc296695ab76ce5df45882025a6898ca7cf0b6913f1689775f8be3c6b"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/Regeling/Identificatie.xml",
+      "bytes": 445,
+      "sha256": "053260c73fae9c03f2b01a201244a13cbf978db62efb243a9792940cad2274cb"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/Regeling/Metadata.xml",
+      "bytes": 1433,
+      "sha256": "2478c23cea7efa242f1d55fba07c5c0cc0e41b42011b633ec9111ddea3eea6bf"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/Regeling/Momentopname.xml",
+      "bytes": 209,
+      "sha256": "d9ee7c25119e0bf9233a4f84553164c8e2449289ff1cdee65a867b869bf1c9e7"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/Regeling/Tekst.xml",
+      "bytes": 1946581,
+      "sha256": "0ba4c7986101614d2fc0ccbab1539d82e44098bd67468b46ce8f0f3ba7eb3ea1"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/Regeling/VersieMetadata.xml",
+      "bytes": 265,
+      "sha256": "a01ed4778fb4d032799c09992c6faa538d1a55b9c945fe6db54abc90391e8a18"
+    },
+    {
+      "path": "Maastricht-DSO-production-2026-10-02/pakbon.xml",
+      "bytes": 2746,
+      "sha256": "6efde6fdef01beb461f2940751b4c43116a6f3a1a76efbbfc52bbd745f8dd60f"
+    },
+    {
+      "path": "Maastricht-boundary-RD.geojson",
+      "bytes": 41673,
+      "sha256": "7651520dbd6b1766a3350dc6ee2680f5792967bb29d023a9156358b6cd281e16"
+    }
+  ]
+}
