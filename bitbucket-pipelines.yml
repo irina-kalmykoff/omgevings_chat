@@ -1,0 +1,26 @@
+# Mirror of .github/workflows/ci.yml in the shape of the OmgevingsChat monorepo
+# pipeline, so the quality gate carries over unchanged when this repository is
+# connected to the client's Bitbucket. Inactive while the repo is on GitHub.
+image: ghcr.io/astral-sh/uv:0.12-python3.12-trixie-slim
+
+definitions:
+  caches:
+    uv:
+      key:
+        files:
+          - uv.lock
+      path: .uv-cache
+  steps:
+    - step: &quality
+        name: Quality (lint, format, types, tests)
+        caches:
+          - uv
+        script:
+          - export UV_CACHE_DIR=.uv-cache UV_LINK_MODE=copy
+          - uv sync --locked
+          - uv run poe check
+
+pipelines:
+  pull-requests:
+    "**":
+      - step: *quality

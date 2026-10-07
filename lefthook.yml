@@ -1,0 +1,16 @@
+# Git hooks, following the OmgevingsChat monorepo's lefthook setup.
+# Install once per clone with `uv run lefthook install`.
+# CI runs the full `uv run poe check`; these hooks keep commits clean locally.
+pre-commit:
+  jobs:
+    - name: lint staged python files
+      glob: "*.py"
+      run: uv run ruff check --fix --force-exclude -- {staged_files}
+      stage_fixed: true
+    - name: format staged python files
+      glob: "*.py"
+      run: uv run ruff format --force-exclude -- {staged_files}
+      stage_fixed: true
+    - name: type-check
+      glob: "*.py"
+      run: uv run mypy

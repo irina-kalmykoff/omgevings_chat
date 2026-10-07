@@ -218,3 +218,19 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------------------
+# Project
+# ---------------------------------------------------------------------------
+
+# Environment files: only the documented example is committed
+.env.*
+!.env.example
+
+# DSO snapshot and derived corpus stay local; manifests and the evaluation set
+# under data/ are committed
+data/raw/
+data/corpus/
+
+# Experiment runs (config snapshot, logs, metrics per run)
+runs/
