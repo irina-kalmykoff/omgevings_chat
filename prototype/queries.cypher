@@ -97,3 +97,71 @@ OPTIONAL MATCH kruis = (a)-[:BEVAT*0..1]->()-[:VERWIJST_NAAR]->(:Artikel)
 OPTIONAL MATCH regel = (a)-[:BEVAT*0..1]->()<-[:IS_TEKST_VAN]-(:Regeltekst)
                        <-[:VAN_REGELTEKST]-(:RegelVoorIedereen)-[:GELDT_VOOR]->(:Activiteit)
 RETURN a, leden, kruis, regel;
+
+// Check data loaded
+// For gemeente Maastricht: Regeltekst ~597, RegelVoorIedereen ~597, Lid ~473, 
+//Artikel ~308, Activiteit 90, plus Hoofdstuk/Afdeling/Paragraaf/Subparagraaf, 
+// Locatie, Component, Regeling 1
+
+MATCH (n) RETURN labels(n)[0] AS type, count(*) AS n ORDER BY n DESC;
+
+// Check relationships 
+//You should see BEVAT, VERWIJST_NAAR, IS_TEKST_VAN, VAN_REGELTEKST, GELDT_VOOR, OP_LOCATIE, VALT_ONDER.
+
+MATCH ()-[r]->() RETURN type(r) AS rel, count(*) AS n ORDER BY n DESC;
+
+// Ontology v0 — enrichment pass over the loaded graph.
+// Heuristic first pass driven by article titles; flagged rule_based, to be
+// corrected during the ten-location validation and test-set review.
+
+// baseline: every article is a prescriptive norm until classified otherwise
+MATCH (a:Artikel) SET a.statement_type = 'prescriptive', a.deontic_source = 'rule_based';
+
+// constitutive (definitions) carry no deontic force
+MATCH (a:Artikel) WHERE toLower(a.opschrift) CONTAINS 'begripsbepaling'
+SET a.statement_type = 'constitutive', a.deontic = null;
+
+// deontic tags, in precedence order (guarded by: not yet set)
+MATCH (a:Artikel) WHERE a.statement_type='prescriptive' AND a.deontic IS NULL
+  AND toLower(a.opschrift) CONTAINS 'uitzondering' SET a.deontic='exemption';
+
+MATCH (a:Artikel) WHERE a.statement_type='prescriptive' AND a.deontic IS NULL
+  AND toLower(a.opschrift) CONTAINS 'inperking' SET a.deontic='prohibition';   // restriction effect
+
+MATCH (a:Artikel) WHERE a.statement_type='prescriptive' AND a.deontic IS NULL
+  AND (toLower(a.opschrift) CONTAINS 'vergunningvrij'
+       OR toLower(a.tekst) CONTAINS 'van rechtswege in overeenstemming') SET a.deontic='permission';
+
+MATCH (a:Artikel) WHERE a.statement_type='prescriptive' AND a.deontic IS NULL
+  AND (toLower(a.opschrift) CONTAINS 'vergunning'
+       OR toLower(a.tekst) CONTAINS 'het is verboden') SET a.deontic='prohibition';
+
+MATCH (a:Artikel) WHERE a.statement_type='prescriptive' AND a.deontic IS NULL
+  AND (toLower(a.opschrift) CONTAINS 'aanvraagvereist'
+       OR toLower(a.tekst) CONTAINS 'worden verstrekt') SET a.deontic='obligation';
+
+// split cross-references into OVERRIDES (force-bearing). The source article's
+// own leden can hold the reference, so reach one level down with BEVAT*0..1.
+MATCH (src:Artikel)-[:BEVAT*0..1]->()-[:VERWIJST_NAAR]->(tgt:Artikel)
+WHERE toLower(src.opschrift) CONTAINS 'uitzondering'
+MERGE (src)-[o:OVERRIDES]->(tgt) SET o.override_type='exception';
+
+MATCH (src:Artikel)-[:BEVAT*0..1]->()-[:VERWIJST_NAAR]->(tgt:Artikel)
+WHERE toLower(src.opschrift) CONTAINS 'inperking'
+MERGE (src)-[o:OVERRIDES]->(tgt) SET o.override_type='restriction';
+
+// distribution of tags
+MATCH (a:Artikel)
+RETURN a.statement_type AS type, a.deontic AS deontic, count(*) AS n
+ORDER BY n DESC;
+
+// the two chains, now typed
+MATCH (a:Artikel)-[o:OVERRIDES]->(b:Artikel)
+WHERE a.nummer IN ['22.27','22.28','22.38','22.39']
+RETURN a.nummer, a.deontic, o.override_type, b.nummer, b.deontic
+ORDER BY a.nummer;
+
+// what still needs a human/LLM tag
+MATCH (a:Artikel)
+WHERE a.statement_type='prescriptive' AND a.deontic IS NULL
+RETURN a.nummer, a.opschrift LIMIT 30;
