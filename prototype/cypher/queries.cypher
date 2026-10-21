@@ -1,13 +1,13 @@
 // Exploration and demo queries for the Omgevingsplan knowledge graph.
 //
 // HOW TO USE
-//   In Neo4j Browser (http://localhost:7474): copy ONE block (between the
+//   In Neo4j Browser: copy ONE block (between the
 //   banners) into the editor and press Cmd/Ctrl+Enter. Run them one at a time
 //   so node-returning queries render as a graph instead of a table of
 //   statements.
 //
 //   Headless / tabular (whole file at once):
-//     docker exec -i neo4j-omgeving cypher-shell -u neo4j -p testpassword < queries.cypher
+//     cypher-shell -a <bolt-url> -u <user> -p <password> < cypher/queries.cypher   (my exact command: ../local-setup.md)
 //
 // Prerequisite: build_graph.py has been run against the delivery package.
 // The ontology v0 tagging (deontic tags + OVERRIDES) lives in

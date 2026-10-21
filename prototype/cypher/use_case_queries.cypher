@@ -3,7 +3,7 @@
 // Prerequisite: build_and_tag.cypher (or deontic_extract.py --write) has run, so
 // every article carries statement_type / deontic and the OVERRIDES edges exist.
 //
-// Run in Neo4j Browser (http://localhost:7474) ONE block at a time, so the
+// Run in Neo4j Browser ONE block at a time, so the
 // node-returning queries draw on the canvas instead of returning a table.
 
 

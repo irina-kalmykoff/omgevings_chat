@@ -1,21 +1,18 @@
 // Build the tagged Omgevingsplan knowledge graph on a fresh machine.
 //
-// Full sequence from an empty Neo4j:
-//   1. Start Neo4j (Docker) with APOC, e.g.
-//        docker run -p7474:7474 -p7687:7687 \
-//          -e NEO4J_AUTH=neo4j/testpassword \
-//          -e NEO4J_PLUGINS='["apoc"]' \
-//          --name neo4j-omgeving neo4j:5
+// Full sequence from an empty Neo4j (see ../README.md; my own exact commands
+// are in ../local-setup.md):
+//   1. Start Neo4j 5 with the APOC plugin; note its Bolt URL, user, password.
 //   2. Load the structure from the committed delivery package:
-//        python build_graph.py
-//      (build_graph.py also applies constraints.cypher)
-//   3. Run THIS file to add the ontology v0 layer (deontic tags + OVERRIDES):
-//        docker exec -i neo4j-omgeving cypher-shell -u neo4j -p testpassword < build_and_tag.cypher
+//        python scripts/build_graph.py        (also applies the schema constraints)
+//   3. Run THIS file to add the ontology v0 layer (deontic tags + OVERRIDES),
+//      in Neo4j Browser or headless:
+//        cypher-shell -a <bolt-url> -u <user> -p <password> < cypher/build_and_tag.cypher
 //
 // The tagging below is a deterministic heuristic (deontic_source = rule_based),
 // driven by article titles and a few text cues. It needs no LLM, so the tagged
 // graph is fully reproducible from the committed data. It is a first pass, to be
-// refined by the LLM extractor (deontic_extract.py) once the pre-write guards
+// refined by the LLM extractor (scripts/deontic_extract.py) once the pre-write guards
 // are in. Every statement is safe to re-run.
 
 

@@ -3,7 +3,7 @@
 // Prerequisite: the graph is tagged (build_and_tag.cypher or
 // deontic_extract.py --write), so articles carry `deontic` and OVERRIDES edges
 // exist. Run in Neo4j Browser one block at a time, or headless:
-//   docker exec -i neo4j-omgeving cypher-shell -u neo4j -p testpassword < derive_overrides.cypher
+//   cypher-shell -a <bolt-url> -u <user> -p <password> < cypher/derive_overrides.cypher   (my exact command: ../local-setup.md)
 //
 // Why: an article that disapplies another cannot be tagged from its own text —
 // the net force depends on what the target is. The LLM is reliable at the local
