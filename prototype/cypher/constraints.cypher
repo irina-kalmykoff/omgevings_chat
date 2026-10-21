@@ -5,7 +5,7 @@
 // run this file by hand. It is kept here as the canonical schema definition,
 // and for loading the schema without the Python script, e.g.:
 //
-//   docker exec -i neo4j-omgeving cypher-shell -u neo4j -p testpassword < constraints.cypher
+//   cypher-shell -a <bolt-url> -u <user> -p <password> < cypher/constraints.cypher   (my exact command: ../local-setup.md)
 //
 // Every statement is idempotent (IF NOT EXISTS): safe to re-run.
 

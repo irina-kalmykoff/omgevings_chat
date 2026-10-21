@@ -1,0 +1,6 @@
+<data:ExpressionIdentificatie xmlns:data="https://standaarden.overheid.nl/stop/imop/data/"
+                              xmlns:lvbbu="https://standaarden.overheid.nl/lvbb/stop/uitlevering/">
+   <data:FRBRWork>/akn/nl/act/gm0935/2020/omgevingsplan</data:FRBRWork>
+   <data:FRBRExpression>/akn/nl/act/gm0935/2020/omgevingsplan/nld@34</data:FRBRExpression>
+   <data:soortWork>/join/id/stop/work_019</data:soortWork>
+</data:ExpressionIdentificatie>

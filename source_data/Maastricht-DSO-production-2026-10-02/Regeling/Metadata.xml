@@ -1,0 +1,29 @@
+<data:RegelingMetadata xmlns:data="https://standaarden.overheid.nl/stop/imop/data/"
+                       xmlns:lvbbu="https://standaarden.overheid.nl/lvbb/stop/uitlevering/">
+   <data:heeftCiteertitelInformatie>
+      <data:CiteertitelInformatie>
+         <data:citeertitel>Omgevingsplan gemeente Maastricht</data:citeertitel>
+         <data:isOfficieel>true</data:isOfficieel>
+      </data:CiteertitelInformatie>
+   </data:heeftCiteertitelInformatie>
+   <data:eindverantwoordelijke>/tooi/id/gemeente/gm0935</data:eindverantwoordelijke>
+   <data:grondslagen>
+      <data:grondslag>
+         <data:TekstReferentie>
+            <data:uri>jci1.3:c:BWBR0037885&amp;artikel=2.4</data:uri>
+            <data:label>Artikel 2.4 Omgevingswet</data:label>
+            <data:soortRef>JCI</data:soortRef>
+         </data:TekstReferentie>
+      </data:grondslag>
+   </data:grondslagen>
+   <data:maker>/tooi/id/gemeente/gm0935</data:maker>
+   <data:officieleTitel>Omgevingsplan gemeente Maastricht</data:officieleTitel>
+   <data:onderwerpen>
+      <data:onderwerp>/tooi/def/concept/c_9af4b880</data:onderwerp>
+   </data:onderwerpen>
+   <data:rechtsgebieden>
+      <data:rechtsgebied>/tooi/def/concept/c_638d8062</data:rechtsgebied>
+   </data:rechtsgebieden>
+   <data:soortRegeling>/join/id/stop/regelingtype_003</data:soortRegeling>
+   <data:soortBestuursorgaan>/tooi/def/thes/kern/c_2a7d8663</data:soortBestuursorgaan>
+</data:RegelingMetadata>

@@ -1,0 +1,1093 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ow-dc:owBestand xmlns:rol="http://www.geostandaarden.nl/imow/regelsoplocatie" xmlns:rg="http://www.geostandaarden.nl/imow/regelingsgebied" xmlns:l="http://www.geostandaarden.nl/imow/locatie" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:kaart="http://www.geostandaarden.nl/imow/kaart" xmlns="http://www.geostandaarden.nl/bestanden-ow/manifest-ow" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ow-dc="http://www.geostandaarden.nl/imow/bestanden/deelbestand" xmlns:ga="http://www.geostandaarden.nl/imow/gebiedsaanwijzing" xmlns:sl="http://www.geostandaarden.nl/bestanden-ow/standlevering-generiek" xmlns:p="http://www.geostandaarden.nl/imow/pons" xmlns:ow="http://www.geostandaarden.nl/imow/owobject" xmlns:regels="http://www.geostandaarden.nl/imow/regels" xmlns:schemaLocation="http://www.geostandaarden.nl/imow/bestanden/deelbestand https://register.geostandaarden.nl/xmlschema/tpod/v3.1.0/bestanden-ow/deelbestand-ow/IMOW_Deelbestand.xsd" xmlns:vt="http://www.geostandaarden.nl/imow/vrijetekst" xmlns:op="http://www.geostandaarden.nl/imow/opobject">
+    <sl:standBestand>
+        <sl:dataset>Onbekend</sl:dataset>
+        <sl:inhoud>
+            <sl:gebied>Onbekend</sl:gebied>
+            <sl:leveringsId>Onbekend</sl:leveringsId>
+            <sl:objectTypen>
+                <sl:objectType>Activiteit</sl:objectType>
+            </sl:objectTypen>
+        </sl:inhoud>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.AanvraagOpBouwwerken</rol:identificatie>
+                    <rol:naam>Aanvraagvereisten binnenplanse omgevingsvergunning omgevingsplanactiviteit bouwwerken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.AcculaderInWerkingHebben</rol:identificatie>
+                    <rol:naam>Acculader in werking hebben</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ActBetrGemMonument</rol:identificatie>
+                    <rol:naam>Activiteit die betrekking heeft op een gemeentelijk monument</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Monumentenactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ActInOmgevingsplanGem</rol:identificatie>
+                    <rol:naam>Activiteit gereguleerd in het omgevingsplan gemeente Maastricht</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Overig</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-mnre1034.activiteit.ActInOmgevingsplan"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege</rol:identificatie>
+                    <rol:naam>Activiteit gereguleerd in omgevingsplanregels</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Overig</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.ActInOmgevingsplanGem"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ActOpLocatieHistBodemVeront</rol:identificatie>
+                    <rol:naam>Activiteit op een locatie met historische bodemverontreiniging zonder onaanvaardbaar risico</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.AfscheidingDakterras</rol:identificatie>
+                    <rol:naam>Afscheiding tussen balkons of dakterrassen bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.AlarminstallatieHebben</rol:identificatie>
+                    <rol:naam>Alarminstallatie hebben</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Alarminstallatieactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.AnderBouwwerkBouwen</rol:identificatie>
+                    <rol:naam>Ander bouwwerk bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.AntenneBouwen</rol:identificatie>
+                    <rol:naam>Antenne-installatie bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.AntihagelkanonHebben</rol:identificatie>
+                    <rol:naam>Antihagelkanonnen in werking hebben</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BetonUitwassen</rol:identificatie>
+                    <rol:naam>Beton uitwassen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BijbehorendBouwwerk</rol:identificatie>
+                    <rol:naam>Bijbehorend bouwwerk of een uitbreiding daarvan bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BouwkeetBouwen</rol:identificatie>
+                    <rol:naam>Bouwkeet, bouwbord, steiger, heistelling, hijskraan, damwand, bouwweg, terreinverharding, terreininrichting of andere hulpconstructie bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BouwwerkAgrarischBouwen</rol:identificatie>
+                    <rol:naam>Bouwwerk voor agrarische bedrijfsvoering bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BouwwerkBouwen</rol:identificatie>
+                    <rol:naam>Bouwactiviteit (omgevingsplan)</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BouwwerkGebruiken</rol:identificatie>
+                    <rol:naam>Afwijken van regels in het omgevingsplan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Overig</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BouwwerkInfrastruct</rol:identificatie>
+                    <rol:naam>Bouwwerk voor een infrastructurele of openbare voorziening bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BouwwerkSlopen</rol:identificatie>
+                    <rol:naam>Bouwwerk slopen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Sloopactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BouwwerkVeranderen</rol:identificatie>
+                    <rol:naam>Bouwwerk veranderen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.BuisleidingBouwen</rol:identificatie>
+                    <rol:naam>Buisleiding bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ConstrTerreinhoogte</rol:identificatie>
+                    <rol:naam>Constructie voor overbruggen van terreinhoogteverschil bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.Dakkapel</rol:identificatie>
+                    <rol:naam>Dakkapel bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.DakraamAndereLichtvoorz</rol:identificatie>
+                    <rol:naam>Dakraam, daklicht, lichtstraat of soortgelijke daglichtvoorziening bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.DierenSlachten</rol:identificatie>
+                    <rol:naam>Dieren slachten en dierlijke bijproducten bewerken of vlees, vis of organen uitsnijden</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.DierlijkeMestOpslaan</rol:identificatie>
+                    <rol:naam>Dierlijke mest opslaan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ElektrWindturbine</rol:identificatie>
+                    <rol:naam>Elektriciteit opwekken met een windturbine die slagschaduw of lichtschittering veroorzaakt</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.Energiebesparing</rol:identificatie>
+                    <rol:naam>Energiebesparing bij milieubelastende activiteiten die niet zijn aangewezen in het Besluit activiteiten leefomgeving</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.Erfafscheiding</rol:identificatie>
+                    <rol:naam>Erf- of perceelafscheiding bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.FokkenLandbHuisdieren</rol:identificatie>
+                    <rol:naam>Landbouwhuisdieren, andere zoogdieren of vogels fokken, houden of trainen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.FotoMateriaalOntw</rol:identificatie>
+                    <rol:naam>Fotografisch materiaal ontwikkelen of afdrukken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeluidProdAct</rol:identificatie>
+                    <rol:naam>Geluid veroorzaakt door alle activiteiten</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeluidProdAndereAct</rol:identificatie>
+                    <rol:naam>Geluid veroorzaakt door activiteiten</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.GeluidProdAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeluidProdSchietbaan</rol:identificatie>
+                    <rol:naam>Geluid veroorzaakt door civiele buitenschietbanen, militaire buitenschietbanen en militaire springterreinen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.GeluidProdAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeluidProdWindturbine</rol:identificatie>
+                    <rol:naam>Geluid veroorzaakt door windturbines en windparken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.GeluidProdAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GenetischGemOrganGebr</rol:identificatie>
+                    <rol:naam>Genetisch gemodificeerde organismen ingeperkt gebruiken gereguleerd in het omgevingsplan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeslotenBodemenergInst</rol:identificatie>
+                    <rol:naam>Gesloten bodemenergiesysteem installeren gereguleerd in het omgevingsplan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeurProdAndereAct</rol:identificatie>
+                    <rol:naam>Geur veroorzaakt door andere agrarische activiteiten</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.GeurProdDoorAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeurProdDierenverblijven</rol:identificatie>
+                    <rol:naam>Geur veroorzaakt door het houden van landbouwhuisdieren of paarden en pony's voor het berijden, in een dierenverblijf</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.GeurProdDoorAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeurProdDoorAct</rol:identificatie>
+                    <rol:naam>Geur veroorzaakt door een activiteit</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GeurProdZuiveringtwerk</rol:identificatie>
+                    <rol:naam>Geur veroorzaakt door het exploiteren van zuiveringtechnische werken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.GeurProdDoorAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GewoonOnderhoud</rol:identificatie>
+                    <rol:naam>Gewoon onderhoud verrichten aan een bouwwerk</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.GrondwLozenSanering</rol:identificatie>
+                    <rol:naam>Grondwater, afkomstig van een sanering of ontwatering, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.HoutopstandVellen</rol:identificatie>
+                    <rol:naam>Boom kappen of houtopstand vellen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Kapactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.HuishAfvalwLozen</rol:identificatie>
+                    <rol:naam>Huishoudelijk afvalwater lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.KleinschaligGravenBovenInt</rol:identificatie>
+                    <rol:naam>Kleinschalig graven (25 m3 of minder) in bodem met een kwaliteit boven de interventiewaarde bodemkwaliteit</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.KoelwaterLozen</rol:identificatie>
+                    <rol:naam>Koelwater, niet afkomstig van een milieubelastende activiteit die is aangewezen in hoofdstuk 3 van het Besluit activiteiten leefomgeving, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.KozijnBouwen</rol:identificatie>
+                    <rol:naam>Kozijn, kozijninvulling, gevelpaneel of boeideel, of stucwerk bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.KuilvoerOpslaan</rol:identificatie>
+                    <rol:naam>Kuilvoer of vaste bijvoedermiddelen opslaan gereguleerd in het omgevingsplan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LPGTanken</rol:identificatie>
+                    <rol:naam>LPG tanken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LaboratoriumBiolAgens</rol:identificatie>
+                    <rol:naam>Praktijkruimte of laboratorium waar gericht gewerkt wordt met biologische agens in werking hebben</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenCalamiteitOef</rol:identificatie>
+                    <rol:naam>Afvalwater, afkomstig van een calamiteitenoefening, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenGemVoorzInzamelAfvalw</rol:identificatie>
+                    <rol:naam>Afvalwater, afkomstig van een gemeentelijke voorziening voor inzameling en transport van afvalwater, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenHemelwater</rol:identificatie>
+                    <rol:naam>Afvloeiend hemelwater, niet afkomstig van een bodembeschermende voorziening, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenMakenBetonmortel</rol:identificatie>
+                    <rol:naam>Afvalwater, afkomstig van het maken van betonmortel, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenOpInBodem</rol:identificatie>
+                    <rol:naam>Afvalwater, waarvan het lozen op of in de bodem niet is vrijgesteld in het omgevingsplan, lozen op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenOpslaanGoederen</rol:identificatie>
+                    <rol:naam>Afvalwater, afkomstig van het opslaan en overslaan van goederen, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenReinigenBouww</rol:identificatie>
+                    <rol:naam>Afvalwater, afkomstig van onderhoudswerkzaamheden aan bouwwerken, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenSchoonmDrinkwleid</rol:identificatie>
+                    <rol:naam>Afvalwater, afkomstig van het schoonmaken van drinkwaterleidingen, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenSchoonwRiool</rol:identificatie>
+                    <rol:naam>Afvalwater of andere afvalstoffen, waarvan de lozing in een schoonwaterriool niet is vrijgesteld in het omgevingsplan, lozen in een schoonwaterriool</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.LozenTelenGewassen</rol:identificatie>
+                    <rol:naam>Afvalwater, afkomstig van het telen, kweken, spoelen of sorteren van gewassen, lozen in het riool of op of in de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.MadenVliegInsectKweken</rol:identificatie>
+                    <rol:naam>Maden van vliegende insecten kweken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.MakenHandelsreclame</rol:identificatie>
+                    <rol:naam>Handelsreclame maken of voeren</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Reclameactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.MilieubelastendeAct</rol:identificatie>
+                    <rol:naam>Milieubelastende activiteit gereguleerd in het omgevingsplan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.MotorvoertuigWassen</rol:identificatie>
+                    <rol:naam>Motorvoertuigen wassen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.NazorgNaSaneren</rol:identificatie>
+                    <rol:naam>Nazorg na saneren van de bodem</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.NietIndVoedselbereid</rol:identificatie>
+                    <rol:naam>Voedsel bereiden, geen voedingsmiddelenindustrie</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.OngewoonVoorvalMBAOP</rol:identificatie>
+                    <rol:naam>Ongewoon voorval bij een milieubelastende activiteit gereguleerd in het omgevingsplan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.OverigeAct</rol:identificatie>
+                    <rol:naam>Overige activiteit</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Overig</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.ActInOpRegelsRijkswege"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.Parkeergarage</rol:identificatie>
+                    <rol:naam>Parkeergelegenheid bieden in een parkeergarage</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.PolyesterharsVerw</rol:identificatie>
+                    <rol:naam>Polyesterhars verwerken gereguleerd in het omgevingsplan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.PropaanOpslaan</rol:identificatie>
+                    <rol:naam>Propaan of propeen opslaan in meer dan twee opslagtanks</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.RecrVisvijver</rol:identificatie>
+                    <rol:naam>Recreatieve visvijver exploiteren</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.RecreatiefNachtverblijfBouw</rol:identificatie>
+                    <rol:naam>Recreatief nachtverblijf bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.RoerendeZakenOpslaan</rol:identificatie>
+                    <rol:naam>Roerende zaken opslaan</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Opslagactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.SlopenBeschStadsgezicht</rol:identificatie>
+                    <rol:naam>Bouwwerk slopen in een gemeentelijk beschermd of rijksbeschermd stads- of dorpsgezicht</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Sloopactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.SportBuitenlucht</rol:identificatie>
+                    <rol:naam>Gelegenheid bieden voor het beoefenen van sport in de buitenlucht</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.SportSpeeltBouwen</rol:identificatie>
+                    <rol:naam>Sport- of speeltoestel bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.TraditioneelSchieten</rol:identificatie>
+                    <rol:naam>Traditioneel schieten</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.Trillingen</rol:identificatie>
+                    <rol:naam>Trillingen door een activiteit</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.TuinmeubilairBouwen</rol:identificatie>
+                    <rol:naam>Tuinmeubilair bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.UitwegMakenHebbenVeranderen</rol:identificatie>
+                    <rol:naam>Uitweg maken, hebben of veranderen of het gebruik daarvan veranderen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Uitritactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.VlaggenmastBouwen</rol:identificatie>
+                    <rol:naam>Vlaggenmast bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.VoedingsmidIndustr</rol:identificatie>
+                    <rol:naam>Milieubelastende activiteit bij de voedingsmiddelenindustrie</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.WegSpoorwegAanleggenWijz</rol:identificatie>
+                    <rol:naam>Weg of spoorweg, zonder geluidproductieplafonds, aanleggen of wijzigen</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/Overig</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.WerkzaamheidUitv</rol:identificatie>
+                    <rol:naam>Werk, niet zijnde bouwwerk, of werkzaamheid uitvoeren</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/VerrichtenVanWerkenEnWerkzaamhedenactiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.OverigeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.Zonnecollector</rol:identificatie>
+                    <rol:naam>Zonnepaneel of zonnecollector bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ZonweringBouwen</rol:identificatie>
+                    <rol:naam>Zonwering, rolhek, luik of rolluik bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.ZwembadBouwen</rol:identificatie>
+                    <rol:naam>Zwembad, bubbelbad of soortgelijke voorziening of vijver bouwen, in stand houden of gebruiken</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/BouwactiviteitRuimtelijk</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.BouwwerkBouwen"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+        <sl:stand>
+            <ow-dc:owObject>
+                <rol:Activiteit>
+                    <rol:identificatie>nl.imow-gm0935.activiteit.Zwerfaval</rol:identificatie>
+                    <rol:naam>Zwerfafval</rol:naam>
+                    <rol:groep>http://standaarden.omgevingswet.overheid.nl/activiteit/id/concept/MilieubelastendeActiviteit</rol:groep>
+                    <rol:bovenliggendeActiviteit>
+                        <rol:ActiviteitRef xlink:href="nl.imow-gm0935.activiteit.MilieubelastendeAct"/>
+                    </rol:bovenliggendeActiviteit>
+                </rol:Activiteit>
+            </ow-dc:owObject>
+        </sl:stand>
+    </sl:standBestand>
+</ow-dc:owBestand>
