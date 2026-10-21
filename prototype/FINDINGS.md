@@ -5,6 +5,89 @@ and the knowledge-graph layer for the omgevingsplan. Newest entry first.
 
 ---
 
+## 2026-10-21 — Step 3 validation (building, monument, afwijken, discharge), and write hygiene
+
+Ran the activity-anchored validation on `Bouwactiviteit`, the monument activity,
+the afwijken activity, and the household-wastewater-discharge activity: list the
+governing articles with their written force and overrides, and check each against
+the article text.
+
+Method correction, up front: a first pass judged the tags from article titles and
+flagged several as wrong. Reading the actual text reversed almost all of them —
+the titles mislead, and the LLM tags were mostly right. That is the main lesson
+of this step: tag validation has to read the rule text, not the opschrift.
+
+Coverage: the governing-article path first under-counted because it only reached
+articles whose own text governs the activity; climbing from each rule's text up
+to its containing Artikel (`BEVAT*0..3`) gave the full set.
+
+What the text showed (correcting the first-pass calls):
+
+- Monument (22.287–22.295) are indieningsvereisten — "bij de aanvraag worden de
+  volgende gegevens en bescheiden verstrekt". Genuine obligations; the uniform
+  `obligation` tagging is correct. 22.295 (overeenkomstige toepassing) is a
+  modification/applicability clause (null). The permit prohibition for monument
+  work lives elsewhere, not in these articles.
+- 22.23 Algemene afbakeningseisen: the text is "Artikel 22.27 en Artikel 22.36
+  zijn niet van toepassing op een activiteit ... [op een illegaal bouwwerk]". It
+  genuinely disapplies 22.27 and 22.36, so the model's overrides to them are
+  correct, and `prohibition` (a restriction on a permission) is defensible. This
+  also corroborates the derived-override logic.
+- 22.25 Mantelzorg: a deeming clause ("mantelzorg wordt aangemerkt als
+  functioneel verbonden met het hoofdgebouw") — constitutive, so `null` is right.
+- 22.34: "kunnen aan een omgevingsvergunning ... voorschriften worden verbonden"
+  — the authority may attach conditions; permission/empowerment, so the
+  `permission` tag is defensible (and points at the empowerment class).
+- 22.40 Overgangsrecht: a transitional provision; `permission` is a rough fit —
+  the real gap is a temporal / overgangsrecht category.
+- Discharge (22.145–22.150), a clean fourth case: scope (22.145) and measurement
+  (22.150) are `null`, submission/treatment requirements are obligations (22.146,
+  22.148, 22.149), and 22.147 is a genuine prohibition (a grinder-waste ban). All
+  correct on the text. 22.146 and 22.149 also carry exemption sub-lids ("het
+  eerste en tweede lid gelden niet voor ...") inside an obligation article — the
+  model tagged by the primary norm (the lid-granularity point again).
+
+Net: across four activities, none of the tags flagged on first read survive as
+clear errors once the text is read. The LLM tagging holds up better than a
+title-based review suggested.
+
+Genuine output of the validation — modelling gaps, not tag errors:
+
+- Assessment / decision rules (beoordelingsregels: 22.29–22.33, 22.281–22.282)
+  and measurement conventions (22.24, 22.150) are addressed to the deciding
+  authority or are conventions, not citizen conduct; the four citizen-facing tags
+  fit them awkwardly. v1 category.
+- Modification / overeenkomstige toepassing (22.37, 22.295). v1.
+- Temporal / overgangsrecht (22.40). v1.
+
+Write hygiene (independent of adjudication): articles carried OVERRIDES from more
+than one tagging pass because `--write` used MERGE and never removed old edges.
+Fixed: `write_back` now clears an article's outgoing OVERRIDES before writing the
+new ones, so a re-tag replaces rather than accumulates.
+
+Derived-override pass (`prototype/derive_overrides.cypher`): a graph step that
+composes each OVERRIDES edge's net effect from its type and the target's deontic
+(exception -> exemption; restriction on permission/exemption -> prohibition;
+restriction on obligation -> obligation), writes it onto the edge
+(`derived_effect`), and reports where the overriding article's own LLM tag
+disagrees. Running it corroborated the entire restriction class (22.23, 22.28,
+22.38, 22.39, 22.61a all agree — the 22.38 win, confirmed). A first composition
+used `exception -> permission`, which falsely flagged the canonical exemption
+22.27; corrected to `exception -> exemption`, aligning with v0 (the graph
+composition and the LLM tags cross-check each other). The remaining exception
+disagreements are not tag errors but v1 categories resurfacing in the override
+layer: "in afwijking van Artikel X" articles (22.64, 22.103) are modifications /
+derogations mislabelled as `exception` — the LLM's obligation tag is right, and
+the override-type vocabulary needs a `modification` type (cue "in afwijking
+van"); and eerbiedigende-werking grandfather clauses (22.99, 22.102) are the
+temporal class, with genuinely mixed force.
+
+Guard verdict: the guards did their narrow job (no invalid deontic values, no
+fake-number targets). The validation turned up no schema violations in the
+written output; the open questions are modelling categories, not guard failures.
+
+---
+
 ## 2026-10-20 — gpt-4o vs local baseline, adjudication, prompt sharpening, a derived-override design, and the graph-grounded use case
 
 ### Setup
@@ -115,7 +198,7 @@ reintroduces the relational problem. The model emits the neutral operation plus
 the target; the graph composes the rest. Costs: two phases (tag all base norms,
 then resolve overrides); the net force is scope-conditional; some articles are
 both a base norm and an override at once (22.28). Aligns with how LegalRuleML
-models defeasibility.
+models defeasibility. Implemented as `prototype/derive_overrides.cypher`.
 
 ### Graph-grounded use case: what the activity and location nodes carry
 
@@ -219,21 +302,23 @@ ambiguous. A trustworthy figure would need blind double annotation with the
 ontology as the codebook and a reported inter-annotator agreement (Cohen's
 kappa).
 
-### Current issues
+## Current issues
 
-- Tags in the graph are the rule_based heuristic, not the extractor. The graph is
-  tagged by `prototype/build_and_tag.cypher` (title/text keywords), which is
-  deterministic and reproducible but cruder than the LLM. The extractor output
-  has not been written to the graph.
-- No pre-write guards yet. Before any LLM `--write`, add a guard layer: reject a
-  `deontic` outside the four values, drop self-overrides, keep only override
-  targets that match a real same-regulation article number, and clear overrides
-  on constitutive rows.
-- Override deontic is relational (22.38): the net force depends on the target's
-  polarity, so it must be derived in the graph, not guessed per article.
+- The graph is tagged by the gpt-4o extractor (`deontic_source = openai:gpt-4o`),
+  guarded and with write hygiene. The step-3 text validation did not confirm the
+  tag errors a title-based pass suspected — on the articles checked, the tags are
+  correct or defensible.
+- Validation must read article text, not titles: a class of "omgevingsplan-
+  activiteit X" articles are submission-requirement obligations that look like
+  activity permits by their name.
+- Missing v1 categories, surfaced by validation: assessment / decision rules
+  (beoordelingsregels) and measurement conventions; modification ("overeen-
+  komstige toepassing"); temporal / overgangsrecht.
+- Override deontic is relational (22.38): handled by the derived-override pass
+  (`derive_overrides.cypher`), which composes the net effect in the graph.
 - Annotation unit is too coarse: several articles mix a primary norm with
-  exemptions and measurement rules (22.16, 22.19). Article-level vs lid-level is
-  an open decision.
+  exemptions and measurement rules (22.16, 22.19, 22.146, 22.149). Article-level
+  vs lid-level is an open decision.
 - Firing conditions are unmodelled: location is uniform (whole municipality) and
   the heritage/safety triggers are textual, so the graph shows which rules can
   apply, not whether they fire for a given case.

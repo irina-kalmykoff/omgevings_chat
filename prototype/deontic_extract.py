@@ -25,6 +25,7 @@ import csv
 import json
 import os
 from collections import Counter
+from datetime import datetime
 
 from neo4j import GraphDatabase
 from openai import OpenAI
@@ -33,6 +34,8 @@ BACKENDS = {
     "ollama": {"base_url": "http://localhost:11434/v1", "api_key": "ollama", "model": "qwen2.5:32b"},
     "openai": {"base_url": None, "api_key_env": "OPENAI_API_KEY", "model": "gpt-4o"},
 }
+
+VALID_DEONTIC = {"obligation", "prohibition", "permission", "exemption"}
 
 SYSTEM_PROMPT = """You classify Dutch environmental-law rules (omgevingsplan) under a fixed ontology.
 
@@ -43,20 +46,20 @@ For one article, return STRICT JSON with these fields:
 - rationale: one short clause quoting the decisive wording.
 
 statement_type decision (decide this first):
-- "prescriptive" = the article bears on conduct: it requires, forbids, allows, or lifts a requirement on what someone must build, do, submit, or refrain from. Dutch legal drafting states obligations as facts in the present tense ("is aangesloten op", "wordt verstrekt", "voldoet aan", "bedraagt ten minste"). A declarative phrasing does NOT make it constitutive: if, read as an instruction, it tells a norm-addressee to achieve or maintain a state, it is prescriptive (an obligation).
-- "constitutive" = the article has no such behavioural content: a definition (begripsbepaling), a statement of the aim/oogmerk of a set of rules, a scope/applicability clause ("deze afdeling is van toepassing op ...", "dit hoofdstuk geldt voor ..."), a deeming or measurement convention. Scope clauses are constitutive even though they contain "van toepassing", because they set where rules apply rather than disapplying a specific rule.
+- "prescriptive" = the article bears on conduct: it requires, forbids, allows, or lifts a requirement on what someone must build, do, submit, or refrain from. Dutch legal drafting states these as facts in the present tense ("is aangesloten op", "wordt verstrekt", "voldoet aan", "is zodanig dat", "bedraagt ten minste", "ligt haaks"). A declarative phrasing does NOT make it constitutive: if, read as an instruction, it tells a norm-addressee to achieve or maintain a state, it is prescriptive. A performance, presence or dimension requirement written as a plain statement is an obligation; a statement that a thing or state shall not be present ("is geen ... aanwezig", "wordt niet ... toegepast") is a prohibition.
+- "constitutive" = the article has no such behavioural content: a definition (begripsbepaling), a statement of the aim/oogmerk, a scope/applicability clause ("deze afdeling is van toepassing op ..."), or a measurement/counting/deeming convention ("een aangebroken verpakking wordt als een volle meegerekend"). A measurement or counting convention is constitutive ONLY when it stands alone; when it sits beside a behavioural norm in the same article, classify the article by that norm, not by the convention.
 
 deontic value (only when prescriptive):
-- obligation = a positive duty: moet, is verplicht, wordt verstrekt, is aangesloten op, voldoet aan, draagt zorg voor.
-- prohibition = conduct forbidden or made subject to a permit: het is verboden, mag niet, is niet toegestaan, vergunningplicht, alleen met omgevingsvergunning.
+- obligation = a positive duty: moet, is verplicht, wordt verstrekt, is aangesloten op, voldoet aan, draagt zorg voor, is zodanig dat.
+- prohibition = conduct forbidden or made subject to a permit, or a required absence: het is verboden, mag niet, is niet toegestaan, vergunningplicht, alleen met omgevingsvergunning, "is geen ... aanwezig".
 - permission = conduct allowed without a permit, or an explicit right: mag, is toegestaan, vergunningvrij, van rechtswege.
-- exemption = a base rule lifted for stated cases: het verbod geldt niet voor, is niet van toepassing op (when it lifts a specific named rule for a case), vrijstelling, niet vereist.
-- "restriction" and "exception" are OVERRIDE types, never deontic values. An article that re-imposes a base rule by cancelling an exemption is itself a "prohibition" (or "obligation"), carrying an overrides entry of type "restriction".
+- exemption = a base rule lifted for stated cases: het verbod geldt niet voor, is niet van toepassing op (lifting a specific named rule for a case), vrijstelling, niet vereist.
+- "restriction" and "exception" are OVERRIDE types, NEVER deontic values. An article that re-imposes a base rule by cancelling an exemption is itself a "prohibition" (or "obligation") carrying an overrides entry of type "restriction".
 
 overrides: add one entry per article this one explicitly disapplies or narrows.
 - "exception" = this article lifts the target rule for stated cases ("het verbod, bedoeld in artikel X, geldt niet voor ...").
 - "restriction" = this article cancels or narrows the target ("artikel X is niet van toepassing op ...").
-- target MUST be a bare article number from this same regulation, exactly as it appears (e.g. "22.26"). Never target the article itself. Never target a lid or subparagraaf number (no "22.2.7.3"), a maatwerk/instrument name, or an article of another law (e.g. Bbl/Bal numbers like "4.x", "3.x"). If no same-regulation article is named, return an empty list.
+- target MUST be a bare article number from this same regulation, exactly as it appears (e.g. "22.26"). Never target the article itself. Never target a lid or subparagraaf ("eerste lid", "22.2.7.3"), a whole afdeling ("Afdeling 22.3"), a maatwerk instrument, or an article of another law (Bbl/Bal numbers like "4.1057"). If no same-regulation article is named, return an empty list.
 
 Return only the JSON object."""
 
@@ -75,14 +78,6 @@ FEWSHOT = [
       "overrides": [{"target": "22.27", "type": "restriction"}], "rationale": "Artikel 22.27 niet van toepassing"}),
     ({"nummer": "1.1", "opschrift": "Begripsbepalingen", "tekst": "Begripsbepalingen die... zijn van toepassing op...", "refs": []},
      {"statement_type": "constitutive", "deontic": None, "overrides": [], "rationale": "definition"}),
-    ({"nummer": "22.8", "opschrift": "Aansluiting op de riolering",
-      "tekst": "Met het oog op het doelmatig beheer van afvalwater is een bouwwerk aangesloten op de openbare riolering.", "refs": []},
-     {"statement_type": "prescriptive", "deontic": "obligation", "overrides": [],
-      "rationale": "is aangesloten op de openbare riolering (positive duty stated declaratively)"}),
-    ({"nummer": "22.41", "opschrift": "Toepassingsbereik",
-      "tekst": "Deze afdeling is van toepassing op het bouwen van bouwwerken in het plangebied.", "refs": []},
-     {"statement_type": "constitutive", "deontic": None, "overrides": [],
-      "rationale": "scope clause: deze afdeling is van toepassing op (sets where rules apply, disapplies nothing)"}),
 ]
 
 
@@ -91,7 +86,7 @@ def make_client(backend):
     cfg = BACKENDS[backend]
     api_key = cfg.get("api_key") or os.environ.get(cfg["api_key_env"], "")
     client = OpenAI(base_url=cfg["base_url"], api_key=api_key or "none",
-                    default_headers={"Accept-Encoding": "identity"})
+            default_headers={"Accept-Encoding": "identity"})
     return client, cfg["model"]
 
 
@@ -178,11 +173,113 @@ def evaluate(preds, gold_path):
     print("\nagreement vs gold:")
     for key in sorted(total):
         print(f"  {key:12} {hits[key]}/{total[key]}")
-    print(f"  overall      {sum(hits.values())}/{sum(total.values())}")
+    overall = f"{sum(hits.values())}/{sum(total.values())}"
+    print(f"  overall      {overall}")
     if wrong:
         print("\ndisagreements (nummer: gold -> predicted):")
         for n, g, p in wrong:
             print(f"  {n}: {g} -> {p}")
+    return overall
+
+
+def sanitize_prediction(pred, nummer, valid_nummers):
+    """Enforce the ontology schema on one prediction before it is used.
+
+    Removes values a prompt cannot reliably prevent: a deontic outside the four
+    valid values, a self-override, an override target that is not a real article
+    in this regulation, and any override on a constitutive statement.
+
+    Args:
+        pred: The model's parsed prediction dict.
+        nummer: The article's own number, to catch self-overrides.
+        valid_nummers: Set of every article number present in the graph.
+
+    Returns:
+        A tuple (clean_pred, changes); changes lists what was altered.
+    """
+    changes = []
+    clean = dict(pred)
+    st = clean.get("statement_type")
+    deontic = clean.get("deontic")
+
+    if st == "constitutive" and deontic is not None:
+        changes.append(f"deontic {deontic!r} -> null (constitutive)")
+        clean["deontic"] = None
+    elif st != "constitutive" and deontic is not None and deontic not in VALID_DEONTIC:
+        changes.append(f"deontic {deontic!r} -> null (not one of the four)")
+        clean["deontic"] = None
+
+    kept = []
+    for ov in clean.get("overrides") or []:
+        target = (ov or {}).get("target")
+        if st == "constitutive":
+            changes.append(f"dropped override -> {target} (constitutive carries none)")
+        elif target == nummer:
+            changes.append(f"dropped self-override -> {target}")
+        elif target not in valid_nummers:
+            changes.append(f"dropped override -> {target} (not an article in this regulation)")
+        else:
+            kept.append(ov)
+    clean["overrides"] = kept
+    return clean, changes
+
+
+def report_guards(guard_log, applied):
+    """Print what the schema guards changed, or would change.
+
+    Args:
+        guard_log: List of (nummer, change) tuples collected over the run.
+        applied: Whether the changes were applied (guards on) or only detected.
+    """
+    if not guard_log:
+        print("\nguards: no schema violations found")
+        return
+    verb = "applied" if applied else "would apply (re-run with --guards to apply)"
+    print(f"\nguards {verb}: {len(guard_log)} change(s)")
+    for nummer, change in guard_log:
+        print(f"  {nummer}: {change}")
+
+
+def write_predictions_csv(preds, path, source):
+    """Write the run's predictions as a CSV snapshot (overwritten each run).
+
+    Args:
+        preds: Mapping of nummer to the (guarded) prediction dict.
+        path: Output CSV path.
+        source: The backend:model string recorded on every row.
+    """
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["nummer", "statement_type", "deontic", "overrides", "rationale", "source"])
+        for nummer, p in preds.items():
+            overrides = "; ".join(f"{o.get('target')}:{o.get('type')}"
+                                  for o in (p.get("overrides") or []))
+            writer.writerow([nummer, p.get("statement_type"), p.get("deontic") or "",
+                             overrides, p.get("rationale", ""), source])
+
+
+def append_diary(path, meta):
+    """Append a dated run summary to a markdown diary (created if absent).
+
+    Args:
+        path: Markdown file to append to.
+        meta: Run metadata (when, model, guards, n, limit, agreement,
+            guard_changes, out).
+    """
+    new_file = not os.path.exists(path)
+    with open(path, "a", encoding="utf-8") as f:
+        if new_file:
+            f.write("# Extraction run diary\n\n")
+        f.write(f"## {meta['when']} - {meta['model']}\n\n")
+        f.write(f"- guards: {'on' if meta['guards'] else 'off'}\n")
+        f.write(f"- articles: {meta['n']}"
+                + (f" (limit {meta['limit']})" if meta['limit'] else "") + "\n")
+        if meta.get("agreement"):
+            f.write(f"- agreement vs gold: {meta['agreement']}\n")
+        f.write(f"- guard changes: {meta['guard_changes']}\n")
+        if meta.get("out"):
+            f.write(f"- predictions snapshot: {meta['out']}\n")
+        f.write("\n")
 
 
 def main():
@@ -192,6 +289,10 @@ def main():
     parser.add_argument("--limit", type=int, help="process only the first N articles")
     parser.add_argument("--write", action="store_true", help="write tags/edges back to Neo4j")
     parser.add_argument("--eval", dest="gold", help="score against a gold CSV")
+    parser.add_argument("--guards", action="store_true",
+                        help="enforce the schema on predictions before eval/write (auto-on with --write)")
+    parser.add_argument("--out", help="write the run's predictions to this CSV")
+    parser.add_argument("--diary", help="append a dated run summary to this markdown file")
     parser.add_argument("--uri", default="bolt://localhost:7687")
     parser.add_argument("--user", default="neo4j")
     parser.add_argument("--password", default="testpassword")
@@ -204,16 +305,36 @@ def main():
 
     try:
         articles = read_articles(driver, args.limit)
+        valid_nummers = {a["nummer"] for a in articles}
+        guards_on = args.guards or args.write
+        if args.write and not args.guards:
+            print("note: guards auto-enabled for --write")
         preds = {}
+        guard_log = []
         for art in articles:
-            pred = classify(client, model, art)
+            raw = classify(client, model, art)
+            clean, changes = sanitize_prediction(raw, art["nummer"], valid_nummers)
+            pred = clean if guards_on else raw
             preds[art["nummer"]] = pred
+            guard_log.extend((art["nummer"], c) for c in changes)
             flag = " ".join(f"{o['target']}:{o['type']}" for o in (pred.get("overrides") or []))
-            print(f"{art['nummer']:>8}  {pred.get('statement_type','?'):12} {str(pred.get('deontic')):11} {flag}")
+            print(f"{art['nummer']:>8}  {str(pred.get('statement_type')):12} {str(pred.get('deontic')):11} {flag}")
             if args.write:
                 write_back(driver, art["nummer"], pred, f"{args.backend}:{model}")
-        if args.gold:
-            evaluate(preds, args.gold)
+        report_guards(guard_log, guards_on)
+        source = f"{args.backend}:{model}"
+        if args.out:
+            write_predictions_csv(preds, args.out, source)
+            print(f"\nwrote predictions: {args.out}")
+        agreement = evaluate(preds, args.gold) if args.gold else None
+        if args.diary:
+            append_diary(args.diary, {
+                "when": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "model": source, "guards": guards_on, "n": len(preds),
+                "limit": args.limit, "agreement": agreement,
+                "guard_changes": len(guard_log), "out": args.out,
+            })
+            print(f"appended diary entry: {args.diary}")
     finally:
         driver.close()
 
