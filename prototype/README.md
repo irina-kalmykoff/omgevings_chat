@@ -11,7 +11,7 @@ database you run yourself; the source files it reads are committed in
 prototype/
   scripts/          Python: graph loader, LLM extractor, spatial + visual tools
   visualizations/   self-contained HTML graph pages (open in a browser)
-  *.cypher          the tagging and query layers, run in Neo4j
+  cypher/           the tagging and query layers, run in Neo4j
   gold_deontic.csv  38 hand-labelled articles used to score the extractor
   demo-script.md    the 3-minute demo-video script
   FINDINGS.md       running log of results and decisions
@@ -24,9 +24,9 @@ to it.
 ## Build the graph (for the demo)
 
 You do not need to run all the cypher. Steps 1–3 below build the structure and
-the tagging layer; that is enough for the demo. `deontic_extract.py`,
-`derive_overrides.cypher`, `queries.cypher` and `spatial.py` are the rest of the
-pipeline, not required for the demo.
+the tagging layer; that is enough for the demo. `scripts/deontic_extract.py`,
+`cypher/derive_overrides.cypher`, `cypher/queries.cypher` and `scripts/spatial.py`
+are the rest of the pipeline, not required for the demo.
 
 1. **Start Neo4j** (version 5) with the **APOC** plugin enabled, however you
    normally run it (Docker, Neo4j Desktop, a server). Note three things you will
@@ -54,15 +54,15 @@ pipeline, not required for the demo.
    uses `MERGE`, so re-running does not duplicate anything.
 
 4. **Add the ontology v0 tags** (normative force + OVERRIDES edges). Open
-   `build_and_tag.cypher` in Neo4j Browser and run its blocks, or feed the file
-   to `cypher-shell`:
+   `cypher/build_and_tag.cypher` in Neo4j Browser and run its blocks, or feed the
+   file to `cypher-shell`:
 
    ```
-   cypher-shell -a bolt://localhost:7687 -u neo4j -p testpassword < build_and_tag.cypher
+   cypher-shell -a bolt://localhost:7687 -u neo4j -p testpassword < cypher/build_and_tag.cypher
    ```
 
    (If Neo4j runs in a container, reach the same shell with
-   `docker exec -i <container> cypher-shell -u neo4j -p testpassword < build_and_tag.cypher`.)
+   `docker exec -i <container> cypher-shell -u neo4j -p testpassword < cypher/build_and_tag.cypher`.)
 
    This is a deterministic heuristic (title/text cues), recorded as
    `deontic_source = 'rule_based'`, so the tagged graph is reproducible from the
@@ -81,11 +81,11 @@ pipeline, not required for the demo.
 | `scripts/review_mismatches.py` | writes a mismatch report of the extractor against the gold set, with article text |
 | `scripts/spatial.py` | point-in-polygon lookup: which rules apply at an RD point |
 | `scripts/generate_visualisation.py` | renders any Cypher query's result as a self-contained HTML graph with SVG/PNG export |
-| `constraints.cypher` | the schema (uniqueness constraints); applied automatically by `build_graph.py`, kept as the canonical definition |
-| `build_and_tag.cypher` | the ontology v0 tagging layer, run after `build_graph.py`; deterministic heuristic, no LLM |
-| `derive_overrides.cypher` | composes each OVERRIDES edge's net effect from the target's deontic (restriction-on-permission -> prohibition, ...) and writes it onto the edge |
-| `queries.cypher` | general exploration queries, one block each |
-| `use_case_queries.cypher` | demo queries on the tagged graph: colour-by-force, the defeasibility chain, and a question answered on the graph |
+| `cypher/constraints.cypher` | the schema (uniqueness constraints); applied automatically by `build_graph.py`, kept as the canonical definition |
+| `cypher/build_and_tag.cypher` | the ontology v0 tagging layer, run after `build_graph.py`; deterministic heuristic, no LLM |
+| `cypher/derive_overrides.cypher` | composes each OVERRIDES edge's net effect from the target's deontic (restriction-on-permission -> prohibition, ...) and writes it onto the edge |
+| `cypher/queries.cypher` | general exploration queries, one block each |
+| `cypher/use_case_queries.cypher` | demo queries on the tagged graph: colour-by-force, the defeasibility chain, and a question answered on the graph |
 | `gold_deontic.csv` | 38 hand-labelled articles used to score the extractor |
 | `demo-script.md` | shot-by-shot 3-minute demo-video script, with the pre-recording graph prep |
 | `visualizations/maastricht-rule-graph.html` | self-contained interactive graph (open in a browser) |
@@ -124,7 +124,7 @@ See `FINDINGS.md` for results and open issues.
 
 ## Derive override effects
 
-`derive_overrides.cypher` composes each OVERRIDES edge's net effect from the
+`cypher/derive_overrides.cypher` composes each OVERRIDES edge's net effect from the
 override type and the target's deontic (e.g. a restriction on a permission is a
 prohibition), writes it onto the edge as `derived_effect`, and reports where an
 article's own tag disagrees with the composition. Run after tagging, in Neo4j
@@ -132,8 +132,8 @@ Browser or via `cypher-shell` as in step 4.
 
 ## Query
 
-Open `queries.cypher` (general exploration) or `use_case_queries.cypher` (the
-tagged-graph demo) and run one block at a time in Neo4j Browser (copy a block,
+Open `cypher/queries.cypher` (general exploration) or `cypher/use_case_queries.cypher`
+(the tagged-graph demo) and run one block at a time in Neo4j Browser (copy a block,
 Cmd/Ctrl+Enter). Run them individually so node-returning queries render as a
 graph rather than a table.
 
@@ -154,7 +154,7 @@ To wipe the data and reload (constraints are kept), run in Neo4j Browser:
 MATCH (n) DETACH DELETE n;
 ```
 
-then re-run step 3 (`build_graph.py`) and step 4 (`build_and_tag.cypher`).
+then re-run step 3 (`scripts/build_graph.py`) and step 4 (`cypher/build_and_tag.cypher`).
 
 ## The visualization
 

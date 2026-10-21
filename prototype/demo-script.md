@@ -26,7 +26,7 @@ Narration lines double as on-screen captions if recording silent. Hard cap 3:00.
 
   Expect roughly 308 Artikel plus Regeltekst, RegelVoorIedereen, Activiteit,
   Locatie and the structure labels. If it comes back near-empty, run
-  `scripts/build_graph.py` then `build_and_tag.cypher` first.
+  `scripts/build_graph.py` then `cypher/build_and_tag.cypher` first.
 
 ### 2. Fire the prep (not recorded, one statement at a time)
 

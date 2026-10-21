@@ -65,7 +65,7 @@ than one tagging pass because `--write` used MERGE and never removed old edges.
 Fixed: `write_back` now clears an article's outgoing OVERRIDES before writing the
 new ones, so a re-tag replaces rather than accumulates.
 
-Derived-override pass (`prototype/derive_overrides.cypher`): a graph step that
+Derived-override pass (`prototype/cypher/derive_overrides.cypher`): a graph step that
 composes each OVERRIDES edge's net effect from its type and the target's deontic
 (exception -> exemption; restriction on permission/exemption -> prohibition;
 restriction on obligation -> obligation), writes it onto the edge
@@ -198,7 +198,7 @@ reintroduces the relational problem. The model emits the neutral operation plus
 the target; the graph composes the rest. Costs: two phases (tag all base norms,
 then resolve overrides); the net force is scope-conditional; some articles are
 both a base norm and an override at once (22.28). Aligns with how LegalRuleML
-models defeasibility. Implemented as `prototype/derive_overrides.cypher`.
+models defeasibility. Implemented as `prototype/cypher/derive_overrides.cypher`.
 
 ### Graph-grounded use case: what the activity and location nodes carry
 
@@ -229,7 +229,7 @@ Schema note for querying: an article links to its own rule text by
 The governing path is
 `Artikel -IS_TEKST_VAN- Regeltekst -VAN_REGELTEKST- RegelVoorIedereen -GELDT_VOOR-> Activiteit`
 (and `-OP_LOCATIE-> Locatie`). The use-case query in
-`prototype/use_case_queries.cypher` traverses these three norm edges and
+`prototype/cypher/use_case_queries.cypher` traverses these three norm edges and
 deliberately excludes `BEVAT` so each rule resolves to its own activity.
 
 ### The six mismatches (original prompt), adjudicated
@@ -315,7 +315,7 @@ kappa).
   (beoordelingsregels) and measurement conventions; modification ("overeen-
   komstige toepassing"); temporal / overgangsrecht.
 - Override deontic is relational (22.38): handled by the derived-override pass
-  (`derive_overrides.cypher`), which composes the net effect in the graph.
+  (`cypher/derive_overrides.cypher`), which composes the net effect in the graph.
 - Annotation unit is too coarse: several articles mix a primary norm with
   exemptions and measurement rules (22.16, 22.19, 22.146, 22.149). Article-level
   vs lid-level is an open decision.
