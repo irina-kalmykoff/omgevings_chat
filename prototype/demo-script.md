@@ -16,7 +16,8 @@ Narration lines double as on-screen captions if recording silent. Hard cap 3:00.
 
 ### 1. Check the setup
 
-- Neo4j running (Docker), Browser open at http://localhost:7474, APOC enabled.
+- Neo4j running with APOC enabled, and Neo4j Browser open (the URL your Neo4j
+  shows for it).
 - Graph loaded and tagged — run:
 
   ```cypher
@@ -25,7 +26,7 @@ Narration lines double as on-screen captions if recording silent. Hard cap 3:00.
 
   Expect roughly 308 Artikel plus Regeltekst, RegelVoorIedereen, Activiteit,
   Locatie and the structure labels. If it comes back near-empty, run
-  `build_graph.py` then `build_and_tag.cypher` first.
+  `scripts/build_graph.py` then `build_and_tag.cypher` first.
 
 ### 2. Fire the prep (not recorded, one statement at a time)
 
@@ -35,7 +36,7 @@ showcase articles — e.g. 22.38 comes out `exemption`, when its effect is a
 22.36). Overwrite ONLY these six articles with the hand-verified labels
 (`deontic_source = 'manual'`) so the on-screen example is correct and stable; the
 rest of the graph keeps its LLM tags. Restore them afterwards with
-`python deontic_extract.py --backend openai --model gpt-4o --write`.
+`python scripts/deontic_extract.py --backend openai --model gpt-4o --write`.
 
 ```cypher
 // a. clear any stale colour labels (addLabels only adds, so an old one lingers)
@@ -160,15 +161,3 @@ restriction that brings the permit back for monuments."
 
 Narration: "Deontic force plus defeasibility, as a graph the retrieval pipeline
 can traverse — that's how the knowledge graph makes legal answers reliable."
-
----
-
-## Notes
-
-- After recording, restore the LLM tags:
-  `python deontic_extract.py --backend openai --model gpt-4o --write`.
-- Recording: QuickTime (File → New Screen Recording) or Loom; native resolution,
-  then trim.
-- If silent: put each narration line on screen as a caption for its shot.
-- Hold each query's result ~2–3s before moving on.
-- The dakkapel chain is the first thing to cut if 3:00 runs tight.

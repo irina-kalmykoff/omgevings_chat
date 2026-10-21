@@ -92,7 +92,7 @@ written output; the open questions are modelling categories, not guard failures.
 
 ### Setup
 
-The extractor (`prototype/deontic_extract.py`) runs one code path that switches
+The extractor (`prototype/scripts/deontic_extract.py`) runs one code path that switches
 between a local model (qwen2.5 via Ollama) and the OpenAI API. For each article
 it assigns `statement_type` (prescriptive / constitutive), a `deontic` tag
 (obligation / prohibition / permission / exemption) and `OVERRIDES` edges, under
