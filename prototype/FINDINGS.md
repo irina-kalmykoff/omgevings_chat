@@ -5,6 +5,106 @@ and the knowledge-graph layer for the omgevingsplan. Newest entry first.
 
 ---
 
+## 2026-10-23 — Derogation flavor probe and a v1 override proposal
+
+Question: should the override vocabulary (exception / restriction) gain finer
+flavors, such as modification, permissive derogation and decision-authority
+derogation?
+
+Reading all 35 "in afwijking van" articles first showed that the cue is not one
+concept. It covers six groups (silver grouping, one read): A derogation inside
+the same article (13), B modification proper (4: 22.64, 22.65, 22.66, 22.103),
+C permissive / grandfathering "mag, in afwijking van" (3), D eerbiedigende-werking
+scope clauses (4), E decision-authority derogation (4: 22.29, 22.32, 22.33,
+22.278), F derogation from an external source, Bal or NEN (7). These groups mix
+three independent things: where the target is (A, F), what the derogation does
+(B, C, E) and whether it concerns an existing situation (D).
+
+Probe (`scripts/derogation_probe.py`, standalone, reads Tekst.xml): gpt-4o
+labels every derogation clause on three axes (target scope, flavor, temporal
+flag) plus the net effect for the regulated party. Run on the 35 cue articles
+plus 15 random control articles with "geldt niet / niet van toepassing" but no
+cue (including 22.23, 22.27, 22.28), two runs, 154 clause rows. Flavor set:
+exception, restriction, modification, permissive, discretionary.
+
+| | Separable | Stable | Composes differently | Verdict |
+|---|---|---|---|---|
+| target scope | A -> same_article 21/22, F -> external 7/8, B/C/D -> other_article | yes | n/a | adopt |
+| temporal | C 3/3 and D 7/7 true, B 0/7 | yes | n/a | adopt as a flag |
+| modification | core yes (B 6/7; the miss, 22.64, is a genuine exception clause), but leaks: 4 in controls, 10 in A | mostly | yes: net effect keeps the target's obligation (32 of 44) | adopt, sharpen definition |
+| discretionary | yes: E 4, F 1, never in controls | yes | yes: net effect "undetermined" 10/10 | adopt |
+| permissive | no: C labelled exception 3/3 | no: 22.99, 22.175 flip exception <-> permissive | no: effectively "allowed", as exception | drop |
+| restriction | the model almost never emits it (0 in run 1, 2 in run 2) | | | keep deriving it in the graph |
+
+Stability: 44/50 articles identical across runs; every flip sits on a flavor
+boundary (exception/permissive, exception/modification, modification/restriction).
+
+What it means:
+
+- Permissive derogation dissolves: group C is an exception plus the temporal flag
+  (grandfathering).
+- Decision-authority derogation is the genuinely new concept: the only flavor whose
+  effect cannot be composed in the graph, because it depends on a decision. It is
+  empowerment (22.4, 22.34) in another form, so one concept covers both gaps.
+- The derived-override design is confirmed from another angle: even canonical 22.28
+  ("Artikel 22.27 niet van toepassing") is labelled exception, because the local
+  text does not show that 22.27 is itself an exemption. The LLM should name only
+  the local operation; the graph composes exception vs restriction.
+- The boundary to fix is modification vs narrowing: 22.28 "Artikel 22.27 alleen van
+  toepassing voor zover ..." flipped modification <-> restriction. Narrowing when a
+  rule applies is not a change of its content.
+- Group A needs no lid-level rebuild of the annotation unit: target scope picks out
+  same-article derogations reliably, and the graph already has `Lid` nodes
+  (`Artikel -BEVAT-> Lid`), so these can be Lid -> Lid edges while the deontic tag
+  stays at article level.
+- Schema leak: `net_effect = "restriction"` appeared 4 times; guards must cover the
+  new fields if this enters the extractor.
+
+Caveats: silver groups from a single read, one model, two runs.
+
+v1 override proposal (to test):
+
+- The LLM labels the local operation only: `disapply`, `modification`,
+  `discretionary`.
+- `exception` vs `restriction` is derived in the graph from the target's deontic,
+  as `derive_overrides.cypher` already does.
+- Each override edge carries `target_scope` (same_article / other_article /
+  external) and a `temporal` flag.
+- External targets need a node type for national-law articles and standards.
+
+Next: the probe prompt now uses this three-operation set, with modification
+sharpened ("narrowing or widening when or to whom a rule applies is disapply, not
+modification") and a schema-violation count. Success on the rerun: controls drop
+to about 0 modification, and 22.28 stops flipping.
+
+Rerun with the v1 operation set (disapply / modification / discretionary,
+modification sharpened; `runs/derogation_probe_v2.csv`, same 50 articles, two runs):
+
+- Success criteria met: controls 0 modification (was 4), 22.28 stable and all
+  disapply (it was flipping modification <-> restriction), schema violations 0
+  (was 4), B modification 5/7, E discretionary 4/4.
+- Modification is now precise: net effect obligation in 17/17 clauses, so its
+  composition rule is clean (keeps the target's deontic, changes its content).
+  The A clauses labelled modification (22.63, 22.122, 22.138) are genuine value or
+  deadline changes. Misses: 22.103 ("geldt de afstand, bedoeld in ...") is a
+  modification labelled disapply; 22.64 disapply is correct (a laden-en-lossen
+  exception clause).
+- Discretionary has a "kan" problem: 3 of 7 run-1 clauses are permissions to the
+  regulated party, not authority discretion (22.148 "kan ... worden geloosd",
+  22.198 / 22.204 "kan met een lagere frequentie ... worden volstaan"). Its
+  definition needs an actor test: discretionary only when the competent authority
+  decides.
+- Stability: 45/50 articles identical, but only one flavor flip (22.23); the rest
+  differ in clause splitting or scope (external vs other_article), not in flavor.
+  Flavor-level stability is 49/50, up from 44/50.
+- As designed, disapply still reports net effect "exemption" for 22.28; the
+  restriction is left to the graph composition.
+
+Verdict: the three-operation set plus target scope and temporal flag holds up.
+Remaining fix before it enters the extractor: the actor test for discretionary.
+
+---
+
 ## 2026-10-23 — Held-out scoring and run-to-run variance
 
 `evaluate()` in `deontic_extract.py` now scores two ways: on all gold articles,
@@ -50,6 +150,52 @@ variance, not the guards. Decision: guards stay on for `--write` as a write-time
 integrity control (no edges to non-existent articles, no self-loops, no deontic
 outside the four); they are not needed for measuring the model, and either
 setting gives the same score here.
+
+### Legal ideas tested so far
+
+| Idea | Legal root | Tested on | Verdict |
+|---|---|---|---|
+| Prescriptive vs constitutive (regulates behaviour vs defines / counts-as) | Hart's primary/secondary rules; constitutive "counts-as" statements | 1.1, 22.1, 22.25, 22.12, 22.19 | Works once the prompt says Dutch drafting states duties as plain facts ("is aangesloten op", "ligt haaks") |
+| Four deontic operators: canonical prohibition = "verboden zonder omgevingsvergunning" (22.26), canonical permission = vergunningvrij (22.36), obligation (indieningsvereisten), exemption (22.27) | LegalRuleML deontic operators | 38-article gold set + the step 3 activities | About 88% held-out; remaining errors are structural |
+| Defeasibility: one rule defeats another, as an exception (lifts it) or a restriction (reinstates it) | LegalRuleML overrides / defeasible logic | dakkapel chain 22.26 -> 22.27 -> 22.28; permit-free chain 22.36 -> 22.38 / 22.39 | Holds |
+| Relational deontic (derived override): the net force of a disapplying article depends on what it disapplies, so it is composed in the graph, not asked of the LLM | deontic composition | 22.38 (key case), 22.23, 22.28, 22.39, 22.61a | Corroborated for the whole restriction class |
+| Rule - activity - location applicability | STOP/TPOD juridische regel | use-case query | Tested and found not discriminating: one location (whole municipality), one generic building activity |
+| Integrity constraints on the override graph | schema / referential integrity | guards | Rarely fire, but needed for `--write` |
+
+### Seen but not modelled: size of each gap
+
+Articles (out of 308 in the Maastricht regeling) whose text contains the typical
+Dutch cue. These are lexical indicators, not labels: they size each gap, not
+count it exactly.
+
+| Concept | Cue | Articles | Our cases |
+|---|---|---|---|
+| Disapplication (the override layer itself) | "geldt niet", "niet van toepassing" | 95 (31%) | about 8 checked |
+| Reference to national law | Bbl / Bal | 51 | guards drop these targets |
+| Modification / derogation | "in afwijking van" | 35 (11%) | 22.37, 22.64, 22.103, 22.295 |
+| Temporal: overgangsrecht, eerbiedigende werking | | 20 | 22.40, 22.99, 22.102 |
+| Conditions | "mits", "tenzij" | 14 | 22.19 (conditional lid) |
+| Assessment rules | "wordt alleen verleend als", etc. | 12 | 22.29–22.33 |
+| Analogous application | "overeenkomstige toepassing" | 11 | 22.37, 22.295 |
+| Cumulation | "onverminderd" | 7 | none |
+| Empowerment / maatwerk | | 7 | 22.4, 22.34 |
+| Precedence / voorrang | | 1 | 22.1 |
+
+### Expanding the circle: proposed order
+
+1. Test the derived override at scale, with no ontology change: run the
+   composition over all OVERRIDES edges and report clean vs disagreeing, plus the
+   two untested shapes: multi-hop chains (22.28 -> 22.27 -> 22.26) and several
+   overrides on one target (22.36 has 22.38 and 22.39). The core thesis idea has
+   so far been checked on about 8 of roughly 95 disapplying articles.
+2. Add modification as a fifth override type (cue "in afwijking van"): the most
+   frequent gap, already visible in both the gold scoring and the override pass,
+   and a small lexical prompt/schema change.
+3. After the presentation: firing conditions (mits/tenzij, heritage and safety
+   triggers). Temporal, empowerment and precedence stay listed as known gaps.
+
+A "doesn't fit v0" category column in the next annotation round would measure
+these gaps directly instead of relying on cue counts.
 
 ---
 
