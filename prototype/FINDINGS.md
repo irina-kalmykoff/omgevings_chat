@@ -103,6 +103,30 @@ modification sharpened; `runs/derogation_probe_v2.csv`, same 50 articles, two ru
 Verdict: the three-operation set plus target scope and temporal flag holds up.
 Remaining fix before it enters the extractor: the actor test for discretionary.
 
+Actor test (`runs/derogation_probe_v3.csv`): adding the actor test to the
+discretionary definition in the prompt did not work. 22.148, 22.198 and 22.204
+stayed discretionary in both runs. The passive "kan ... worden" hides who decides,
+and a definition alone cannot fix that. A deterministic check does: keep
+discretionary only when the quoted clause names an authority or decision
+(bevoegd gezag, college, (omgevings)vergunning, maatwerk, besluit), otherwise
+relabel as disapply. Applied to the saved output of all three runs it kept only
+group E clauses (6 of 10, 8 of 14, 8 of 14): perfect precision, no true E clause
+lost. Implemented as `actor_guard` in the probe; the CSV keeps the model's
+`raw_flavor` next to the guarded flavor.
+
+Other v3 results match v2 within noise: controls 1 modification (22.23 "blijft
+het aantal woningen gelijk", borderline), 0 schema violations, one flavor flip
+(22.63). New: the temporal flag is less stable than the first runs suggested;
+most of the 7 unstable articles flip on temporal (22.90, 22.218, 22.59) or on
+scope / clause splitting, and E went from 3/7 to 0/7 temporal. Temporal needs a
+sharper cue list or the same lexical-guard treatment.
+
+Decision: stop tuning the probe prompt here (same reasoning as freezing the main
+prompt: more wording tweaks against 50 articles would overfit). The pattern for
+v1 is the one the project already uses: the LLM proposes the local operation,
+deterministic rules check what is checkable from the text (schema guards, actor
+guard), and the graph composes the net effect.
+
 ---
 
 ## 2026-10-23 — Held-out scoring and run-to-run variance

@@ -22,6 +22,7 @@ from openai import OpenAI
 
 CUE = re.compile(r"in afwijking van", re.I)
 CONTROL_CUE = re.compile(r"geldt niet|gelden niet|niet van toepassing|hoeft niet|hoeven niet", re.I)
+AUTHORITY_CUE = re.compile(r"bevoegd gezag|college|omgevingsvergunning|vergunning|maatwerk|besluit", re.I)
 
 # Silver grouping from the 2026-10-23 read of all 35 "in afwijking van" articles.
 SILVER = {
@@ -60,8 +61,12 @@ Find every clause in the article that departs from, disapplies or bends another 
                     different values, limits, distances, deadlines, frequencies or method
                     ("gelden in plaats van ... de volgende eisen", "is ... niet hoger dan [other value]").
                     Narrowing or widening WHEN or TO WHOM a rule applies is disapply, not modification.
-    discretionary = the competent authority may decide differently from what the target prescribes
-                    ("kan het bevoegd gezag", "kan de omgevingsvergunning toch worden verleend")
+    discretionary = the competent authority (bevoegd gezag, college, the body granting a permit or
+                    maatwerk) may decide differently from what the target prescribes ("kan het
+                    bevoegd gezag", "kan de omgevingsvergunning toch worden verleend"). Actor test:
+                    ask who decides. If "kan" or "mag" gives the regulated party room to act
+                    ("kan ... worden geloosd", "kan met een lagere frequentie worden volstaan"),
+                    there is no authority decision: that is disapply, not discretionary.
 - temporal: true if the clause depends on an existing or earlier situation, a date, a transition,
   or eerbiedigende werking / overgangsrecht; else false.
 - net_effect: the resulting position of the regulated party, one of {NET}
@@ -142,6 +147,23 @@ def label(client, model, nummer, art):
         return []
 
 
+def actor_guard(clause):
+    """Keep a discretionary label only when the clause names an authority or decision.
+
+    The prompt alone cannot separate authority discretion from a passive "kan ...
+    worden" that gives the regulated party room to act, so this is checked in code.
+
+    Args:
+        clause: One clause dict from the model.
+
+    Returns:
+        A tuple (clause, changed); a rejected discretionary label becomes disapply.
+    """
+    if clause.get("flavor") == "discretionary" and not AUTHORITY_CUE.search(clause.get("quote") or ""):
+        return {**clause, "flavor": "disapply"}, True
+    return clause, False
+
+
 def signature(clauses):
     """Order-free summary of an article's clauses, used to compare runs."""
     return tuple(sorted((c.get("target_scope"), c.get("flavor"), bool(c.get("temporal"))) for c in clauses))
@@ -165,7 +187,7 @@ def main():
     parser.add_argument("--runs", type=int, default=2)
     parser.add_argument("--controls", type=int, default=15)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--out", default="runs/derogation_probe_v2.csv")
+    parser.add_argument("--out", default="runs/derogation_probe_v3.csv")
     args = parser.parse_args()
 
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -174,13 +196,20 @@ def main():
     print(f"{len(selection)} articles ({sum(g != 'control' for _, g in selection)} cue, "
           f"{sum(g == 'control' for _, g in selection)} control), {args.runs} runs")
 
-    rows, sigs = [], defaultdict(list)
+    rows, sigs, guarded = [], defaultdict(list), []
     for run in range(1, args.runs + 1):
         for nummer, group in selection:
-            clauses = label(client, args.model, nummer, articles[nummer])
+            raw = label(client, args.model, nummer, articles[nummer])
+            clauses = []
+            for c in raw:
+                clean, changed = actor_guard(c)
+                clauses.append(clean)
+                if changed:
+                    guarded.append((run, nummer))
             sigs[nummer].append(signature(clauses))
-            for c in clauses:
+            for c, r in zip(clauses, raw):
                 rows.append({"run": run, "nummer": nummer, "group": group,
+                             "raw_flavor": r.get("flavor"),
                              "target_scope": c.get("target_scope"), "target": c.get("target"),
                              "flavor": c.get("flavor"), "temporal": bool(c.get("temporal")),
                              "net_effect": c.get("net_effect"), "quote": c.get("quote")})
@@ -192,6 +221,9 @@ def main():
         writer.writeheader()
         writer.writerows(rows)
     print(f"wrote {len(rows)} clause rows: {args.out}")
+
+    print(f"actor guard: {len(guarded)} discretionary labels without an authority -> disapply"
+          + (f" ({', '.join(f'run {r} {n}' for r, n in guarded)})" if guarded else ""))
 
     first = [r for r in rows if r["run"] == 1]
     print("\nflavor by silver group (run 1, clauses):")
