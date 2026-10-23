@@ -152,34 +152,54 @@ def write_back(driver, nummer, pred, source):
 
 
 def evaluate(preds, gold_path):
-    """Print per-tag agreement of predictions against a gold CSV (nummer,deontic,statement_type)."""
+    """Score predictions against a gold CSV, overall and held-out.
+
+    The held-out score excludes the articles used as few-shot examples in
+    FEWSHOT, since the model has seen their answers in the prompt.
+
+    Args:
+        preds: Mapping of article nummer to predicted dict.
+        gold_path: CSV with columns nummer, deontic, statement_type.
+
+    Returns:
+        Tuple (overall, held_out) of "hits/total" strings.
+    """
     gold = {}
     with open(gold_path, encoding="utf-8") as f:
         for row in csv.DictReader(f):
             gold[row["nummer"]] = (row["deontic"] or None, row["statement_type"])
-    hits = Counter()
-    total = Counter()
+    fewshot = {example["nummer"] for example, _ in FEWSHOT}
+    hits, total = Counter(), Counter()
+    hits_ho, total_ho = Counter(), Counter()
     wrong = []
     for nummer, p in preds.items():
         if nummer not in gold:
             continue
         g_deontic, g_type = gold[nummer]
         key = g_deontic or f"({g_type})"
+        correct = (p.get("deontic") or None) == g_deontic and p.get("statement_type") == g_type
         total[key] += 1
-        if (p.get("deontic") or None) == g_deontic and p.get("statement_type") == g_type:
-            hits[key] += 1
-        else:
-            wrong.append((nummer, g_deontic or g_type, p.get("deontic") or p.get("statement_type")))
+        hits[key] += correct
+        if nummer not in fewshot:
+            total_ho[key] += 1
+            hits_ho[key] += correct
+        if not correct:
+            tag = " [few-shot]" if nummer in fewshot else ""
+            wrong.append((nummer, g_deontic or g_type, p.get("deontic") or p.get("statement_type"), tag))
     print("\nagreement vs gold:")
+    print(f"  {'':14} {'all':>7} {'held-out':>9}")
     for key in sorted(total):
-        print(f"  {key:12} {hits[key]}/{total[key]}")
+        print(f"  {key:14} {f'{hits[key]}/{total[key]}':>7} {f'{hits_ho[key]}/{total_ho[key]}':>9}")
     overall = f"{sum(hits.values())}/{sum(total.values())}"
-    print(f"  overall      {overall}")
+    held_out = f"{sum(hits_ho.values())}/{sum(total_ho.values())}"
+    print(f"  {'overall':14} {overall:>7} {held_out:>9}")
+    excluded = sorted(fewshot & set(gold) & set(preds))
+    print(f"  held-out excludes few-shot articles: {', '.join(excluded) or 'none'}")
     if wrong:
         print("\ndisagreements (nummer: gold -> predicted):")
-        for n, g, p in wrong:
-            print(f"  {n}: {g} -> {p}")
-    return overall
+        for n, g, pr, tag in wrong:
+            print(f"  {n}: {g} -> {pr}{tag}")
+    return overall, held_out
 
 
 def sanitize_prediction(pred, nummer, valid_nummers):
@@ -275,7 +295,8 @@ def append_diary(path, meta):
         f.write(f"- articles: {meta['n']}"
                 + (f" (limit {meta['limit']})" if meta['limit'] else "") + "\n")
         if meta.get("agreement"):
-            f.write(f"- agreement vs gold: {meta['agreement']}\n")
+            overall, held_out = meta["agreement"]
+            f.write(f"- agreement vs gold: {overall} (held-out, excl. few-shot: {held_out})\n")
         f.write(f"- guard changes: {meta['guard_changes']}\n")
         if meta.get("out"):
             f.write(f"- predictions snapshot: {meta['out']}\n")

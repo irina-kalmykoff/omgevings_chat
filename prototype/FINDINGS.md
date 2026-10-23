@@ -5,6 +5,54 @@ and the knowledge-graph layer for the omgevingsplan. Newest entry first.
 
 ---
 
+## 2026-10-23 — Held-out scoring and run-to-run variance
+
+`evaluate()` in `deontic_extract.py` now scores two ways: on all gold articles,
+and held-out, excluding the articles used as few-shot examples (read from
+`FEWSHOT` itself, so it stays correct if the examples change). The table prints
+both columns, few-shot disagreements are marked `[few-shot]`, and the diary
+records both figures.
+
+Gold composition: 38 articles, one row each. The four few-shot articles (1.1,
+22.26, 22.27, 22.28) are all in gold, so held-out n = 34: obligation 12,
+constitutive 9, prohibition 8, permission 4, exemption 1. Exemption has a single
+held-out article and says nothing on its own.
+
+Four gpt-4o runs (sharpened prompt, temperature 0) scored against gold: the three
+2026-10-21 prediction snapshots, rescored offline, plus a new run.
+
+| run | all | held-out |
+|---|---|---|
+| 2026-10-21 raw | 33/38 | 29/34 |
+| 2026-10-21 guarded | 34/38 | 30/34 |
+| 2026-10-21 write | 35/38 | 31/34 |
+| 2026-10-23 | 34/38 | 30/34 |
+
+- The few-shot articles were correct in every run, so the leak is exactly +4
+  hits; held-out sits about 1.3 points below the all-38 figure.
+- Held-out mean 30/34 (88%), spread 29–31 (85–91%), i.e. ±1 article run to run.
+- Sampling uncertainty dominates: a 95% Wilson interval for 30/34 is roughly
+  [73%, 95%]. The gold-set size, not model noise, is the bottleneck.
+- Across all 308 articles, 9 changed label between two consecutive runs (~3%).
+
+Errors. Stable in all four runs: 22.4 (gold permission -> constitutive), 22.16
+(prohibition -> exemption), 22.37 (permission -> obligation). Intermittent: 22.19
+(prohibition -> permission, 2/4 runs), 22.30 (constitutive -> obligation, 1/4).
+22.4, 22.16, 22.19 and 22.37 were already adjudicated on 2026-10-20 as structural
+(empowerment, lid granularity, lid granularity, modification). 22.30 has not been
+read yet. So the held-out errors are almost entirely ontology/annotation-unit
+cases, not plain model mistakes.
+
+Guards and measurement: the guards changed one prediction per run (22.16, a
+self-override; it drops an edge and does not touch the deontic), and none on the
+write run. The differences between the raw and guarded snapshots were run-to-run
+variance, not the guards. Decision: guards stay on for `--write` as a write-time
+integrity control (no edges to non-existent articles, no self-loops, no deontic
+outside the four); they are not needed for measuring the model, and either
+setting gives the same score here.
+
+---
+
 ## 2026-10-21 — Step 3 validation (building, monument, afwijken, discharge), and write hygiene
 
 Ran the activity-anchored validation on `Bouwactiviteit`, the monument activity,
@@ -322,6 +370,8 @@ kappa).
 - Firing conditions are unmodelled: location is uniform (whole municipality) and
   the heritage/safety triggers are textual, so the graph shows which rules can
   apply, not whether they fire for a given case.
-- Gold set is a single-annotator silver standard with few-shot leakage; a
-  defensible number needs held-out scoring and blind double annotation.
-- Temperature-0 runs are not reproducible; report the spread, not one number.
+- Gold set is a single-annotator silver standard and small: held-out n = 34
+  gives roughly a ±11-point interval. Held-out scoring is in place (the leak was
+  worth ~1 point); still needed: more items and blind double annotation.
+- Temperature-0 runs are not reproducible (~3% of articles flip between runs,
+  ±1 of 34 held-out); report the mean and spread, not one number.
