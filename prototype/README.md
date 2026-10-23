@@ -80,6 +80,9 @@ are the rest of the pipeline, not required for the demo.
 | `scripts/build_graph.py` | parses the STOP/TPOD delivery package and loads the full graph; applies the schema constraints |
 | `scripts/deontic_extract.py` | LLM deontic extractor, switchable local (Ollama) / OpenAI, with schema guards, write hygiene and evaluation against the silver set |
 | `scripts/review_mismatches.py` | writes a mismatch report of the extractor against the silver set, with article text |
+| `scripts/silver_stats.py` | quality and stability statistics: accuracy with intervals, kappa, precision/recall/F1 (population-weighted), run-to-run stability |
+| `scripts/derogation_probe.py` | experiment: labels "in afwijking van" derogation clauses on three axes (target scope, operation, temporal) to test v1 override types |
+| `scripts/make_annotation_sheet.py` | builds the blind, stratified annotation sheet behind silver v2 |
 | `scripts/spatial.py` | point-in-polygon lookup: which rules apply at an RD point |
 | `scripts/generate_visualisation.py` | renders any Cypher query's result as a self-contained HTML graph with SVG/PNG export |
 | `cypher/constraints.cypher` | the schema (uniqueness constraints); applied automatically by `build_graph.py`, kept as the canonical definition |
@@ -90,6 +93,7 @@ are the rest of the pipeline, not required for the demo.
 | `silver_deontic_v1.csv` | silver v1: 38 articles labelled by us, used to score the extractor |
 | `silver_deontic_v2.csv` | silver v2: 50 articles labelled by Claude, stratified by predicted tag, with v0-fit flags |
 | `silver_v2_annotation.xlsx` | the blind annotation sheet behind silver v2, with codebook |
+| `silver_v2_strata.csv` | the stratum of each silver v2 article and the stratum sizes, needed for the weighted estimates |
 | `demo-script.md` | shot-by-shot 3-minute demo-video script, with the pre-recording graph prep |
 | `visualizations/maastricht-rule-graph.html` | self-contained interactive graph (open in a browser) |
 | `visualizations/graph.json` | the subgraph that page draws (also embedded in the page) |
@@ -121,6 +125,14 @@ disagreement with the article text, to adjudicate label vs model:
 
 ```
 python scripts/review_mismatches.py --backend openai --model gpt-4o
+```
+
+`scripts/silver_stats.py` computes the statistics in `FINDINGS.md` from saved
+prediction runs (`runs/gpt4o_*.csv`, written with `--out`), so it needs no API
+key once the runs exist:
+
+```
+python scripts/silver_stats.py
 ```
 
 See `FINDINGS.md` for results and open issues.
