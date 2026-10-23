@@ -7,7 +7,7 @@ OpenAI-compatible endpoint — switching is only a matter of base_url / model.
 
 Reads articles from Neo4j, calls the model with the v0 definitions and a few
 worked examples, optionally writes the tags and OVERRIDES edges back, and can
-score itself against a human-labelled gold file.
+score itself against a labelled reference file (silver set).
 
 Usage:
     pip install openai neo4j
@@ -16,8 +16,8 @@ Usage:
     # hosted:
     export OPENAI_API_KEY=...
     python deontic_extract.py --backend openai --model gpt-4o --write
-    # evaluate against the gold sample without writing:
-    python deontic_extract.py --backend ollama --eval gold_deontic.csv
+    # evaluate against the silver sample without writing:
+    python deontic_extract.py --backend ollama --eval silver_deontic_v1.csv
 """
 
 import argparse
@@ -151,35 +151,55 @@ def write_back(driver, nummer, pred, source):
         )
 
 
-def evaluate(preds, gold_path):
-    """Print per-tag agreement of predictions against a gold CSV (nummer,deontic,statement_type)."""
-    gold = {}
-    with open(gold_path, encoding="utf-8") as f:
+def evaluate(preds, silver_path):
+    """Score predictions against a silver CSV, overall and held-out.
+
+    The held-out score excludes the articles used as few-shot examples in
+    FEWSHOT, since the model has seen their answers in the prompt.
+
+    Args:
+        preds: Mapping of article nummer to predicted dict.
+        silver_path: CSV with columns nummer, deontic, statement_type.
+
+    Returns:
+        Tuple (overall, held_out) of "hits/total" strings.
+    """
+    silver = {}
+    with open(silver_path, encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            gold[row["nummer"]] = (row["deontic"] or None, row["statement_type"])
-    hits = Counter()
-    total = Counter()
+            silver[row["nummer"]] = (row["deontic"] or None, row["statement_type"])
+    fewshot = {example["nummer"] for example, _ in FEWSHOT}
+    hits, total = Counter(), Counter()
+    hits_ho, total_ho = Counter(), Counter()
     wrong = []
     for nummer, p in preds.items():
-        if nummer not in gold:
+        if nummer not in silver:
             continue
-        g_deontic, g_type = gold[nummer]
+        g_deontic, g_type = silver[nummer]
         key = g_deontic or f"({g_type})"
+        correct = (p.get("deontic") or None) == g_deontic and p.get("statement_type") == g_type
         total[key] += 1
-        if (p.get("deontic") or None) == g_deontic and p.get("statement_type") == g_type:
-            hits[key] += 1
-        else:
-            wrong.append((nummer, g_deontic or g_type, p.get("deontic") or p.get("statement_type")))
-    print("\nagreement vs gold:")
+        hits[key] += correct
+        if nummer not in fewshot:
+            total_ho[key] += 1
+            hits_ho[key] += correct
+        if not correct:
+            tag = " [few-shot]" if nummer in fewshot else ""
+            wrong.append((nummer, g_deontic or g_type, p.get("deontic") or p.get("statement_type"), tag))
+    print("\nagreement vs silver:")
+    print(f"  {'':14} {'all':>7} {'held-out':>9}")
     for key in sorted(total):
-        print(f"  {key:12} {hits[key]}/{total[key]}")
+        print(f"  {key:14} {f'{hits[key]}/{total[key]}':>7} {f'{hits_ho[key]}/{total_ho[key]}':>9}")
     overall = f"{sum(hits.values())}/{sum(total.values())}"
-    print(f"  overall      {overall}")
+    held_out = f"{sum(hits_ho.values())}/{sum(total_ho.values())}"
+    print(f"  {'overall':14} {overall:>7} {held_out:>9}")
+    excluded = sorted(fewshot & set(silver) & set(preds))
+    print(f"  held-out excludes few-shot articles: {', '.join(excluded) or 'none'}")
     if wrong:
-        print("\ndisagreements (nummer: gold -> predicted):")
-        for n, g, p in wrong:
-            print(f"  {n}: {g} -> {p}")
-    return overall
+        print("\ndisagreements (nummer: silver -> predicted):")
+        for n, g, pr, tag in wrong:
+            print(f"  {n}: {g} -> {pr}{tag}")
+    return overall, held_out
 
 
 def sanitize_prediction(pred, nummer, valid_nummers):
@@ -275,7 +295,8 @@ def append_diary(path, meta):
         f.write(f"- articles: {meta['n']}"
                 + (f" (limit {meta['limit']})" if meta['limit'] else "") + "\n")
         if meta.get("agreement"):
-            f.write(f"- agreement vs gold: {meta['agreement']}\n")
+            overall, held_out = meta["agreement"]
+            f.write(f"- agreement vs silver: {overall} (held-out, excl. few-shot: {held_out})\n")
         f.write(f"- guard changes: {meta['guard_changes']}\n")
         if meta.get("out"):
             f.write(f"- predictions snapshot: {meta['out']}\n")
@@ -288,7 +309,7 @@ def main():
     parser.add_argument("--model", help="override the backend's default model")
     parser.add_argument("--limit", type=int, help="process only the first N articles")
     parser.add_argument("--write", action="store_true", help="write tags/edges back to Neo4j")
-    parser.add_argument("--eval", dest="gold", help="score against a gold CSV")
+    parser.add_argument("--eval", dest="silver", help="score against a silver reference CSV")
     parser.add_argument("--guards", action="store_true",
                         help="enforce the schema on predictions before eval/write (auto-on with --write)")
     parser.add_argument("--out", help="write the run's predictions to this CSV")
@@ -326,7 +347,7 @@ def main():
         if args.out:
             write_predictions_csv(preds, args.out, source)
             print(f"\nwrote predictions: {args.out}")
-        agreement = evaluate(preds, args.gold) if args.gold else None
+        agreement = evaluate(preds, args.silver) if args.silver else None
         if args.diary:
             append_diary(args.diary, {
                 "when": datetime.now().strftime("%Y-%m-%d %H:%M"),

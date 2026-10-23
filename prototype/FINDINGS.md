@@ -3,6 +3,370 @@
 A running log of results and decisions from building the LLM deontic extractor
 and the knowledge-graph layer for the omgevingsplan. Newest entry first.
 
+Naming: the labelled reference set was called "gold" until 2026-10-23. It is a
+silver standard (no authoritative source for deontic force, no expert annotator),
+so it is now silver v1 (`silver_deontic_v1.csv`, the 38 articles labelled by us)
+plus silver v2 (`silver_deontic_v2.csv`, 50 articles labelled by Claude). Older
+entries below still say "gold" for silver v1.
+
+---
+
+## 2026-10-23 — Quality and stability statistics (`scripts/silver_stats.py`)
+
+Inputs: the four gpt-4o prediction snapshots (`runs/gpt4o_*.csv`), silver v1
+held-out (34, few-shot excluded), silver v2 (50, stratified; strata in
+`silver_v2_strata.csv`). No new API calls. 2000 bootstrap replicates, seed 7.
+
+Quality per run:
+
+| run | v1 held-out | v2 raw | v2 weighted | combined (84) | kappa |
+|---|---|---|---|---|---|
+| raw | 29/34 | 40/50 | 0.869 | 69/84 | 0.772 |
+| guarded | 30/34 | 39/50 | 0.863 | 69/84 | 0.772 |
+| write | 31/34 | 39/50 | 0.863 | 70/84 | 0.788 |
+| 23 Oct | 30/34 | 40/50 | 0.869 | 70/84 | 0.788 |
+
+Mean ± sd across runs: v1 0.882 ± 0.024, v2 weighted 0.866 ± 0.003, combined
+0.827 ± 0.007, kappa 0.780 ± 0.009.
+
+Intervals (95%): combined 70/84 = 0.833, Wilson [74%, 90%], bootstrap [75%, 90%];
+v2 stratum-weighted 0.863, stratified bootstrap [77%, 94%]; combined kappa 0.79,
+bootstrap [0.69, 0.88].
+
+Which number to quote: silver v2 is the only random sample, so its
+stratum-weighted 87% [77%, 94%] is the population estimate. The combined raw 83%
+is lower because v2 deliberately oversamples the hard strata (permission,
+exemption, prohibition); it is not a population figure.
+
+Clean vs flagged (v2, all runs pooled): clean articles 84/84 = 100% (21 articles);
+flagged articles (mixed lids or not fitting v0) 74/116 = 64% (29 articles). The
+errors are an ontology / annotation-unit problem, not a reading problem.
+
+Per tag (combined, all runs pooled): permission recall 0.64 (confused with
+prohibition 12 and obligation 8 times: the discharge-route template); exemption
+precision 0.60 and obligation -> exemption 15 times (the model tags the exemption
+lid of an obligation article); constitutive recall 0.97, precision 0.91.
+
+Precision / recall / F1 as a population estimate (silver v2, each article
+weighted by N_h / n_h of its stratum, run `write`, 95% stratified bootstrap):
+
+| tag | precision | recall | F1 |
+|---|---|---|---|
+| obligation | 0.90 [0.70, 1.00] | 0.90 [0.82, 0.96] | 0.90 |
+| prohibition | 0.50 [0.20, 0.80] | 1.00 (5/5; Wilson [0.57, 1.00]) | 0.67 |
+| permission | 1.00 [1.00, 1.00] | 0.40 [0.21, 0.85] | 0.57 |
+| exemption | 0.60 [0.30, 0.90] | 0.83 [0.54, 1.00] | 0.70 |
+| constitutive | 0.98 [0.95, 1.00] | 1.00 | 0.99 |
+
+Macro F1 0.76 [0.64, 0.88]; per-tag F1 is the same within ±0.04 across the four
+runs. The weighting matters: obligation and constitutive are three quarters of the
+population and carry the 87% accuracy, while the two weak tags are mirror images
+of the two article-level ambiguities. gpt-4o over-calls prohibition (precision
+0.50) and misses permission (recall 0.40) on the discharge-route template, and
+over-calls exemption (precision 0.60) on obligation articles with an exemption
+lid. Bootstrap intervals of 1.00 [1.00, 1.00] come from very few true items
+(e.g. 5 silver prohibitions) and understate the uncertainty.
+
+Stability: 295 of 308 articles (95.8%) get the identical label in all four runs;
+Fleiss' kappa across runs 0.967, pairwise Cohen's kappa 0.958–0.981 (almost
+perfect). Most common flips: permission <-> prohibition, obligation <->
+prohibition, constitutive <-> obligation (3 each).
+
+What it means:
+
+- The model is very consistent with itself (kappa 0.97) but agrees less with the
+  silver labels (kappa 0.78). The gap is systematic, not noise: a majority vote
+  over the runs does not help (0.821 vs single runs 0.821–0.833).
+- The systematic part sits entirely in the flagged articles, so the next accuracy
+  gain comes from modelling (lid-level norms, v1 categories), not from prompting
+  or more runs.
+- Instability is a useful difficulty signal: of the 4 unstable articles in the
+  silver sets, the majority vote is right for only 1, against 68/80 for stable
+  ones. A flip between runs is a cheap flag for human review.
+
+Caveats: silver labels (v1 one human, v2 Claude); v1 was hand-picked, not
+sampled; the four runs mix guarded and unguarded settings (guards do not change
+the deontic tag here).
+
+---
+
+## 2026-10-23 — Silver v2: 50 more labelled articles, and "gold" renamed to silver
+
+Why silver: there is no authoritative STOP/TPOD field for deontic force, the
+original 38 were labelled by one annotator after seeing LLM output, and the new
+labels come from Claude because blind labelling needs fluent Dutch. Neither set
+is gold. The file `gold_deontic.csv` is renamed `silver_deontic_v1.csv`; the scripts and
+README now say silver (`--eval silver_deontic_v1.csv`; `review_mismatches.py
+--silver`).
+
+Sheet (`scripts/make_annotation_sheet.py`, seed 42, `silver_v2_annotation.xlsx`):
+10 articles per predicted tag (obligation, prohibition, permission, exemption,
+constitutive), sampled from the 270 articles outside silver v1, plus 8 hidden
+re-check items from silver v1 (no few-shot articles), shuffled, with no
+predictions shown. The stratum key is kept apart in `runs/silver_v2_key.csv`. A
+codebook tab carries the v0 definitions and tie-break rules (declarative duties
+are obligations; tag a mixed article by its primary norm and flag it; best v0
+label plus a category when v0 fits badly).
+
+Labelling: Claude labelled all 58 from the article text and codebook only,
+without the predictions or the key, with a confidence (1–3), a v0-fit flag and a
+category. 33 of 58 are flagged (29 of the 50 new articles: mixed lids, temporal,
+discretionary / empowerment, assessment rule, modification, reserved / repealed).
+
+Calibration: on the 8 hidden re-check items, Claude agrees with silver v1 8/8.
+
+First quality check, gpt-4o against the 50 new articles (existing prediction
+snapshots, no new API calls). The sample is stratified, so the overall figure
+weights each stratum by its share of the 270: acc = sum_h (N_h / N) acc_h.
+
+| run | raw | stratum-weighted | Cohen's kappa |
+|---|---|---|---|
+| 2026-10-21 raw | 40/50 | 0.869 | 0.75 |
+| 2026-10-21 guarded | 39/50 | 0.863 | 0.73 |
+| 2026-10-21 write | 39/50 | 0.863 | 0.73 |
+| 2026-10-23 | 40/50 | 0.869 | 0.75 |
+
+- About 87% weighted, consistent with the 88% held-out on silver v1: two
+  independent samples give the same answer. Kappa about 0.75 ("substantial").
+- All 10 disagreements are on articles flagged as mixed lids or not fitting v0;
+  on clean single-norm articles agreement is 100%.
+- Pattern 1, the discharge-route template (22.139, 22.187, 22.190, 22.198): "kan
+  ... worden geloosd in X. ... wordt niet geloosd in Y" grants one route and
+  forbids another. Silver tags lid 1 (permission), gpt-4o mostly prohibition.
+  Both are defensible: the annotation-unit problem, not a model error.
+- Pattern 2, obligation followed by an exemption lid (22.205, 22.245): gpt-4o tags
+  the exemption lid, as with 22.16.
+- Permission was thin in silver v1 (4); silver v2 has 14, mostly the discharge
+  template.
+
+Caveats: Claude is a different model family from gpt-4o, not a legal expert, and
+two LLM readers can share errors; the 8/8 calibration is against a single human
+annotator. The strata are gpt-4o's own predictions, so a per-stratum accuracy is
+gpt-4o's precision for that predicted tag.
+
+Next: a statistics script over the combined held-out set (34 + 50 = 84) with
+bootstrap intervals, kappa and a clean vs flagged split, plus run-to-run stability
+(per-article flip rate, Fleiss' kappa) over the four existing runs on all 308
+articles.
+
+---
+
+## 2026-10-23 — Derogation flavor probe and a v1 override proposal
+
+Question: should the override vocabulary (exception / restriction) gain finer
+flavors, such as modification, permissive derogation and decision-authority
+derogation?
+
+Reading all 35 "in afwijking van" articles first showed that the cue is not one
+concept. It covers six groups (silver grouping, one read): A derogation inside
+the same article (13), B modification proper (4: 22.64, 22.65, 22.66, 22.103),
+C permissive / grandfathering "mag, in afwijking van" (3), D eerbiedigende-werking
+scope clauses (4), E decision-authority derogation (4: 22.29, 22.32, 22.33,
+22.278), F derogation from an external source, Bal or NEN (7). These groups mix
+three independent things: where the target is (A, F), what the derogation does
+(B, C, E) and whether it concerns an existing situation (D).
+
+Probe (`scripts/derogation_probe.py`, standalone, reads Tekst.xml): gpt-4o
+labels every derogation clause on three axes (target scope, flavor, temporal
+flag) plus the net effect for the regulated party. Run on the 35 cue articles
+plus 15 random control articles with "geldt niet / niet van toepassing" but no
+cue (including 22.23, 22.27, 22.28), two runs, 154 clause rows. Flavor set:
+exception, restriction, modification, permissive, discretionary.
+
+| | Separable | Stable | Composes differently | Verdict |
+|---|---|---|---|---|
+| target scope | A -> same_article 21/22, F -> external 7/8, B/C/D -> other_article | yes | n/a | adopt |
+| temporal | C 3/3 and D 7/7 true, B 0/7 | yes | n/a | adopt as a flag |
+| modification | core yes (B 6/7; the miss, 22.64, is a genuine exception clause), but leaks: 4 in controls, 10 in A | mostly | yes: net effect keeps the target's obligation (32 of 44) | adopt, sharpen definition |
+| discretionary | yes: E 4, F 1, never in controls | yes | yes: net effect "undetermined" 10/10 | adopt |
+| permissive | no: C labelled exception 3/3 | no: 22.99, 22.175 flip exception <-> permissive | no: effectively "allowed", as exception | drop |
+| restriction | the model almost never emits it (0 in run 1, 2 in run 2) | | | keep deriving it in the graph |
+
+Stability: 44/50 articles identical across runs; every flip sits on a flavor
+boundary (exception/permissive, exception/modification, modification/restriction).
+
+What it means:
+
+- Permissive derogation dissolves: group C is an exception plus the temporal flag
+  (grandfathering).
+- Decision-authority derogation is the genuinely new concept: the only flavor whose
+  effect cannot be composed in the graph, because it depends on a decision. It is
+  empowerment (22.4, 22.34) in another form, so one concept covers both gaps.
+- The derived-override design is confirmed from another angle: even canonical 22.28
+  ("Artikel 22.27 niet van toepassing") is labelled exception, because the local
+  text does not show that 22.27 is itself an exemption. The LLM should name only
+  the local operation; the graph composes exception vs restriction.
+- The boundary to fix is modification vs narrowing: 22.28 "Artikel 22.27 alleen van
+  toepassing voor zover ..." flipped modification <-> restriction. Narrowing when a
+  rule applies is not a change of its content.
+- Group A needs no lid-level rebuild of the annotation unit: target scope picks out
+  same-article derogations reliably, and the graph already has `Lid` nodes
+  (`Artikel -BEVAT-> Lid`), so these can be Lid -> Lid edges while the deontic tag
+  stays at article level.
+- Schema leak: `net_effect = "restriction"` appeared 4 times; guards must cover the
+  new fields if this enters the extractor.
+
+Caveats: silver groups from a single read, one model, two runs.
+
+v1 override proposal (to test):
+
+- The LLM labels the local operation only: `disapply`, `modification`,
+  `discretionary`.
+- `exception` vs `restriction` is derived in the graph from the target's deontic,
+  as `derive_overrides.cypher` already does.
+- Each override edge carries `target_scope` (same_article / other_article /
+  external) and a `temporal` flag.
+- External targets need a node type for national-law articles and standards.
+
+Next: the probe prompt now uses this three-operation set, with modification
+sharpened ("narrowing or widening when or to whom a rule applies is disapply, not
+modification") and a schema-violation count. Success on the rerun: controls drop
+to about 0 modification, and 22.28 stops flipping.
+
+Rerun with the v1 operation set (disapply / modification / discretionary,
+modification sharpened; `runs/derogation_probe_v2.csv`, same 50 articles, two runs):
+
+- Success criteria met: controls 0 modification (was 4), 22.28 stable and all
+  disapply (it was flipping modification <-> restriction), schema violations 0
+  (was 4), B modification 5/7, E discretionary 4/4.
+- Modification is now precise: net effect obligation in 17/17 clauses, so its
+  composition rule is clean (keeps the target's deontic, changes its content).
+  The A clauses labelled modification (22.63, 22.122, 22.138) are genuine value or
+  deadline changes. Misses: 22.103 ("geldt de afstand, bedoeld in ...") is a
+  modification labelled disapply; 22.64 disapply is correct (a laden-en-lossen
+  exception clause).
+- Discretionary has a "kan" problem: 3 of 7 run-1 clauses are permissions to the
+  regulated party, not authority discretion (22.148 "kan ... worden geloosd",
+  22.198 / 22.204 "kan met een lagere frequentie ... worden volstaan"). Its
+  definition needs an actor test: discretionary only when the competent authority
+  decides.
+- Stability: 45/50 articles identical, but only one flavor flip (22.23); the rest
+  differ in clause splitting or scope (external vs other_article), not in flavor.
+  Flavor-level stability is 49/50, up from 44/50.
+- As designed, disapply still reports net effect "exemption" for 22.28; the
+  restriction is left to the graph composition.
+
+Verdict: the three-operation set plus target scope and temporal flag holds up.
+Remaining fix before it enters the extractor: the actor test for discretionary.
+
+Actor test (`runs/derogation_probe_v3.csv`): adding the actor test to the
+discretionary definition in the prompt did not work. 22.148, 22.198 and 22.204
+stayed discretionary in both runs. The passive "kan ... worden" hides who decides,
+and a definition alone cannot fix that. A deterministic check does: keep
+discretionary only when the quoted clause names an authority or decision
+(bevoegd gezag, college, (omgevings)vergunning, maatwerk, besluit), otherwise
+relabel as disapply. Applied to the saved output of all three runs it kept only
+group E clauses (6 of 10, 8 of 14, 8 of 14): perfect precision, no true E clause
+lost. Implemented as `actor_guard` in the probe; the CSV keeps the model's
+`raw_flavor` next to the guarded flavor.
+
+Other v3 results match v2 within noise: controls 1 modification (22.23 "blijft
+het aantal woningen gelijk", borderline), 0 schema violations, one flavor flip
+(22.63). New: the temporal flag is less stable than the first runs suggested;
+most of the 7 unstable articles flip on temporal (22.90, 22.218, 22.59) or on
+scope / clause splitting, and E went from 3/7 to 0/7 temporal. Temporal needs a
+sharper cue list or the same lexical-guard treatment.
+
+Decision: stop tuning the probe prompt here (same reasoning as freezing the main
+prompt: more wording tweaks against 50 articles would overfit). The pattern for
+v1 is the one the project already uses: the LLM proposes the local operation,
+deterministic rules check what is checkable from the text (schema guards, actor
+guard), and the graph composes the net effect.
+
+---
+
+## 2026-10-23 — Held-out scoring and run-to-run variance
+
+`evaluate()` in `deontic_extract.py` now scores two ways: on all gold articles,
+and held-out, excluding the articles used as few-shot examples (read from
+`FEWSHOT` itself, so it stays correct if the examples change). The table prints
+both columns, few-shot disagreements are marked `[few-shot]`, and the diary
+records both figures.
+
+Gold composition: 38 articles, one row each. The four few-shot articles (1.1,
+22.26, 22.27, 22.28) are all in gold, so held-out n = 34: obligation 12,
+constitutive 9, prohibition 8, permission 4, exemption 1. Exemption has a single
+held-out article and says nothing on its own.
+
+Four gpt-4o runs (sharpened prompt, temperature 0) scored against gold: the three
+2026-10-21 prediction snapshots, rescored offline, plus a new run.
+
+| run | all | held-out |
+|---|---|---|
+| 2026-10-21 raw | 33/38 | 29/34 |
+| 2026-10-21 guarded | 34/38 | 30/34 |
+| 2026-10-21 write | 35/38 | 31/34 |
+| 2026-10-23 | 34/38 | 30/34 |
+
+- The few-shot articles were correct in every run, so the leak is exactly +4
+  hits; held-out sits about 1.3 points below the all-38 figure.
+- Held-out mean 30/34 (88%), spread 29–31 (85–91%), i.e. ±1 article run to run.
+- Sampling uncertainty dominates: a 95% Wilson interval for 30/34 is roughly
+  [73%, 95%]. The gold-set size, not model noise, is the bottleneck.
+- Across all 308 articles, 9 changed label between two consecutive runs (~3%).
+
+Errors. Stable in all four runs: 22.4 (gold permission -> constitutive), 22.16
+(prohibition -> exemption), 22.37 (permission -> obligation). Intermittent: 22.19
+(prohibition -> permission, 2/4 runs), 22.30 (constitutive -> obligation, 1/4).
+22.4, 22.16, 22.19 and 22.37 were already adjudicated on 2026-10-20 as structural
+(empowerment, lid granularity, lid granularity, modification). 22.30 has not been
+read yet. So the held-out errors are almost entirely ontology/annotation-unit
+cases, not plain model mistakes.
+
+Guards and measurement: the guards changed one prediction per run (22.16, a
+self-override; it drops an edge and does not touch the deontic), and none on the
+write run. The differences between the raw and guarded snapshots were run-to-run
+variance, not the guards. Decision: guards stay on for `--write` as a write-time
+integrity control (no edges to non-existent articles, no self-loops, no deontic
+outside the four); they are not needed for measuring the model, and either
+setting gives the same score here.
+
+### Legal ideas tested so far
+
+| Idea | Legal root | Tested on | Verdict |
+|---|---|---|---|
+| Prescriptive vs constitutive (regulates behaviour vs defines / counts-as) | Hart's primary/secondary rules; constitutive "counts-as" statements | 1.1, 22.1, 22.25, 22.12, 22.19 | Works once the prompt says Dutch drafting states duties as plain facts ("is aangesloten op", "ligt haaks") |
+| Four deontic operators: canonical prohibition = "verboden zonder omgevingsvergunning" (22.26), canonical permission = vergunningvrij (22.36), obligation (indieningsvereisten), exemption (22.27) | LegalRuleML deontic operators | 38-article gold set + the step 3 activities | About 88% held-out; remaining errors are structural |
+| Defeasibility: one rule defeats another, as an exception (lifts it) or a restriction (reinstates it) | LegalRuleML overrides / defeasible logic | dakkapel chain 22.26 -> 22.27 -> 22.28; permit-free chain 22.36 -> 22.38 / 22.39 | Holds |
+| Relational deontic (derived override): the net force of a disapplying article depends on what it disapplies, so it is composed in the graph, not asked of the LLM | deontic composition | 22.38 (key case), 22.23, 22.28, 22.39, 22.61a | Corroborated for the whole restriction class |
+| Rule - activity - location applicability | STOP/TPOD juridische regel | use-case query | Tested and found not discriminating: one location (whole municipality), one generic building activity |
+| Integrity constraints on the override graph | schema / referential integrity | guards | Rarely fire, but needed for `--write` |
+
+### Seen but not modelled: size of each gap
+
+Articles (out of 308 in the Maastricht regeling) whose text contains the typical
+Dutch cue. These are lexical indicators, not labels: they size each gap, not
+count it exactly.
+
+| Concept | Cue | Articles | Our cases |
+|---|---|---|---|
+| Disapplication (the override layer itself) | "geldt niet", "niet van toepassing" | 95 (31%) | about 8 checked |
+| Reference to national law | Bbl / Bal | 51 | guards drop these targets |
+| Modification / derogation | "in afwijking van" | 35 (11%) | 22.37, 22.64, 22.103, 22.295 |
+| Temporal: overgangsrecht, eerbiedigende werking | | 20 | 22.40, 22.99, 22.102 |
+| Conditions | "mits", "tenzij" | 14 | 22.19 (conditional lid) |
+| Assessment rules | "wordt alleen verleend als", etc. | 12 | 22.29–22.33 |
+| Analogous application | "overeenkomstige toepassing" | 11 | 22.37, 22.295 |
+| Cumulation | "onverminderd" | 7 | none |
+| Empowerment / maatwerk | | 7 | 22.4, 22.34 |
+| Precedence / voorrang | | 1 | 22.1 |
+
+### Expanding the circle: proposed order
+
+1. Test the derived override at scale, with no ontology change: run the
+   composition over all OVERRIDES edges and report clean vs disagreeing, plus the
+   two untested shapes: multi-hop chains (22.28 -> 22.27 -> 22.26) and several
+   overrides on one target (22.36 has 22.38 and 22.39). The core thesis idea has
+   so far been checked on about 8 of roughly 95 disapplying articles.
+2. Add modification as a fifth override type (cue "in afwijking van"): the most
+   frequent gap, already visible in both the gold scoring and the override pass,
+   and a small lexical prompt/schema change.
+3. After the presentation: firing conditions (mits/tenzij, heritage and safety
+   triggers). Temporal, empowerment and precedence stay listed as known gaps.
+
+A "doesn't fit v0" category column in the next annotation round would measure
+these gaps directly instead of relying on cue counts.
+
 ---
 
 ## 2026-10-21 — Step 3 validation (building, monument, afwijken, discharge), and write hygiene
@@ -97,7 +461,7 @@ between a local model (qwen2.5 via Ollama) and the OpenAI API. For each article
 it assigns `statement_type` (prescriptive / constitutive), a `deontic` tag
 (obligation / prohibition / permission / exemption) and `OVERRIDES` edges, under
 ontology v0. We compared qwen2.5:7b (local) against gpt-4o (hosted), temperature
-0, identical prompt and few-shot, scored against `prototype/gold_deontic.csv` —
+0, identical prompt and few-shot, scored against `prototype/silver_deontic_v1.csv` —
 38 articles hand-labelled by us against the v0 definitions.
 
 ### Two methodology issues found this session (read these first)
@@ -294,7 +658,7 @@ Neo4j.
 
 ### The gold is a silver standard
 
-`gold_deontic.csv` is single-annotator, labelled by us against the v0
+`silver_deontic_v1.csv` is single-annotator, labelled by us against the v0
 definitions. There is no authoritative STOP/TPOD field for deontic force — that
 is why we extract it. So "agreement" partly measures agreement between two
 LLM-style reads, which inflates easy cases and makes hard-case disagreements
@@ -322,6 +686,9 @@ kappa).
 - Firing conditions are unmodelled: location is uniform (whole municipality) and
   the heritage/safety triggers are textual, so the graph shows which rules can
   apply, not whether they fire for a given case.
-- Gold set is a single-annotator silver standard with few-shot leakage; a
-  defensible number needs held-out scoring and blind double annotation.
-- Temperature-0 runs are not reproducible; report the spread, not one number.
+- The reference set is silver, not gold: v1 (38, labelled by us) and v2 (50,
+  labelled by Claude, 8/8 against v1 on re-check items). Held-out n is now
+  34 + 50 = 84 (about ±7 points instead of ±11). A second annotator with fluent
+  Dutch would still make it stronger.
+- Temperature-0 runs are not reproducible (~3% of articles flip between runs,
+  ±1 of 34 held-out); report the mean and spread, not one number.

@@ -1,0 +1,51 @@
+nummer,deontic,statement_type,v0_fit,category,confidence,annotator,notes
+22.100,exemption,prescriptive,yes,,3,claude,disapplies 22.98 lid 1 above a distance
+22.102,exemption,prescriptive,no,temporal,2,claude,eerbiedigende werking disapplies 22.101; lid 2 adds a no-increase condition
+22.111,,constitutive,no,other,3,claude,repealed (vervallen)
+22.115,obligation,prescriptive,yes,,3,claude,minimum distance
+22.122,obligation,prescriptive,yes,mixed lids,3,claude,odour limit; lid 2 modified limit for old plants
+22.123,exemption,prescriptive,yes,temporal,3,claude,values disapplied for old permits
+22.131,,constitutive,yes,,3,claude,scope clause
+22.132,obligation,prescriptive,yes,,3,claude,mitigation duty
+22.133,,constitutive,no,other,3,claude,"reserved, no content"
+22.134,,constitutive,no,other,3,claude,"reserved, no content"
+22.138,obligation,prescriptive,yes,mixed lids,3,claude,"notification duty; lid 3 exemption, lid 4 modified deadline"
+22.139,permission,prescriptive,yes,mixed lids,2,claude,discharge-route permission plus limits
+22.140,permission,prescriptive,yes,mixed lids,2,claude,'kan worden geloosd' plus limits and an exemption
+22.146,obligation,prescriptive,yes,mixed lids,3,claude,notification duty; lid 3 exemption
+22.161,obligation,prescriptive,no,modification,1,claude,widens the Bal discharge route; still a 'wordt geloosd' duty
+22.166,permission,prescriptive,yes,mixed lids,2,claude,discharge-route permission plus conditions
+22.169,permission,prescriptive,yes,,3,claude,'kan worden geloosd'
+22.172,exemption,prescriptive,yes,temporal,3,claude,'hoeft geen recirculatiesysteem' for discharges begun before the Omgevingswet
+22.181,,constitutive,yes,,3,claude,scope clause
+22.182,obligation,prescriptive,yes,,3,claude,notification duty
+22.183,permission,prescriptive,yes,mixed lids,2,claude,'kan ook worden geloosd' plus an emission limit
+22.187,permission,prescriptive,yes,mixed lids,2,claude,discharge-route permission plus a prohibition
+22.190,permission,prescriptive,yes,mixed lids,2,claude,"discharge-route template; lid 2 obligation, lid 3 exemption"
+22.194,permission,prescriptive,yes,mixed lids,2,claude,same discharge-route template as 22.198
+22.198,permission,prescriptive,yes,mixed lids,1,claude,lid 1 'kan ... worden geloosd' sets a permitted route; later lids prohibition and obligations
+22.201,permission,prescriptive,no,other,1,claude,conditional permission: 'alleen toegestaan als'
+22.203,obligation,prescriptive,yes,,3,claude,notification duty
+22.205,obligation,prescriptive,yes,mixed lids,3,claude,lid 1 odour measures; lid 2 temporal exemption
+22.215,,constitutive,yes,temporal,2,claude,"scope, eerbiedigende werking"
+22.218,exemption,prescriptive,yes,,3,claude,disapplies 22.216
+22.220,,constitutive,yes,measurement convention,3,claude,measurement standard
+22.227,,constitutive,yes,,3,claude,scope clause
+22.245,obligation,prescriptive,yes,mixed lids,3,claude,storage requirement; lid 2 exemption
+22.259,prohibition,prescriptive,yes,,3,claude,permit requirement
+22.263,prohibition,prescriptive,yes,,3,claude,permit requirement
+22.264,prohibition,prescriptive,yes,,3,claude,permit requirement
+22.269,prohibition,prescriptive,yes,,3,claude,safety-net permit requirement
+22.277,,constitutive,yes,,3,claude,scope clause
+22.279,permission,prescriptive,no,assessment rule,1,claude,authority 'kan ... verlenen'; addressed to the authority
+22.280,prohibition,prescriptive,yes,,2,claude,deeming clause that creates a permit requirement
+22.282,permission,prescriptive,no,discretionary / empowerment,1,claude,'kan de omgevingsvergunning toch worden verleend'
+22.294,obligation,prescriptive,yes,,3,claude,drawing requirements for an application
+22.300,obligation,prescriptive,yes,,3,claude,application requirements
+22.34,permission,prescriptive,no,discretionary / empowerment,2,claude,authority may attach conditions to a permit
+22.45,permission,prescriptive,no,discretionary / empowerment,2,claude,"maatwerk power, like 22.4"
+22.47,obligation,prescriptive,yes,,3,claude,notification duty
+22.52a,obligation,prescriptive,no,temporal,2,claude,lid 1 keeps the old Activiteitenbesluit obligations until 2023; lid 2 disapplies 22.52 meanwhile
+22.84,,constitutive,yes,temporal,2,claude,"scope extension, eerbiedigende werking"
+22.87,exemption,prescriptive,yes,,3,claude,vibration values disapplied
+22.94,exemption,prescriptive,yes,,3,claude,values/distances disapplied for former functionally bound objects
