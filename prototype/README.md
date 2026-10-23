@@ -12,13 +12,14 @@ prototype/
   scripts/          Python: graph loader, LLM extractor, spatial + visual tools
   visualizations/   self-contained HTML graph pages (open in a browser)
   cypher/           the tagging and query layers, run in Neo4j
-  gold_deontic.csv  38 hand-labelled articles used to score the extractor
+  silver_deontic_v1.csv  38 articles labelled by us (silver v1)
+  silver_deontic_v2.csv  50 more articles labelled by Claude, stratified (silver v2)
   demo-script.md    the 3-minute demo-video script
   FINDINGS.md       running log of results and decisions
 ```
 
 Run every command below **from this `prototype/` folder** (not from inside
-`scripts/`). The scripts find `../source_data` and `gold_deontic.csv` relative
+`scripts/`). The scripts find `../source_data` and `silver_deontic_v1.csv` relative
 to it.
 
 ## Build the graph (for the demo)
@@ -77,8 +78,8 @@ are the rest of the pipeline, not required for the demo.
 | File | What it is |
 | --- | --- |
 | `scripts/build_graph.py` | parses the STOP/TPOD delivery package and loads the full graph; applies the schema constraints |
-| `scripts/deontic_extract.py` | LLM deontic extractor, switchable local (Ollama) / OpenAI, with schema guards, write hygiene and gold evaluation |
-| `scripts/review_mismatches.py` | writes a mismatch report of the extractor against the gold set, with article text |
+| `scripts/deontic_extract.py` | LLM deontic extractor, switchable local (Ollama) / OpenAI, with schema guards, write hygiene and evaluation against the silver set |
+| `scripts/review_mismatches.py` | writes a mismatch report of the extractor against the silver set, with article text |
 | `scripts/spatial.py` | point-in-polygon lookup: which rules apply at an RD point |
 | `scripts/generate_visualisation.py` | renders any Cypher query's result as a self-contained HTML graph with SVG/PNG export |
 | `cypher/constraints.cypher` | the schema (uniqueness constraints); applied automatically by `build_graph.py`, kept as the canonical definition |
@@ -86,7 +87,9 @@ are the rest of the pipeline, not required for the demo.
 | `cypher/derive_overrides.cypher` | composes each OVERRIDES edge's net effect from the target's deontic (restriction-on-permission -> prohibition, ...) and writes it onto the edge |
 | `cypher/queries.cypher` | general exploration queries, one block each |
 | `cypher/use_case_queries.cypher` | demo queries on the tagged graph: colour-by-force, the defeasibility chain, and a question answered on the graph |
-| `gold_deontic.csv` | 38 hand-labelled articles used to score the extractor |
+| `silver_deontic_v1.csv` | silver v1: 38 articles labelled by us, used to score the extractor |
+| `silver_deontic_v2.csv` | silver v2: 50 articles labelled by Claude, stratified by predicted tag, with v0-fit flags |
+| `silver_v2_annotation.xlsx` | the blind annotation sheet behind silver v2, with codebook |
 | `demo-script.md` | shot-by-shot 3-minute demo-video script, with the pre-recording graph prep |
 | `visualizations/maastricht-rule-graph.html` | self-contained interactive graph (open in a browser) |
 | `visualizations/graph.json` | the subgraph that page draws (also embedded in the page) |
@@ -102,16 +105,16 @@ prior OVERRIDES so re-tagging replaces rather than accumulates.
 ```
 pip install openai neo4j
 # local (needs: ollama pull qwen2.5:32b)
-python scripts/deontic_extract.py --backend ollama --eval gold_deontic.csv
+python scripts/deontic_extract.py --backend ollama --eval silver_deontic_v1.csv
 # hosted
 export OPENAI_API_KEY=...        # or put it in ../.env (gitignored)
-python scripts/deontic_extract.py --backend openai --model gpt-4o --eval gold_deontic.csv
+python scripts/deontic_extract.py --backend openai --model gpt-4o --eval silver_deontic_v1.csv
 # write the tags to the graph, logging the run
 python scripts/deontic_extract.py --backend openai --model gpt-4o --write \
   --out runs/gpt4o_write.csv --diary runs/extraction_diary.md
 ```
 
-`--eval gold_deontic.csv` scores the predictions against the 38 hand-labelled
+`--eval silver_deontic_v1.csv` scores the predictions against the 38 silver v1
 articles without writing; `--out` / `--diary` save a predictions CSV and a dated
 run summary. `review_mismatches.py` writes a markdown report of every
 disagreement with the article text, to adjudicate label vs model:

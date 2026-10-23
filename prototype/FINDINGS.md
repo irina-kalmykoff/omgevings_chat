@@ -3,6 +3,73 @@
 A running log of results and decisions from building the LLM deontic extractor
 and the knowledge-graph layer for the omgevingsplan. Newest entry first.
 
+Naming: the labelled reference set was called "gold" until 2026-10-23. It is a
+silver standard (no authoritative source for deontic force, no expert annotator),
+so it is now silver v1 (`silver_deontic_v1.csv`, the 38 articles labelled by us)
+plus silver v2 (`silver_deontic_v2.csv`, 50 articles labelled by Claude). Older
+entries below still say "gold" for silver v1.
+
+---
+
+## 2026-10-23 — Silver v2: 50 more labelled articles, and "gold" renamed to silver
+
+Why silver: there is no authoritative STOP/TPOD field for deontic force, the
+original 38 were labelled by one annotator after seeing LLM output, and the new
+labels come from Claude because blind labelling needs fluent Dutch. Neither set
+is gold. The file `gold_deontic.csv` is renamed `silver_deontic_v1.csv`; the scripts and
+README now say silver (`--eval silver_deontic_v1.csv`; `review_mismatches.py
+--silver`).
+
+Sheet (`scripts/make_annotation_sheet.py`, seed 42, `silver_v2_annotation.xlsx`):
+10 articles per predicted tag (obligation, prohibition, permission, exemption,
+constitutive), sampled from the 270 articles outside silver v1, plus 8 hidden
+re-check items from silver v1 (no few-shot articles), shuffled, with no
+predictions shown. The stratum key is kept apart in `runs/silver_v2_key.csv`. A
+codebook tab carries the v0 definitions and tie-break rules (declarative duties
+are obligations; tag a mixed article by its primary norm and flag it; best v0
+label plus a category when v0 fits badly).
+
+Labelling: Claude labelled all 58 from the article text and codebook only,
+without the predictions or the key, with a confidence (1–3), a v0-fit flag and a
+category. 21 of 58 are flagged (mixed lids, temporal, discretionary /
+empowerment, assessment rule, modification, reserved / repealed).
+
+Calibration: on the 8 hidden re-check items, Claude agrees with silver v1 8/8.
+
+First quality check, gpt-4o against the 50 new articles (existing prediction
+snapshots, no new API calls). The sample is stratified, so the overall figure
+weights each stratum by its share of the 270: acc = sum_h (N_h / N) acc_h.
+
+| run | raw | stratum-weighted | Cohen's kappa |
+|---|---|---|---|
+| 2026-10-21 raw | 40/50 | 0.869 | 0.75 |
+| 2026-10-21 guarded | 39/50 | 0.863 | 0.73 |
+| 2026-10-21 write | 39/50 | 0.863 | 0.73 |
+| 2026-10-23 | 40/50 | 0.869 | 0.75 |
+
+- About 87% weighted, consistent with the 88% held-out on silver v1: two
+  independent samples give the same answer. Kappa about 0.75 ("substantial").
+- All 10 disagreements are on articles flagged as mixed lids or not fitting v0;
+  on clean single-norm articles agreement is 100%.
+- Pattern 1, the discharge-route template (22.139, 22.187, 22.190, 22.198): "kan
+  ... worden geloosd in X. ... wordt niet geloosd in Y" grants one route and
+  forbids another. Silver tags lid 1 (permission), gpt-4o mostly prohibition.
+  Both are defensible: the annotation-unit problem, not a model error.
+- Pattern 2, obligation followed by an exemption lid (22.205, 22.245): gpt-4o tags
+  the exemption lid, as with 22.16.
+- Permission was thin in silver v1 (4); silver v2 has 14, mostly the discharge
+  template.
+
+Caveats: Claude is a different model family from gpt-4o, not a legal expert, and
+two LLM readers can share errors; the 8/8 calibration is against a single human
+annotator. The strata are gpt-4o's own predictions, so a per-stratum accuracy is
+gpt-4o's precision for that predicted tag.
+
+Next: a statistics script over the combined held-out set (34 + 50 = 84) with
+bootstrap intervals, kappa and a clean vs flagged split, plus run-to-run stability
+(per-article flip rate, Fleiss' kappa) over the four existing runs on all 308
+articles.
+
 ---
 
 ## 2026-10-23 — Derogation flavor probe and a v1 override proposal
@@ -315,7 +382,7 @@ between a local model (qwen2.5 via Ollama) and the OpenAI API. For each article
 it assigns `statement_type` (prescriptive / constitutive), a `deontic` tag
 (obligation / prohibition / permission / exemption) and `OVERRIDES` edges, under
 ontology v0. We compared qwen2.5:7b (local) against gpt-4o (hosted), temperature
-0, identical prompt and few-shot, scored against `prototype/gold_deontic.csv` —
+0, identical prompt and few-shot, scored against `prototype/silver_deontic_v1.csv` —
 38 articles hand-labelled by us against the v0 definitions.
 
 ### Two methodology issues found this session (read these first)
@@ -512,7 +579,7 @@ Neo4j.
 
 ### The gold is a silver standard
 
-`gold_deontic.csv` is single-annotator, labelled by us against the v0
+`silver_deontic_v1.csv` is single-annotator, labelled by us against the v0
 definitions. There is no authoritative STOP/TPOD field for deontic force — that
 is why we extract it. So "agreement" partly measures agreement between two
 LLM-style reads, which inflates easy cases and makes hard-case disagreements
@@ -540,8 +607,9 @@ kappa).
 - Firing conditions are unmodelled: location is uniform (whole municipality) and
   the heritage/safety triggers are textual, so the graph shows which rules can
   apply, not whether they fire for a given case.
-- Gold set is a single-annotator silver standard and small: held-out n = 34
-  gives roughly a ±11-point interval. Held-out scoring is in place (the leak was
-  worth ~1 point); still needed: more items and blind double annotation.
+- The reference set is silver, not gold: v1 (38, labelled by us) and v2 (50,
+  labelled by Claude, 8/8 against v1 on re-check items). Held-out n is now
+  34 + 50 = 84 (about ±7 points instead of ±11). A second annotator with fluent
+  Dutch would still make it stronger.
 - Temperature-0 runs are not reproducible (~3% of articles flip between runs,
   ±1 of 34 held-out); report the mean and spread, not one number.
