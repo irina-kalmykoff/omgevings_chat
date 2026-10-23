@@ -11,6 +11,85 @@ entries below still say "gold" for silver v1.
 
 ---
 
+## 2026-10-23 — Quality and stability statistics (`scripts/silver_stats.py`)
+
+Inputs: the four gpt-4o prediction snapshots (`runs/gpt4o_*.csv`), silver v1
+held-out (34, few-shot excluded), silver v2 (50, stratified; strata in
+`silver_v2_strata.csv`). No new API calls. 2000 bootstrap replicates, seed 7.
+
+Quality per run:
+
+| run | v1 held-out | v2 raw | v2 weighted | combined (84) | kappa |
+|---|---|---|---|---|---|
+| raw | 29/34 | 40/50 | 0.869 | 69/84 | 0.772 |
+| guarded | 30/34 | 39/50 | 0.863 | 69/84 | 0.772 |
+| write | 31/34 | 39/50 | 0.863 | 70/84 | 0.788 |
+| 23 Oct | 30/34 | 40/50 | 0.869 | 70/84 | 0.788 |
+
+Mean ± sd across runs: v1 0.882 ± 0.024, v2 weighted 0.866 ± 0.003, combined
+0.827 ± 0.007, kappa 0.780 ± 0.009.
+
+Intervals (95%): combined 70/84 = 0.833, Wilson [74%, 90%], bootstrap [75%, 90%];
+v2 stratum-weighted 0.863, stratified bootstrap [77%, 94%]; combined kappa 0.79,
+bootstrap [0.69, 0.88].
+
+Which number to quote: silver v2 is the only random sample, so its
+stratum-weighted 87% [77%, 94%] is the population estimate. The combined raw 83%
+is lower because v2 deliberately oversamples the hard strata (permission,
+exemption, prohibition); it is not a population figure.
+
+Clean vs flagged (v2, all runs pooled): clean articles 84/84 = 100% (21 articles);
+flagged articles (mixed lids or not fitting v0) 74/116 = 64% (29 articles). The
+errors are an ontology / annotation-unit problem, not a reading problem.
+
+Per tag (combined, all runs pooled): permission recall 0.64 (confused with
+prohibition 12 and obligation 8 times: the discharge-route template); exemption
+precision 0.60 and obligation -> exemption 15 times (the model tags the exemption
+lid of an obligation article); constitutive recall 0.97, precision 0.91.
+
+Precision / recall / F1 as a population estimate (silver v2, each article
+weighted by N_h / n_h of its stratum, run `write`, 95% stratified bootstrap):
+
+| tag | precision | recall | F1 |
+|---|---|---|---|
+| obligation | 0.90 [0.70, 1.00] | 0.90 [0.82, 0.96] | 0.90 |
+| prohibition | 0.50 [0.20, 0.80] | 1.00 (5/5; Wilson [0.57, 1.00]) | 0.67 |
+| permission | 1.00 [1.00, 1.00] | 0.40 [0.21, 0.85] | 0.57 |
+| exemption | 0.60 [0.30, 0.90] | 0.83 [0.54, 1.00] | 0.70 |
+| constitutive | 0.98 [0.95, 1.00] | 1.00 | 0.99 |
+
+Macro F1 0.76 [0.64, 0.88]; per-tag F1 is the same within ±0.04 across the four
+runs. The weighting matters: obligation and constitutive are three quarters of the
+population and carry the 87% accuracy, while the two weak tags are mirror images
+of the two article-level ambiguities. gpt-4o over-calls prohibition (precision
+0.50) and misses permission (recall 0.40) on the discharge-route template, and
+over-calls exemption (precision 0.60) on obligation articles with an exemption
+lid. Bootstrap intervals of 1.00 [1.00, 1.00] come from very few true items
+(e.g. 5 silver prohibitions) and understate the uncertainty.
+
+Stability: 295 of 308 articles (95.8%) get the identical label in all four runs;
+Fleiss' kappa across runs 0.967, pairwise Cohen's kappa 0.958–0.981 (almost
+perfect). Most common flips: permission <-> prohibition, obligation <->
+prohibition, constitutive <-> obligation (3 each).
+
+What it means:
+
+- The model is very consistent with itself (kappa 0.97) but agrees less with the
+  silver labels (kappa 0.78). The gap is systematic, not noise: a majority vote
+  over the runs does not help (0.821 vs single runs 0.821–0.833).
+- The systematic part sits entirely in the flagged articles, so the next accuracy
+  gain comes from modelling (lid-level norms, v1 categories), not from prompting
+  or more runs.
+- Instability is a useful difficulty signal: of the 4 unstable articles in the
+  silver sets, the majority vote is right for only 1, against 68/80 for stable
+  ones. A flip between runs is a cheap flag for human review.
+
+Caveats: silver labels (v1 one human, v2 Claude); v1 was hand-picked, not
+sampled; the four runs mix guarded and unguarded settings (guards do not change
+the deontic tag here).
+
+---
+
 ## 2026-10-23 — Silver v2: 50 more labelled articles, and "gold" renamed to silver
 
 Why silver: there is no authoritative STOP/TPOD field for deontic force, the
@@ -31,8 +110,8 @@ label plus a category when v0 fits badly).
 
 Labelling: Claude labelled all 58 from the article text and codebook only,
 without the predictions or the key, with a confidence (1–3), a v0-fit flag and a
-category. 21 of 58 are flagged (mixed lids, temporal, discretionary /
-empowerment, assessment rule, modification, reserved / repealed).
+category. 33 of 58 are flagged (29 of the 50 new articles: mixed lids, temporal,
+discretionary / empowerment, assessment rule, modification, reserved / repealed).
 
 Calibration: on the 8 hidden re-check items, Claude agrees with silver v1 8/8.
 
