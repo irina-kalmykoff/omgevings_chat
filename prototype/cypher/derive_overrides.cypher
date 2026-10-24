@@ -12,7 +12,7 @@
 // here, deterministically, from the override type and the target's deontic.
 //
 // Composition (LegalRuleML-style defeasibility):
-//   exception   on prohibition -> permission   (the forbidden thing is allowed in the carve-out)
+//   exception   on prohibition -> exemption    (the ban does not apply in the carve-out; 22.27 on 22.26)
 //   exception   on obligation  -> exemption    (no longer obliged in the carve-out)
 //   restriction on permission  -> prohibition  (allowed thing needs a permit again; 22.38 on 22.36)
 //   restriction on exemption   -> prohibition  (the lifted base rule is reimposed; 22.28 on 22.27)
@@ -26,7 +26,7 @@
 MATCH (:Artikel)-[o:OVERRIDES]->(tgt:Artikel)
 SET o.target_deontic = tgt.deontic,
     o.derived_effect = CASE o.override_type + '|' + coalesce(tgt.deontic, '')
-      WHEN 'exception|prohibition'   THEN 'permission'
+      WHEN 'exception|prohibition'   THEN 'exemption'
       WHEN 'exception|obligation'    THEN 'exemption'
       WHEN 'restriction|permission'  THEN 'prohibition'
       WHEN 'restriction|exemption'   THEN 'prohibition'
