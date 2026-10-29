@@ -234,3 +234,6 @@ data/corpus/
 
 # Experiment runs (config snapshot, logs, metrics per run)
 runs/
+
+# JetBrains project folder
+.idea/
