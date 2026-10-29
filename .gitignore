@@ -15,3 +15,5 @@ __pycache__/
 # Claude-generated files
 Claude outputs/
 prototype/mismatches.md
+
+.idea/
