@@ -1,0 +1,34 @@
+{
+  "format_version": 1,
+  "document_title": "Omgevingsplan gemeente Maastricht",
+  "document_id": "/akn/nl/act/gm0935/2020/omgevingsplan",
+  "expression_id": "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34",
+  "inputs_sha256": {
+    "Regeling/Tekst.xml": "0ba4c7986101614d2fc0ccbab1539d82e44098bd67468b46ce8f0f3ba7eb3ea1",
+    "Regeling/Identificatie.xml": "053260c73fae9c03f2b01a201244a13cbf978db62efb243a9792940cad2274cb"
+  },
+  "exporter_sha256": "01915c1d2bbf2c5743e09ab7d49ff7809bf7cf8afc9fc175c2f05059d7b36ce2",
+  "counts": {
+    "articles": 308,
+    "paragraphs": 473,
+    "appendices": 1,
+    "explanatory_notes": 309,
+    "article_text_characters": 232604
+  },
+  "audit": {
+    "visible_text_preserved": true,
+    "all_content_covered": true
+  },
+  "model_input_fields": [
+    "number",
+    "heading",
+    "context",
+    "text"
+  ],
+  "notes": [
+    "No IMOW annotations, graph edges or model labels are read.",
+    "Reference wording is retained; reference target attributes are excluded.",
+    "Supporting text is separate; explanatory notes are not operative rules.",
+    "sup/sub are rendered as ^(value)/_(value); table cells use | separators."
+  ]
+}
