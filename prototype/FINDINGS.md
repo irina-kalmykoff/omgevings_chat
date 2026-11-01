@@ -11,6 +11,60 @@ entries below still say "gold" for silver v1.
 
 ---
 
+## 2026-11-01 — Lid-level pilot (`scripts/lid_pilot.py`)
+
+Question: the remaining article-level errors sit on mixed articles (a primary
+norm plus an exemption or a different norm in another lid). Does tagging each lid
+separately help?
+
+Setup: all silver articles with more than one lid, few-shot articles excluded:
+50 articles, 142 lids (19 flagged and 10 clean from silver v2, 21 from silver
+v1). Lid text and offsets from `LLM_KG/data/cleaned/articles.jsonl` (lid wIds
+match the `Lid` nodes). Each lid classified with the same prompt and few-shot
+examples as `deontic_extract.py` (gpt-4o, temperature 0), with the article title
+and "lid k van n" as context; lid tags saved in
+`tags/gpt4o_lids_pilot_2026-11-01.csv`. Three roll-ups to one article label,
+scored against silver; baseline = the article-level tags of the 2026-11-01
+rebuild.
+
+| method | v2 flagged | v2 clean | v1 | all |
+|---|---|---|---|---|
+| article-level (baseline) | 11/19 | 10/10 | 16/21 | 37/50 (74%) |
+| first lid | 15/19 | 9/10 | 19/21 | 43/50 (86%) |
+| first lid with force | 14/19 | 10/10 | 17/21 | 41/50 |
+| majority | 11/19 | 8/10 | 18/21 | 37/50 |
+
+- First lid fixes 8 articles (22.16, 22.19, 22.30, 22.102, 22.139, 22.190,
+  22.205, 22.245), mostly the obligation + exemption-lid pattern: per lid the
+  model gets the primary norm right where the article-level call tagged the
+  exemption lid. It breaks 2: 22.115 (lid 1 is a scope sentence, "Dit artikel is
+  van toepassing op") and 22.194 (discharge template).
+- Exact McNemar test, baseline vs first lid: 8 vs 2 discordant articles,
+  p = 2 * P(X <= 2 | n = 10, 0.5) = 0.11. A clear direction, not yet significant
+  on 50 articles.
+- 38 of the 50 multi-lid articles have lids with different labels: among
+  multi-lid articles, mixed is the norm.
+- Still wrong with every method: 22.4 and 22.45 (maatwerk / empowerment, all lids
+  constitutive), 22.37 (modification), 22.52a (temporal), 22.198 (discharge
+  template). These are ontology gaps, not lid problems; the discharge template
+  now fails inside lid 1, where one sentence grants one route and forbids another.
+- At lid level the model returns many references to its own article (e.g.
+  `22.7:exception` from lid 2): the same-article derogations the v1 draft wants
+  as Lid -> Lid edges. The current guards drop these as self-overrides, so lid
+  extraction needs lid targets.
+
+Caveat: silver was labelled by the primary norm, usually lid 1, so "first lid"
+partly follows silver's own convention. The supported claim is that per-lid
+tagging identifies the primary norm more reliably, not that lid 1 is always the
+legal label.
+
+What it means: keep both levels. Store lid tags on the `Lid` nodes and derive the
+article label from the first lid (with a rule for a leading scope sentence). Next:
+Lid -> Lid OVERRIDES from the self-references, and a decision on the discharge
+template (a prompt rule or sentence-level splitting).
+
+---
+
 ## 2026-11-01 — Clean rebuild, and how similar a rerun is
 
 Why: the graph mixed three layers: the rule-based heuristic

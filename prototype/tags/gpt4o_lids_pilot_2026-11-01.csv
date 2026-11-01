@@ -1,0 +1,143 @@
+nummer,lid,wId,statement_type,deontic,overrides,rationale
+22.1,1,gm0935_34__chp_22__subchp_22.1__art_22.1__para_1,constitutive,,,regels zijn niet van toepassing voor zover in strijd
+22.1,2,gm0935_34__chp_22__subchp_22.1__art_22.1__para_2,constitutive,,,regels in Afdeling 22.3 zijn niet van toepassing
+22.2,1,gm0935_34__chp_22__subchp_22.1__art_22.2__para_1,constitutive,,,wordt onder ... verstaan
+22.2,2,gm0935_34__chp_22__subchp_22.1__art_22.2__para_2,constitutive,,,is van toepassing
+22.4,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.1__art_22.4__para_1,constitutive,,,maatwerkvoorschrift kan worden gesteld
+22.4,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.1__art_22.4__para_2,constitutive,,,kan worden afgeweken van de artikelen
+22.7,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.7__para_1,prescriptive,prohibition,,mag niet in ernstige mate in strijd zijn met redelijke eisen van welstand
+22.7,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.7__para_2,prescriptive,exemption,22.7:exception,Het eerste lid is niet van toepassing
+22.8,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.8__para_1,prescriptive,obligation,,is een voorziening ... aangesloten op het distributienet
+22.8,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.8__para_2,prescriptive,exemption,22.8:exception,Het eerste lid is niet van toepassing op
+22.9,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.9__para_1,prescriptive,obligation,,is een voorziening ... aangesloten op het distributienet voor gas
+22.9,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.9__para_2,prescriptive,exemption,22.9:exception,Het eerste lid is niet van toepassing op
+22.10,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.10__para_1,prescriptive,obligation,,is een te bouwen bouwwerk ... aangesloten op het ... distributienet voor warmte
+22.10,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.10__para_2,prescriptive,obligation,,heeft ten minste dezelfde mate van energiezuinigheid en bescherming van het milieu
+22.10,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.10__para_3,prescriptive,exemption,22.10:exception,het eerste en tweede lid niet van toepassing
+22.10,4,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.10__para_4,prescriptive,obligation,,blijft die aansluitplicht voor dat gebied van toepassing
+22.12,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.12__para_1,prescriptive,obligation,,ligt ... zoveel mogelijk haaks op de scheidingsconstructie
+22.12,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.12__para_2,prescriptive,obligation,,is zodanig dat
+22.12,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.12__para_3,prescriptive,prohibition,,bevat geen beer- of rottingput
+22.12,4,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.12__para_4,prescriptive,permission,,kan in ieder geval worden bepaald
+22.13,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.13__para_1,prescriptive,obligation,,heeft een toereikende bluswatervoorziening
+22.13,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.13__para_2,prescriptive,obligation,,is ten hoogste 40 m
+22.13,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.13__para_3,prescriptive,obligation,,is onbeperkt toegankelijk voor bluswerkzaamheden
+22.14,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.14__para_1,prescriptive,obligation,,ligt tussen de openbare weg en ten minste een toegang van een gebouw ... een verbindingsweg die geschikt is voor voertuigen van de brandweer
+22.14,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.14__para_2,prescriptive,exemption,22.14:exception,Het eerste lid is niet van toepassing
+22.14,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.14__para_3,prescriptive,obligation,,"heeft een verbindingsweg: een breedte van ten minste 4,5 m"
+22.14,4,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.14__para_4,prescriptive,obligation,,vrijgehouden voor voertuigen van de brandweer en andere hulpverleningsdiensten
+22.14,5,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.14__para_5,prescriptive,obligation,,kunnen door hulpdiensten snel en gemakkelijk worden geopend
+22.15,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.15__para_1,prescriptive,obligation,,zijn zodanige opstelplaatsen voor brandweervoertuigen dat
+22.15,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.15__para_2,prescriptive,exemption,22.15:exception,Het eerste lid is niet van toepassing
+22.15,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.15__para_3,prescriptive,obligation,,is ten hoogste 40 m
+22.15,4,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.15__para_4,prescriptive,obligation,,is over de hoogte en breedte vrijgehouden
+22.15,5,gm0935_34__chp_22__subchp_22.2__subsec_22.2.3__art_22.15__para_5,prescriptive,obligation,,kunnen door hulpdiensten snel en gemakkelijk worden geopend
+22.16,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.4__art_22.16__para_1,prescriptive,prohibition,,wordt een woning niet bewoond door meer dan
+22.16,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.4__art_22.16__para_2,prescriptive,exemption,22.16:exception,Het eerste lid is niet van toepassing op
+22.18,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.4__art_22.18__para_1,prescriptive,obligation,,is verplicht alle maatregelen te treffen
+22.18,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.4__art_22.18__para_2,prescriptive,obligation,,is verplicht alle maatregelen te treffen
+22.18,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.4__art_22.18__para_3,prescriptive,exemption,22.18:exception,Het eerste lid is niet van toepassing op
+22.19,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.19__para_1,prescriptive,prohibition,,is geen brandgevaarlijke stof aanwezig
+22.19,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.19__para_2,prescriptive,exemption,22.19:exception,Het eerste lid is niet van toepassing als
+22.19,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.19__para_3,prescriptive,exemption,22.19:exception,Het eerste lid is niet van toepassing op
+22.19,4,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.19__para_4,constitutive,,,een aangebroken verpakking wordt als een volle meegerekend
+22.19,5,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.19__para_5,prescriptive,permission,22.19:exception,is toegestaan als die oliesoort op zodanige wijze wordt opgeslagen en gebruikt
+22.20,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.20__para_1,prescriptive,obligation,,is verplicht alle maatregelen te treffen
+22.20,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.20__para_2,prescriptive,obligation,,is verplicht alle maatregelen te treffen
+22.20,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.5__art_22.20__para_3,prescriptive,obligation,,is verplicht alle maatregelen te treffen
+22.22,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.6__art_22.22__para_1,prescriptive,exemption,,regels niet van toepassing als die activiteit betrekking heeft op een oppervlakte van minder dan 100 m^(2)
+22.22,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.6__art_22.22__para_2,constitutive,,,geldt die afwijkende andere oppervlakte
+22.23,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.23__para_1,prescriptive,prohibition,22.27:restriction; 22.36:restriction,Artikel 22.27 en Artikel 22.36 zijn niet van toepassing
+22.23,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.23__para_2,constitutive,,,bij de toepassing van Artikel 22.27 en Artikel 22.36 blijft het aantal woningen gelijk
+22.24,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.24__para_1,constitutive,,,worden de waarden ... gemeten
+22.24,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.1__art_22.24__para_2,constitutive,,,wordt gemeten aan de kant waar
+22.30,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.30__para_1,constitutive,,,de toelaatbare kwaliteit van de bodem is de interventiewaarde
+22.30,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.30__para_2,constitutive,,,Er is sprake van overschrijding
+22.30,3,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.30__para_3,prescriptive,exemption,22.30:exception,is niet van toepassing voor zover het gaat om aanwezigheid van asbest
+22.34,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.34__para_1,prescriptive,permission,,kunnen aan een omgevingsvergunning ... voorschriften worden verbonden
+22.34,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.34__para_2,constitutive,,,van overeenkomstige toepassing
+22.37,1,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.37__para_1,constitutive,,,van overeenkomstige toepassing
+22.37,2,gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.3__art_22.37__para_2,prescriptive,obligation,22.36:restriction,"gelden in plaats van de in Artikel 22.36, onder a, onder 3°, gestelde eisen"
+22.41,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.41__para_1,constitutive,,,deze afdeling is van toepassing op
+22.41,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.41__para_2,constitutive,,,deze afdeling is niet van toepassing op
+22.41,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.41__para_3,prescriptive,exemption,,Het tweede lid geldt niet voor
+22.41,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.41__para_4,prescriptive,exemption,,Het tweede lid geldt niet voor
+22.45,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.45__para_1,constitutive,,,kan worden gesteld over
+22.45,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.45__para_2,constitutive,,,kan worden afgeweken van de artikelen
+22.45,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.45__para_3,constitutive,,,met het oog op de belangen
+22.45,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.45__para_4,constitutive,,,zijn van overeenkomstige toepassing
+22.47,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.47__para_1,prescriptive,obligation,,worden de daardoor gewijzigde gegevens verstrekt
+22.47,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.1__art_22.47__para_2,prescriptive,obligation,,worden ... gegevens verstrekt aan het college
+22.52a,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.2__art_22.52a__para_1,constitutive,,,overgangsrecht maatregelen en informatieplicht
+22.52a,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.2__art_22.52a__para_2,prescriptive,exemption,22.52:exception,Artikel 22.52 niet van toepassing
+22.102,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.6__subsec_22.3.6.2__art_22.102__para_1,prescriptive,exemption,22.101:exception,Artikel 22.101 is niet van toepassing
+22.102,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.6__subsec_22.3.6.2__art_22.102__para_2,prescriptive,prohibition,,mag het aantal ... niet toenemen en de afstand ... niet afnemen
+22.115,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.6__subsec_22.3.6.4__art_22.115__para_1,constitutive,,,is van toepassing op
+22.115,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.6__subsec_22.3.6.4__art_22.115__para_2,prescriptive,obligation,,is de afstand ... niet kleiner dan
+22.122,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.6__subsec_22.3.6.5__art_22.122__para_1,prescriptive,obligation,,is de geur op een geurgevoelig object niet hoger dan de waarde
+22.122,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.6__subsec_22.3.6.5__art_22.122__para_2,prescriptive,exemption,,In afwijking van het eerste lid
+22.122,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.6__subsec_22.3.6.5__art_22.122__para_3,constitutive,,,is artikel 6.13 van de Omgevingsregeling van toepassing
+22.138,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.138__para_1,prescriptive,obligation,,worden aan het college van burgemeester en wethouders gegevens en bescheiden verstrekt
+22.138,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.138__para_2,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt
+22.138,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.138__para_3,prescriptive,exemption,22.138:exception,het eerste en tweede lid gelden niet voor
+22.138,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.138__para_4,prescriptive,obligation,,worden de gegevens en bescheiden ten minste vijf werkdagen voor het begin van het lozen verstrekt
+22.139,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.139__para_1,prescriptive,permission,,kan grondwater ... worden geloosd
+22.139,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.139__para_2,constitutive,,,"emissiegrenswaarden de waarden, bedoeld in bijlage XIX"
+22.139,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.139__para_3,constitutive,,,"emissiegrenswaarden de waarden, bedoeld in tabel 22.3.26"
+22.139,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.139__para_4,prescriptive,prohibition,,wordt niet geloosd in een vuilwaterriool
+22.140,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.140__para_1,prescriptive,permission,,kan grondwater bij ontwatering ... worden geloosd
+22.140,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.140__para_2,prescriptive,obligation,,is de emissiegrenswaarde
+22.140,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.140__para_3,prescriptive,obligation,,is de emissiegrenswaarde voor onopgeloste stoffen 300 mg/l
+22.140,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.140__para_4,prescriptive,obligation,,duurt niet langer dan 8 weken en de geloosde hoeveelheid is ten hoogste 5 m^(3)/u
+22.140,5,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.1__art_22.140__para_5,prescriptive,exemption,,zijn niet van toepassing op het lozen van grondwater
+22.146,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.3__art_22.146__para_1,prescriptive,obligation,,worden aan het college van burgemeester en wethouders gegevens en bescheiden verstrekt
+22.146,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.3__art_22.146__para_2,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt
+22.146,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.3__art_22.146__para_3,prescriptive,exemption,22.146:exception,Het eerste en tweede lid gelden niet voor
+22.166,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.8__art_22.166__para_1,prescriptive,permission,,kan afvalwater ... worden geloosd
+22.166,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.8__art_22.166__para_2,prescriptive,prohibition,,alleen in een vuilwaterriool geloosd als
+22.166,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.8__art_22.166__para_3,prescriptive,obligation,,ontstaat geen wateroverlast
+22.166,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.8__subsec_22.3.8.8__art_22.166__para_4,prescriptive,prohibition,,worden geen chemicaliën toegevoegd
+22.182,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.11__art_22.182__para_1,prescriptive,obligation,,worden aan het college van burgemeester en wethouders gegevens en bescheiden verstrekt
+22.182,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.11__art_22.182__para_2,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt
+22.183,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.11__art_22.183__para_1,prescriptive,permission,,kan te lozen afvalwater ... worden geloosd in een vuilwaterriool
+22.183,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.11__art_22.183__para_2,prescriptive,obligation,,is de emissiegrenswaarde
+22.190,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.13__art_22.190__para_1,prescriptive,permission,,kan afvalwater afkomstig van het ontwikkelen of afdrukken van fotografisch materiaal worden geloosd in een vuilwaterriool
+22.190,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.13__art_22.190__para_2,prescriptive,obligation,,er worden in goede staat verkerende afkwetsrollen gebruikt en er wordt een doelmatige zilverterugwininstallatie toegepast
+22.190,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.13__art_22.190__para_3,prescriptive,exemption,,hoeft geen zilverterugwininstallatie te worden toegepast
+22.190,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.13__art_22.190__para_4,prescriptive,obligation,,is de emissiegrenswaarde voor zilver 4 milligram per liter
+22.194,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.14__art_22.194__para_1,prescriptive,prohibition,,Het afvalwater wordt niet geloosd in een schoonwaterriool
+22.194,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.14__art_22.194__para_2,prescriptive,permission,,"is toegestaan, als per week ten hoogste één motorvoertuig"
+22.194,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.14__art_22.194__para_3,prescriptive,obligation,,is de emissiegrenswaarde voor olie 20 mg/l
+22.198,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.15__art_22.198__para_1,prescriptive,prohibition,,Het afvalwater wordt niet geloosd in een schoonwaterriool
+22.198,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.15__art_22.198__para_2,prescriptive,permission,,kan het afvalwater op de bodem worden geloosd
+22.198,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.15__art_22.198__para_3,prescriptive,prohibition,,wordt niet geloosd
+22.198,4,gm0935_34__chp_22__subchp_22.3__subsec_22.3.15__art_22.198__para_4,prescriptive,obligation,,wordt voor vermenging met ander afvalwater geleid door
+22.198,5,gm0935_34__chp_22__subchp_22.3__subsec_22.3.15__art_22.198__para_5,prescriptive,permission,,kan met een lagere frequentie worden volstaan
+22.201,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.16__art_22.201__para_1,prescriptive,permission,,alleen toegestaan als nieuwe geurhinder wordt voorkomen
+22.201,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.16__art_22.201__para_2,constitutive,,,is ook van toepassing op
+22.203,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.17__art_22.203__para_1,prescriptive,obligation,,worden aan het college van burgemeester en wethouders de volgende gegevens en bescheiden verstrekt
+22.203,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.17__art_22.203__para_2,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt
+22.205,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.17__art_22.205__para_1,prescriptive,obligation,,wordt bij het slachten van dieren ten minste de vaste dierlijke mest ... opgeslagen; en worden dampen en gassen ... afgezogen
+22.205,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.17__art_22.205__para_2,prescriptive,exemption,22.205:exception,"is het eerste lid, onder b, niet van toepassing"
+22.215,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.18__art_22.215__para_1,constitutive,,,is van toepassing op
+22.215,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.18__art_22.215__para_2,prescriptive,exemption,22.214:exception,deze paragraaf niet van toepassing op
+22.245,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.23__art_22.245__para_1,prescriptive,obligation,,wordt vaste mest opgeslagen
+22.245,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.23__art_22.245__para_2,prescriptive,exemption,22.245:restriction,Het eerste lid is niet van toepassing op
+22.259,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.259__para_1,prescriptive,prohibition,,het is verboden zonder omgevingsvergunning
+22.259,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.259__para_2,prescriptive,obligation,,wordt een beschrijving verstrekt
+22.259,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.259__para_3,prescriptive,obligation,,wordt alleen verleend als geurhinder wordt voorkomen of tot een aanvaardbaar niveau wordt beperkt
+22.263,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.263__para_1,prescriptive,prohibition,,het is verboden zonder omgevingsvergunning
+22.263,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.263__para_2,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt
+22.264,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.264__para_1,prescriptive,prohibition,,het is verboden zonder omgevingsvergunning
+22.264,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.264__para_2,prescriptive,obligation,,worden de volgende gegevens verstrekt
+22.269,1,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.269__para_1,prescriptive,prohibition,,het is verboden zonder omgevingsvergunning
+22.269,2,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.269__para_2,prescriptive,exemption,22.269:exception,Het eerste lid is niet van toepassing op
+22.269,3,gm0935_34__chp_22__subchp_22.3__subsec_22.3.26__art_22.269__para_3,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt
+22.282,1,gm0935_34__chp_22__subchp_22.5__subsec_22.5.1__art_22.282__para_1,prescriptive,permission,,kan de omgevingsvergunning toch worden verleend
+22.282,2,gm0935_34__chp_22__subchp_22.5__subsec_22.5.1__art_22.282__para_2,constitutive,,,zijn van overeenkomstige toepassing
+22.294,1,gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.294__para_1,prescriptive,obligation,,tekeningen een schaal die niet kleiner is dan
+22.294,2,gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.294__para_2,prescriptive,obligation,,"heeft een schaal van 1:1, 1:2 of 1:5 en is voorzien van een omschrijving"
+22.294,3,gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.294__para_3,prescriptive,obligation,,uit een situatietekening ... blijkt
+22.294,4,gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.294__para_4,prescriptive,obligation,,bevatten de volgende historische gegevens
+22.300,1,gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.300__para_1,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt
+22.300,2,gm0935_34__chp_22__subchp_22.5__subsec_22.5.2__subsec_22.5.2.4__art_22.300__para_2,prescriptive,obligation,,vermeldt de aanvrager in de aanvraag
