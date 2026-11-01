@@ -125,6 +125,7 @@ are the rest of the pipeline, not required for the demo.
 | `scripts/review_mismatches.py` | writes a mismatch report of the extractor against the silver set, with article text |
 | `scripts/silver_stats.py` | quality and stability statistics: accuracy with intervals, kappa, precision/recall/F1 (population-weighted), run-to-run stability |
 | `scripts/derogation_probe.py` | experiment: labels "in afwijking van" derogation clauses on three axes (target scope, operation, temporal) to test v1 override types |
+| `scripts/lid_pilot.py` | pilot: tags each lid separately (text from `../LLM_KG/data/cleaned/articles.jsonl`) and scores roll-ups to the article label against the silver sets |
 | `scripts/make_annotation_sheet.py` | builds the blind, stratified annotation sheet behind silver v2 |
 | `scripts/spatial.py` | point-in-polygon lookup: which rules apply at an RD point |
 | `scripts/generate_visualisation.py` | renders any Cypher query's result as a self-contained HTML graph with SVG/PNG export |
@@ -136,6 +137,7 @@ are the rest of the pipeline, not required for the demo.
 | `silver_deontic_v1.csv` | silver v1: 38 articles labelled by us, used to score the extractor |
 | `silver_deontic_v2.csv` | silver v2: 50 articles labelled by Claude, stratified by predicted tag, with v0-fit flags |
 | `silver_v2_annotation.xlsx` | the blind annotation sheet behind silver v2, with codebook |
+| `tags/gpt4o_lids_pilot_2026-11-01.csv` | the per-lid gpt-4o tags of the lid pilot (50 articles, 142 lids) |
 | `tags/gpt4o_2026-11-01.csv` | the gpt-4o tags and OVERRIDES of the current graph (rebuild of 2026-11-01) |
 | `silver_v2_strata.csv` | the stratum of each silver v2 article and the stratum sizes, needed for the weighted estimates |
 | `demo-script.md` | shot-by-shot 3-minute demo-video script, with the pre-recording graph prep |
