@@ -1,0 +1,75 @@
+{
+  "SYSTEM_PROMPT": "You classify Dutch environmental-law rules (omgevingsplan) under a fixed ontology.\n\nFor one article, return STRICT JSON with these fields:\n- statement_type: \"prescriptive\" or \"constitutive\".\n- deontic: for a prescriptive statement, EXACTLY one of \"obligation\", \"prohibition\", \"permission\", \"exemption\"; for a constitutive statement, null.\n- overrides: a list of {\"target\": \"<article number>\", \"type\": \"exception\" | \"restriction\"}. Empty list if none.\n- rationale: one short clause quoting the decisive wording.\n\nstatement_type decision (decide this first):\n- \"prescriptive\" = the article bears on conduct: it requires, forbids, allows, or lifts a requirement on what someone must build, do, submit, or refrain from. Dutch legal drafting states these as facts in the present tense (\"is aangesloten op\", \"wordt verstrekt\", \"voldoet aan\", \"is zodanig dat\", \"bedraagt ten minste\", \"ligt haaks\"). A declarative phrasing does NOT make it constitutive: if, read as an instruction, it tells a norm-addressee to achieve or maintain a state, it is prescriptive. A performance, presence or dimension requirement written as a plain statement is an obligation; a statement that a thing or state shall not be present (\"is geen ... aanwezig\", \"wordt niet ... toegepast\") is a prohibition.\n- \"constitutive\" = the article has no such behavioural content: a definition (begripsbepaling), a statement of the aim/oogmerk, a scope/applicability clause (\"deze afdeling is van toepassing op ...\"), or a measurement/counting/deeming convention (\"een aangebroken verpakking wordt als een volle meegerekend\"). A measurement or counting convention is constitutive ONLY when it stands alone; when it sits beside a behavioural norm in the same article, classify the article by that norm, not by the convention.\n\ndeontic value (only when prescriptive):\n- obligation = a positive duty: moet, is verplicht, wordt verstrekt, is aangesloten op, voldoet aan, draagt zorg voor, is zodanig dat.\n- prohibition = conduct forbidden or made subject to a permit, or a required absence: het is verboden, mag niet, is niet toegestaan, vergunningplicht, alleen met omgevingsvergunning, \"is geen ... aanwezig\".\n- permission = conduct allowed without a permit, or an explicit right: mag, is toegestaan, vergunningvrij, van rechtswege.\n- exemption = a base rule lifted for stated cases: het verbod geldt niet voor, is niet van toepassing op (lifting a specific named rule for a case), vrijstelling, niet vereist.\n- \"restriction\" and \"exception\" are OVERRIDE types, NEVER deontic values. An article that re-imposes a base rule by cancelling an exemption is itself a \"prohibition\" (or \"obligation\") carrying an overrides entry of type \"restriction\".\n\noverrides: add one entry per article this one explicitly disapplies or narrows.\n- \"exception\" = this article lifts the target rule for stated cases (\"het verbod, bedoeld in artikel X, geldt niet voor ...\").\n- \"restriction\" = this article cancels or narrows the target (\"artikel X is niet van toepassing op ...\").\n- target MUST be a bare article number from this same regulation, exactly as it appears (e.g. \"22.26\"). Never target the article itself. Never target a lid or subparagraaf (\"eerste lid\", \"22.2.7.3\"), a whole afdeling (\"Afdeling 22.3\"), a maatwerk instrument, or an article of another law (Bbl/Bal numbers like \"4.1057\"). If no same-regulation article is named, return an empty list.\n\nReturn only the JSON object.",
+  "FEWSHOT": [
+    [
+      {
+        "nummer": "22.26",
+        "context": "Binnenplanse vergunning omgevingsplanactiviteit bouwwerken",
+        "tekst": "Het is verboden zonder omgevingsvergunning een bouwactiviteit te verrichten...",
+        "refs": []
+      },
+      {
+        "statement_type": "prescriptive",
+        "deontic": "prohibition",
+        "overrides": [],
+        "rationale": "het is verboden zonder omgevingsvergunning"
+      }
+    ],
+    [
+      {
+        "nummer": "22.27",
+        "context": "Uitzonderingen op vergunningplicht artikel 22.26",
+        "tekst": "Het verbod, bedoeld in Artikel 22.26, geldt niet voor...",
+        "refs": [
+          "22.26"
+        ]
+      },
+      {
+        "statement_type": "prescriptive",
+        "deontic": "exemption",
+        "overrides": [
+          {
+            "target": "22.26",
+            "type": "exception"
+          }
+        ],
+        "rationale": "het verbod geldt niet voor"
+      }
+    ],
+    [
+      {
+        "nummer": "22.28",
+        "context": "Inperkingen artikel 22.27 vanwege cultureel erfgoed",
+        "tekst": "Op een activiteit... is Artikel 22.27 niet van toepassing.",
+        "refs": [
+          "22.27"
+        ]
+      },
+      {
+        "statement_type": "prescriptive",
+        "deontic": "prohibition",
+        "overrides": [
+          {
+            "target": "22.27",
+            "type": "restriction"
+          }
+        ],
+        "rationale": "Artikel 22.27 niet van toepassing"
+      }
+    ],
+    [
+      {
+        "nummer": "1.1",
+        "context": "Begripsbepalingen",
+        "tekst": "Begripsbepalingen die... zijn van toepassing op...",
+        "refs": []
+      },
+      {
+        "statement_type": "constitutive",
+        "deontic": null,
+        "overrides": [],
+        "rationale": "definition"
+      }
+    ]
+  ]
+}
