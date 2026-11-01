@@ -1,0 +1,33 @@
+{
+  "id": "automatic-text-legal-profile",
+  "version": "1.0.0",
+  "status": "experimental-conceptual-profile",
+  "input_boundary": "Visible legal wording and structural headings only. No native DSO semantic annotations or XML reference targets.",
+  "sources": {
+    "LegalRuleML": "https://docs.oasis-open.org/legalruleml/legalruleml-core-spec/v1.0/os/legalruleml-core-spec-v1.0-os.pdf",
+    "PROV-O": "https://www.w3.org/TR/prov-o/"
+  },
+  "concepts": {
+    "obligation": {"definition": "Positive duty to act or maintain a state.", "alignment": "LegalRuleML obligation", "mapping": "conceptual"},
+    "prohibition": {"definition": "Forbidden conduct, including forbidden conduct without a required permit.", "alignment": "LegalRuleML prohibition", "mapping": "conceptual"},
+    "permission": {"definition": "Explicit allowance within its stated scope.", "alignment": "LegalRuleML permission", "mapping": "conceptual"},
+    "exemption": {"definition": "Lifts an identified requirement for specified cases; not unconditional permission.", "alignment": "LegalRuleML defeasibility", "mapping": "project applicability category"},
+    "definition": {"definition": "Defines a term or a counts-as convention.", "alignment": "constitutive statement", "mapping": "project-specific"},
+    "scope": {"definition": "States where, when or to what provisions apply.", "alignment": "rule applicability", "mapping": "project-specific"},
+    "empowerment": {"definition": "Confers a legal power on an authority; distinguish from permission for a citizen.", "alignment": null, "mapping": "project-specific"},
+    "assessment": {"definition": "A criterion governing an authority's assessment or decision.", "alignment": null, "mapping": "project-specific"},
+    "modification": {"definition": "Substitutes or changes another rule's requirements.", "alignment": null, "mapping": "project-specific"},
+    "temporal": {"definition": "A transitional or other temporal qualification.", "alignment": "LegalRuleML temporal qualification", "mapping": "conceptual"},
+    "precedence": {"definition": "Specifies priority between provisions.", "alignment": "LegalRuleML defeasibility", "mapping": "conceptual"},
+    "measurement": {"definition": "A method or convention for measuring or counting.", "alignment": null, "mapping": "project-specific"}
+  },
+  "relations": ["refers_to", "excepts", "restricts", "modifies", "takes_precedence_over", "applies_analogously"],
+  "alignment_statuses": ["mapped", "unmapped", "ambiguous"],
+  "policy": {
+    "human_approval_required": false,
+    "exact_evidence_required": true,
+    "automatic_legal_consequence_inference": false,
+    "uncertainty_is_not_truth": true,
+    "formal_ontology_conformance_claimed": false
+  }
+}
