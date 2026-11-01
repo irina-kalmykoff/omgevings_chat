@@ -53,8 +53,55 @@ What it means: a teammate who reruns the extractor gets the same graph for about
 96% of the labels and about 80% of the override edges. For anything that must
 match exactly (the demo, the findings), use the saved tags.
 
-Pending: the composition test at scale on the rebuilt graph (derived effects
-over all 38 edges, multi-hop chains, targets with several overrides).
+Composition test at scale (rebuilt graph, `derive_overrides.cypher` with the
+fixed rule, all 38 OVERRIDES edges):
+
+| | edges |
+|---|---|
+| derived effect defined | 32 |
+| of which agrees with the overriding article's own tag | 20 (62.5%) |
+| of which disagrees | 12 |
+| undefined (no composition rule for the combination) | 6 |
+
+Every one of the 18 disagreeing or undefined edges traces to a known category;
+none is an error of the composition itself:
+
+| cause | edges | articles |
+|---|---|---|
+| modification typed as exception / restriction (v1: `modification`) | 4 | 22.64, 22.65, 22.66 -> 22.63; 22.37 -> 22.36 |
+| exception typed as restriction, in a grandfathering clause (type flip + temporal) | 5 | 22.120 -> 22.114–22.117, 22.119 (one article, eerbiedigende werking, tagged exemption) |
+| target without force: a scope clause or a measurement convention | 2 | 22.91 -> 22.90 (scope); 22.103 -> 22.97 (measurement) |
+| measurement convention read as an exception; targets are temporal provisions left untagged | 2 | 22.70 -> 22.67, 22.69 |
+| target mislabelled (silver v2: obligation, not exemption) | 2 | 22.93, 22.94 -> 22.245 |
+| temporal / grandfathering | 2 | 22.102 -> 22.101; 22.99 -> 22.98 |
+| discretionary (v1: undetermined) | 1 | 22.32 -> 22.29 |
+
+Agreement is measured against the LLM's own article tag, which is itself about
+87% accurate, so a disagreement can sit on either side: for 22.102 the derived
+exemption matches silver v2 and the article tag (prohibition) is the error.
+
+Multi-hop chains: 7 chains, all two hops, none longer. The dakkapel chain
+(22.28 -> 22.27 -> 22.26) and 22.23 -> 22.27 -> 22.26 compose correctly step by
+step: the restriction on the exemption reinstates the prohibition of 22.26. The
+other chains start from a measurement convention read as an exception
+(22.70 -> 22.64/65/66 -> 22.63) or end at a target without force
+(22.104/105 -> 22.103 -> 22.97). The current rule composes
+each edge from the target's own tag; no case yet needs recursive composition.
+
+Targets with several overrides: 8 targets. Seven receive consistent effects
+(e.g. 22.36: four restrictions, all -> prohibition; 22.63: five exceptions, all
+-> exemption). One conflicts: 22.29 receives 22.32 (exception -> exemption) and
+22.33 (restriction -> prohibition). Both are decision-authority rules that apply
+under different conditions, so the graph cannot say which one governs a given
+case: the firing-condition gap, with 22.29 as a worked example next to
+22.38 / 22.39.
+
+What it means: the composition rule itself holds wherever its inputs are right.
+What goes wrong is upstream, in the categories the v1 draft already names
+(modification, temporal, discretionary, the exception / restriction type that
+the LLM should not be asked for) plus measurement conventions and scope clauses
+read as overrides, and mislabelled targets. The one conflict
+needs firing conditions.
 
 ---
 
