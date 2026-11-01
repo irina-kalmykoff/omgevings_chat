@@ -11,6 +11,53 @@ entries below still say "gold" for silver v1.
 
 ---
 
+## 2026-11-01 — Clean rebuild, and how similar a rerun is
+
+Why: the graph mixed three layers: the rule-based heuristic
+(`build_and_tag.cypher`, no override source), the demo prep (six hand-set tags,
+4 `manual` OVERRIDES edges, colour labels) and the gpt-4o tags. `write_back`
+only MERGEd edges, so older edges survived a rerun; one was wrong (22.28 -> 22.22
+`restriction` from the heuristic; 22.28 restricts 22.27). The "write hygiene"
+described on 2026-10-21 had never reached the code. Fixed: `write_back` now
+deletes an article's outgoing OVERRIDES before writing the new ones. The
+composition rule in `derive_overrides.cypher` had a similar gap and was fixed on
+2026-10-24 (exception on a prohibition -> exemption).
+
+Rebuild: wiped the graph, `build_graph.py` (876 structure nodes, 597
+regelteksten, 90 activiteiten, 597 regels-voor-iedereen, 440 cross-references),
+`deontic_extract.py --write` with gpt-4o (0 guard changes), then
+`derive_overrides.cypher`. Result: 308 articles and 38 OVERRIDES edges, all with
+source `openai:gpt-4o`; no manual or null-source edges. Tags saved in
+`tags/gpt4o_2026-11-01.csv`. Not run: `build_and_tag.cypher` and the demo prep,
+which are for the demo only.
+
+Rerun similarity (five full runs: 21 Oct raw, guarded and write, 23 Oct, 1 Nov):
+
+- Labels: 294 of 308 articles (95.5%) identical in all five runs; Fleiss' kappa
+  0.967, pairwise Cohen's kappa 0.953–0.981.
+- Quality of the rebuild run is in line with the others: silver v1 held-out
+  29/34, silver v2 40/50 (stratum-weighted 0.874), combined kappa 0.77. Mean over
+  the five runs: v2 weighted 0.868 ± 0.005, kappa 0.778 ± 0.009.
+- OVERRIDES edges are less stable than labels: 31–40 edges per run; 29
+  source-target pairs in every run, 41 in at least one; mean pairwise Jaccard 0.83
+  on pairs, 0.69 when the type must match too. All 38 rebuild edges occur in at
+  least one other run, 29 of them in all five.
+- The exception / restriction type flips between runs on 5 of the 29 always
+  present pairs. This supports the v1 draft: the LLM should state only the local
+  operation, and the graph should derive exception vs restriction.
+- Majority voting still does not help (0.810 vs single runs 0.821–0.833), and
+  the 5 silver articles whose label varies are all wrong by majority vote:
+  instability marks hard articles.
+
+What it means: a teammate who reruns the extractor gets the same graph for about
+96% of the labels and about 80% of the override edges. For anything that must
+match exactly (the demo, the findings), use the saved tags.
+
+Pending: the composition test at scale on the rebuilt graph (derived effects
+over all 38 edges, multi-hop chains, targets with several overrides).
+
+---
+
 ## 2026-10-23 — Quality and stability statistics (`scripts/silver_stats.py`)
 
 Inputs: the four gpt-4o prediction snapshots (`runs/gpt4o_*.csv`), silver v1
