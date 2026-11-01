@@ -1,0 +1,309 @@
+nummer,statement_type,deontic,overrides,rationale,source
+1.1,constitutive,,,Begripsbepalingen voor de toepassing,openai:gpt-4o
+22.1,constitutive,,,regels zijn niet van toepassing,openai:gpt-4o
+22.10,prescriptive,obligation,,is een te bouwen bouwwerk ... aangesloten op het ... distributienet voor warmte,openai:gpt-4o
+22.100,prescriptive,exemption,22.98:exception,"Artikel 22.98, eerste lid, is niet van toepassing",openai:gpt-4o
+22.101,prescriptive,obligation,,"de afstand tot een geurgevoelig object, niet kleiner dan",openai:gpt-4o
+22.102,prescriptive,prohibition,22.101:exception,Artikel 22.101 is niet van toepassing,openai:gpt-4o
+22.103,prescriptive,obligation,22.97:exception,"de afstand niet kleiner dan de afstand, bedoeld in tabel 22.3.13",openai:gpt-4o
+22.104,prescriptive,exemption,22.103:exception,in afwijking van dat artikel,openai:gpt-4o
+22.105,prescriptive,exemption,22.103:exception,in afwijking van dat artikel,openai:gpt-4o
+22.106,constitutive,,,Vervallen,openai:gpt-4o
+22.107,constitutive,,,vervallen,openai:gpt-4o
+22.108,constitutive,,,Vervallen,openai:gpt-4o
+22.109,constitutive,,,Vervallen,openai:gpt-4o
+22.11,prescriptive,obligation,,is ... aangesloten op het distributienet voor drinkwater,openai:gpt-4o
+22.110,constitutive,,,Vervallen,openai:gpt-4o
+22.111,constitutive,,,vervallen,openai:gpt-4o
+22.112,constitutive,,,Vervallen,openai:gpt-4o
+22.113,constitutive,,,vervallen,openai:gpt-4o
+22.114,prescriptive,obligation,,"de afstand ... niet kleiner dan de afstand, bedoeld in tabel 22.3.17",openai:gpt-4o
+22.115,prescriptive,obligation,,de afstand ... niet kleiner dan,openai:gpt-4o
+22.116,prescriptive,obligation,,de afstand ... niet kleiner dan,openai:gpt-4o
+22.117,prescriptive,obligation,,de afstand ... niet kleiner dan,openai:gpt-4o
+22.118,prescriptive,obligation,,de afstand ... niet kleiner dan,openai:gpt-4o
+22.119,prescriptive,obligation,,de afstand ... niet kleiner dan,openai:gpt-4o
+22.12,prescriptive,obligation,,is zodanig dat bij zetting de dichtheid van de aansluiting en de afvoer gehandhaafd blijft,openai:gpt-4o
+22.120,prescriptive,exemption,22.114:restriction; 22.115:restriction; 22.116:restriction; 22.117:restriction; 22.119:restriction,"Artikel 22.114, derde lid, Artikel 22.115, tweede lid, Artikel 22.116, derde lid, Artikel 22.117, tweede lid, of Artikel 22.119, derde lid, niet van toepassing",openai:gpt-4o
+22.121,constitutive,,,is van toepassing op,openai:gpt-4o
+22.122,prescriptive,obligation,,is de geur op een geurgevoelig object niet hoger dan de waarde,openai:gpt-4o
+22.123,prescriptive,exemption,22.122:exception,zijn niet van toepassing op de geur,openai:gpt-4o
+22.124,prescriptive,obligation,,is de waarde van de geur ... niet hoger dan,openai:gpt-4o
+22.125,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.126,prescriptive,obligation,,treft de noodzakelijke maatregelen gericht op,openai:gpt-4o
+22.127,constitutive,,,deze paragraaf is van toepassing op,openai:gpt-4o
+22.128,prescriptive,obligation,,worden aan het college van burgemeester en wethouders gegevens en bescheiden verstrekt,openai:gpt-4o
+22.129,prescriptive,obligation,,wordt grond die bij het graven is vrijgekomen niet langer dan acht weken opgeslagen,openai:gpt-4o
+22.13,prescriptive,obligation,,heeft een toereikende bluswatervoorziening,openai:gpt-4o
+22.130,prescriptive,obligation,,wordt de activiteit milieukundig begeleid,openai:gpt-4o
+22.131,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.132,prescriptive,obligation,,neemt in het belang van bescherming van de bodem maatregelen,openai:gpt-4o
+22.133,constitutive,,,gereserveerd,openai:gpt-4o
+22.134,constitutive,,,gereserveerd,openai:gpt-4o
+22.135,constitutive,,,reserved article,openai:gpt-4o
+22.136,constitutive,,,gereserveerd,openai:gpt-4o
+22.137,constitutive,,,is van toepassing op,openai:gpt-4o
+22.138,prescriptive,obligation,,worden aan het college van burgemeester en wethouders gegevens en bescheiden verstrekt,openai:gpt-4o
+22.139,prescriptive,prohibition,,Dat grondwater wordt niet geloosd in een vuilwaterriool,openai:gpt-4o
+22.14,prescriptive,obligation,,ligt tussen de openbare weg en ten minste een toegang van een gebouw ... een verbindingsweg die geschikt is voor voertuigen van de brandweer en andere hulpverleningsdiensten,openai:gpt-4o
+22.140,prescriptive,permission,,kan grondwater bij ontwatering ... worden geloosd,openai:gpt-4o
+22.141,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.142,constitutive,,,is van toepassing op,openai:gpt-4o
+22.143,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt aan het college,openai:gpt-4o
+22.144,prescriptive,obligation,,"een voorziening aanwezig om, in afwijking van het vierde lid, het meest vervuilde hemelwater in een vuilwaterriool te lozen",openai:gpt-4o
+22.145,constitutive,,,is van toepassing op,openai:gpt-4o
+22.146,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.147,prescriptive,prohibition,,wordt niet geloosd,openai:gpt-4o
+22.148,prescriptive,obligation,,huishoudelijk afvalwater alleen op of in de bodem geloosd als,openai:gpt-4o
+22.149,prescriptive,obligation,,"wordt huishoudelijk afvalwater dat wordt geloosd op of in de bodem, geleid via een zuiveringsvoorziening",openai:gpt-4o
+22.15,prescriptive,obligation,,is ten hoogste 40 m,openai:gpt-4o
+22.150,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.151,constitutive,,,is van toepassing op,openai:gpt-4o
+22.152,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.153,prescriptive,prohibition,,Aan het te lozen koelwater worden geen chemicaliën toegevoegd,openai:gpt-4o
+22.154,constitutive,,,deze paragraaf is van toepassing op,openai:gpt-4o
+22.155,prescriptive,prohibition,,"wordt ... niet ... geloosd, tenzij",openai:gpt-4o
+22.156,constitutive,,,is van toepassing op,openai:gpt-4o
+22.157,constitutive,,,worden als inerte goederen beschouwd,openai:gpt-4o
+22.158,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.159,prescriptive,obligation,,"wordt alleen in een vuilwaterriool geloosd, als het lozen ... niet mogelijk is",openai:gpt-4o
+22.16,prescriptive,exemption,,Het eerste lid is niet van toepassing op,openai:gpt-4o
+22.160,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.161,prescriptive,exemption,,"in afwijking van artikel 4.1057, eerste lid, van het Besluit activiteiten leefomgeving",openai:gpt-4o
+22.162,constitutive,,,is van toepassing op,openai:gpt-4o
+22.163,prescriptive,permission,,kan het afvalwater ... worden geloosd,openai:gpt-4o
+22.164,prescriptive,permission,,kan huishoudelijk afvalwater ... worden geloosd,openai:gpt-4o
+22.165,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.166,prescriptive,permission,,kan afvalwater dat vrijkomt bij het schoonmaken ... worden geloosd,openai:gpt-4o
+22.167,constitutive,,,deze paragraaf is van toepassing op,openai:gpt-4o
+22.168,prescriptive,obligation,,worden aan het college van burgemeester en wethouders gegevens en bescheiden verstrekt,openai:gpt-4o
+22.169,prescriptive,permission,,kan afvalwater dat vrijkomt bij een calamiteitenoefening worden geloosd,openai:gpt-4o
+22.17,prescriptive,prohibition,,wordt een bouwwerk niet gebruikt,openai:gpt-4o
+22.170,constitutive,,,deze paragraaf is van toepassing op,openai:gpt-4o
+22.171,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.172,prescriptive,exemption,,hoeft ... geen recirculatiesysteem aanwezig en in gebruik te zijn,openai:gpt-4o
+22.173,prescriptive,obligation,,wordt het te lozen afvalwater ... gelijkmatig verspreid,openai:gpt-4o
+22.174,prescriptive,obligation,,is de emissiegrenswaarde voor onopgeloste stoffen 300 mg/l,openai:gpt-4o
+22.175,prescriptive,exemption,,"in afwijking van artikel 4.795, eerste lid, van het Besluit activiteiten leefomgeving",openai:gpt-4o
+22.176,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.177,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.178,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.179,prescriptive,permission,,kan te lozen afvalwater ... ook worden geloosd,openai:gpt-4o
+22.18,prescriptive,obligation,,is verplicht alle maatregelen te treffen,openai:gpt-4o
+22.180,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.181,constitutive,,,deze paragraaf is van toepassing op,openai:gpt-4o
+22.182,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.183,prescriptive,permission,,kan te lozen afvalwater ... worden geloosd in een vuilwaterriool,openai:gpt-4o
+22.184,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.185,constitutive,,,is van toepassing op,openai:gpt-4o
+22.186,prescriptive,obligation,,worden aan het college van burgemeester en wethouders verstrekt,openai:gpt-4o
+22.187,prescriptive,prohibition,,Het spuiwater wordt niet geloosd in een vuilwaterriool,openai:gpt-4o
+22.188,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.189,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.19,prescriptive,permission,,is de aanwezigheid van meer dan 1.000 liter van een oliesoort ... toegestaan,openai:gpt-4o
+22.190,prescriptive,obligation,,er worden in goede staat verkerende afkwetsrollen gebruikt en er wordt een doelmatige zilverterugwininstallatie toegepast,openai:gpt-4o
+22.191,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.192,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.193,prescriptive,obligation,,wordt gewassen boven een vloeistofdichte bodemvoorziening,openai:gpt-4o
+22.194,prescriptive,permission,,"is toegestaan, als per week ten hoogste één motorvoertuig",openai:gpt-4o
+22.195,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.196,constitutive,,,Deze paragraaf is niet van toepassing,openai:gpt-4o
+22.197,prescriptive,obligation,,worden aan het college van burgemeester en wethouders de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.198,prescriptive,prohibition,,wordt niet geloosd,openai:gpt-4o
+22.199,prescriptive,obligation,,worden afgezogen en geleid door een vetvangend filter,openai:gpt-4o
+22.2,constitutive,,,wordt onder ... verstaan,openai:gpt-4o
+22.20,prescriptive,obligation,,is verplicht alle maatregelen te treffen,openai:gpt-4o
+22.200,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.201,prescriptive,permission,,alleen toegestaan als nieuwe geurhinder wordt voorkomen,openai:gpt-4o
+22.202,constitutive,,,Deze paragraaf is niet van toepassing,openai:gpt-4o
+22.203,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.204,prescriptive,prohibition,,Het afvalwater wordt niet geloosd op of in de bodem of in een schoonwaterriool,openai:gpt-4o
+22.205,prescriptive,exemption,,"is het eerste lid, onder b, niet van toepassing",openai:gpt-4o
+22.206,prescriptive,obligation,,vindt het pekelen van dierlijke bijproducten en organen plaats boven een aaneengesloten bodemvoorziening,openai:gpt-4o
+22.207,prescriptive,obligation,,Er wordt een logboek bijgehouden,openai:gpt-4o
+22.208,prescriptive,obligation,,wordt een eindonderzoek bodem verricht,openai:gpt-4o
+22.209,prescriptive,obligation,,bevat,openai:gpt-4o
+22.21,prescriptive,prohibition,,wordt een open erf of terrein niet gebruikt,openai:gpt-4o
+22.210,prescriptive,obligation,,wordt een rapport van het eindonderzoek bodem verstrekt,openai:gpt-4o
+22.211,prescriptive,obligation,,wordt uiterlijk zes maanden na het toezenden van het rapport van het eindonderzoek bodem de bodemkwaliteit hersteld,openai:gpt-4o
+22.212,prescriptive,obligation,,wordt ten minste vijf dagen voor het begin geïnformeerd,openai:gpt-4o
+22.213,prescriptive,obligation,,worden ... de gemorste of gelekte stoffen zoveel mogelijk ... opgeruimd en afgevoerd,openai:gpt-4o
+22.214,constitutive,,,Deze paragraaf is niet van toepassing op,openai:gpt-4o
+22.215,constitutive,,,toepassingsbereik,openai:gpt-4o
+22.216,prescriptive,obligation,,is de windturbine voorzien van een automatische stilstandvoorziening,openai:gpt-4o
+22.217,prescriptive,exemption,22.216:exception,Artikel 22.216 is niet van toepassing op,openai:gpt-4o
+22.218,prescriptive,exemption,22.216:exception,Artikel 22.216 niet van toepassing op,openai:gpt-4o
+22.219,prescriptive,obligation,,Lichtschittering wordt ... voorkomen of zoveel mogelijk beperkt,openai:gpt-4o
+22.22,prescriptive,exemption,,regels zijn niet van toepassing als die activiteit betrekking heeft op een oppervlakte van minder dan 100 m2,openai:gpt-4o
+22.220,constitutive,,,is NEN-EN-ISO 2813 van toepassing,openai:gpt-4o
+22.221,constitutive,,,is van toepassing op,openai:gpt-4o
+22.222,prescriptive,obligation,,vindt het laden van een accu plaats boven een aaneengesloten bodemvoorziening,openai:gpt-4o
+22.223,prescriptive,obligation,,Er wordt een logboek bijgehouden,openai:gpt-4o
+22.224,constitutive,,,is van toepassing op,openai:gpt-4o
+22.225,prescriptive,obligation,,worden aan het college van burgemeester en wethouders de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.226,prescriptive,exemption,,is het eerste lid niet van toepassing,openai:gpt-4o
+22.227,constitutive,,,is van toepassing op,openai:gpt-4o
+22.228,prescriptive,obligation,,worden aan het college van burgemeester en wethouders de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.229,prescriptive,obligation,,vindt het schieten op zodanige wijze plaats dat,openai:gpt-4o
+22.23,prescriptive,prohibition,22.27:restriction; 22.36:restriction,Artikel 22.27 en Artikel 22.36 zijn niet van toepassing,openai:gpt-4o
+22.230,prescriptive,obligation,,is opgesteld boven een bodembeschermende voorziening,openai:gpt-4o
+22.231,prescriptive,obligation,,Er wordt een logboek bijgehouden,openai:gpt-4o
+22.232,prescriptive,obligation,,wordt een eindonderzoek bodem verricht,openai:gpt-4o
+22.233,prescriptive,obligation,,bevat,openai:gpt-4o
+22.234,prescriptive,obligation,,wordt een rapport van het eindonderzoek bodem verstrekt,openai:gpt-4o
+22.235,prescriptive,obligation,,het herstel wordt verricht door een onderneming met een erkenning,openai:gpt-4o
+22.236,prescriptive,obligation,,wordt ten hoogste vijf dagen na beëindiging geïnformeerd,openai:gpt-4o
+22.237,constitutive,,,deze paragraaf is van toepassing op,openai:gpt-4o
+22.238,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.239,prescriptive,prohibition,,de verlichting ... is uitgeschakeld,openai:gpt-4o
+22.24,constitutive,,,wordt gemeten aan de kant waar,openai:gpt-4o
+22.240,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.241,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.242,prescriptive,obligation,,wordt opgeslagen: Met het oog op het voorkomen van verontreiniging,openai:gpt-4o
+22.243,prescriptive,obligation,,Er wordt een logboek bijgehouden,openai:gpt-4o
+22.244,prescriptive,prohibition,,worden niet geloosd in een voorziening,openai:gpt-4o
+22.245,prescriptive,exemption,,Het eerste lid is niet van toepassing op,openai:gpt-4o
+22.246,constitutive,,,Deze paragraaf is niet van toepassing,openai:gpt-4o
+22.247,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.248,prescriptive,obligation,,worden opgeslagen op een elementenbodemvoorziening,openai:gpt-4o
+22.249,prescriptive,obligation,,Er wordt een logboek bijgehouden,openai:gpt-4o
+22.25,constitutive,,,wordt aangemerkt als functioneel verbonden,openai:gpt-4o
+22.250,prescriptive,prohibition,,worden niet geloosd in een voorziening,openai:gpt-4o
+22.251,prescriptive,prohibition,,Het afvalwater wordt niet geloosd,openai:gpt-4o
+22.252,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.253,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt,openai:gpt-4o
+22.254,prescriptive,obligation,,vindt ... plaats boven een aaneengesloten bodemvoorziening,openai:gpt-4o
+22.255,prescriptive,obligation,,er wordt een logboek bijgehouden,openai:gpt-4o
+22.256,prescriptive,obligation,,kan afvalwater ... worden geloosd in een vuilwaterriool,openai:gpt-4o
+22.257,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.258,constitutive,,,is niet van toepassing op,openai:gpt-4o
+22.259,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.26,prescriptive,prohibition,,het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.260,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.261,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.262,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.263,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.264,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.265,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.266,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.267,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.268,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.269,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.27,prescriptive,exemption,22.26:exception,"Het verbod, bedoeld in Artikel 22.26, geldt niet voor",openai:gpt-4o
+22.270,constitutive,,,zijn van overeenkomstige toepassing,openai:gpt-4o
+22.271,constitutive,,,deze afdeling is van toepassing op,openai:gpt-4o
+22.272,prescriptive,prohibition,,Het is verboden zonder omgevingsvergunning,openai:gpt-4o
+22.273,constitutive,,,measurement/counting convention,openai:gpt-4o
+22.274,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.275,prescriptive,prohibition,,wordt alleen verleend als ... niet ... overschreden,openai:gpt-4o
+22.276,prescriptive,obligation,,voorschriften verbonden die ertoe strekken dat,openai:gpt-4o
+22.277,constitutive,,,is van toepassing op,openai:gpt-4o
+22.278,prescriptive,prohibition,,de omgevingsvergunning voor die activiteit geweigerd,openai:gpt-4o
+22.279,prescriptive,permission,,de omgevingsvergunning in ieder geval worden verleend,openai:gpt-4o
+22.28,prescriptive,prohibition,22.27:restriction,Artikel 22.27 niet van toepassing,openai:gpt-4o
+22.280,prescriptive,prohibition,,geldt deze bepaling als verbod om de activiteit zonder omgevingsvergunning te verrichten,openai:gpt-4o
+22.281,constitutive,,,de verplichting gelezen als een bevoegdheid,openai:gpt-4o
+22.282,prescriptive,permission,,de omgevingsvergunning toch worden verleend,openai:gpt-4o
+22.283,constitutive,,,is van toepassing op,openai:gpt-4o
+22.284,prescriptive,obligation,,worden gegevens en bescheiden verstrekt over,openai:gpt-4o
+22.285,prescriptive,obligation,,wordt aannemelijk gemaakt dat,openai:gpt-4o
+22.286,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.287,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.288,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.289,prescriptive,obligation,,hebben een schaal die niet kleiner is dan,openai:gpt-4o
+22.29,prescriptive,prohibition,,de omgevingsvergunning alleen verleend als,openai:gpt-4o
+22.290,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.291,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.292,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.293,prescriptive,obligation,,een opgave verstrekt van de maatregelen die worden getroffen,openai:gpt-4o
+22.294,prescriptive,obligation,,tekeningen een schaal die niet kleiner is dan,openai:gpt-4o
+22.295,constitutive,,,zijn van overeenkomstige toepassing,openai:gpt-4o
+22.296,prescriptive,obligation,,wordt aannemelijk gemaakt dat... wordt een rapport verstrekt,openai:gpt-4o
+22.297,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.298,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.299,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.3,constitutive,,,zijn van overeenkomstige toepassing,openai:gpt-4o
+22.30,prescriptive,prohibition,,niet van toepassing voor zover het gaat om aanwezigheid van asbest,openai:gpt-4o
+22.300,prescriptive,obligation,,vermeldt de aanvrager in de aanvraag,openai:gpt-4o
+22.301,prescriptive,obligation,,worden de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.302,prescriptive,obligation,,wordt aannemelijk gemaakt dat op de locatie van het te slopen bouwwerk een ander bouwwerk kan of zal worden gebouwd,openai:gpt-4o
+22.303,prescriptive,obligation,,voorschriften over de wijze van slopen worden verbonden,openai:gpt-4o
+22.31,prescriptive,obligation,,alleen in gebruik wordt genomen nadat het college van burgemeester en wethouders is geïnformeerd,openai:gpt-4o
+22.32,prescriptive,permission,22.29:exception,kan de omgevingsvergunning ... toch worden verleend,openai:gpt-4o
+22.33,prescriptive,prohibition,22.29:restriction,In afwijking van Artikel 22.29 wordt de omgevingsvergunning geweigerd,openai:gpt-4o
+22.34,prescriptive,permission,,kunnen aan een omgevingsvergunning voorschriften worden verbonden,openai:gpt-4o
+22.35,prescriptive,obligation,,worden ... gegevens en bescheiden verstrekt,openai:gpt-4o
+22.36,prescriptive,permission,,in overeenstemming met dit omgevingsplan,openai:gpt-4o
+22.37,prescriptive,obligation,22.36:restriction,"gelden in plaats van de in Artikel 22.36, onder a, onder 3°, gestelde eisen",openai:gpt-4o
+22.38,prescriptive,prohibition,22.36:restriction,Artikel 22.36 is niet van toepassing,openai:gpt-4o
+22.39,prescriptive,prohibition,22.36:restriction,"Artikel 22.36, aanhef en onder a en c, is niet van toepassing",openai:gpt-4o
+22.4,constitutive,,,kan worden afgeweken van de artikelen in deze afdeling,openai:gpt-4o
+22.40,prescriptive,permission,,mag in stand worden gehouden,openai:gpt-4o
+22.41,constitutive,,,Deze afdeling is van toepassing op,openai:gpt-4o
+22.42,constitutive,,,met het oog op,openai:gpt-4o
+22.43,prescriptive,obligation,,draagt zorg voor de naleving van de regels,openai:gpt-4o
+22.44,prescriptive,obligation,,is verplicht,openai:gpt-4o
+22.45,constitutive,,,van overeenkomstige toepassing,openai:gpt-4o
+22.46,prescriptive,obligation,,worden verstrekt aan het college,openai:gpt-4o
+22.47,prescriptive,obligation,,worden de daardoor gewijzigde gegevens verstrekt aan het college,openai:gpt-4o
+22.48,prescriptive,obligation,,worden de gegevens en bescheiden verstrekt,openai:gpt-4o
+22.49,prescriptive,obligation,,wordt onverwijld geïnformeerd,openai:gpt-4o
+22.5,prescriptive,obligation,,wordt niet begonnen voordat,openai:gpt-4o
+22.50,prescriptive,obligation,,worden ze verstrekt aan het college,openai:gpt-4o
+22.51,constitutive,,,is niet van toepassing op een milieubelastende activiteit,openai:gpt-4o
+22.52,prescriptive,obligation,,worden getroffen,openai:gpt-4o
+22.52a,prescriptive,exemption,22.52:exception,Artikel 22.52 niet van toepassing,openai:gpt-4o
+22.53,prescriptive,obligation,,worden ... verwijderd,openai:gpt-4o
+22.54,constitutive,,,Paragraaf 22.3.4 is van toepassing op,openai:gpt-4o
+22.55,constitutive,,,toepassingsbereik,openai:gpt-4o
+22.56,constitutive,,,als één activiteit beschouwd,openai:gpt-4o
+22.57,constitutive,,,waarden voor het geluid gelden,openai:gpt-4o
+22.58,prescriptive,exemption,,waarden voor geluid zijn niet van toepassing,openai:gpt-4o
+22.59,prescriptive,exemption,,waarden voor geluid niet van toepassing,openai:gpt-4o
+22.6,constitutive,,,vervallen,openai:gpt-4o
+22.60,prescriptive,obligation,,wordt er een geluidonderzoek verricht,openai:gpt-4o
+22.61,prescriptive,obligation,,worden de gewijzigde gegevens verstrekt aan het college,openai:gpt-4o
+22.61a,prescriptive,obligation,,worden aan het college van burgemeester en wethouders de volgende gegevens en bescheiden verstrekt,openai:gpt-4o
+22.62,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.62a,prescriptive,exemption,,niet van toepassing op een windpark met 3 of meer windturbines,openai:gpt-4o
+22.63,prescriptive,obligation,,"is niet hoger dan de waarde, bedoeld in tabel",openai:gpt-4o
+22.64,prescriptive,obligation,22.63:exception,het geluid ... niet hoger dan de waarde,openai:gpt-4o
+22.65,prescriptive,obligation,22.63:exception,"in afwijking van Artikel 22.63, het geluid ... niet hoger dan de waarde",openai:gpt-4o
+22.66,prescriptive,obligation,22.63:exception,het geluid ... niet hoger dan de waarde,openai:gpt-4o
+22.67,constitutive,,,gelden de waarden die zijn opgenomen in die verordening,openai:gpt-4o
+22.68,constitutive,,,de waarde 5 dB(A) hoger dan de waarden,openai:gpt-4o
+22.69,constitutive,,,blijft dat lid gelden,openai:gpt-4o
+22.7,prescriptive,prohibition,,mag niet in ernstige mate in strijd zijn met redelijke eisen van welstand,openai:gpt-4o
+22.70,prescriptive,exemption,22.63:exception; 22.64:exception; 22.65:exception; 22.66:exception; 22.67:exception; 22.69:exception,niet van toepassing op aandrijfgeluid van motorvoertuigen,openai:gpt-4o
+22.71,prescriptive,obligation,,gelden de waarden van het langtijdgemiddelde beoordelingsniveau,openai:gpt-4o
+22.72,prescriptive,obligation,,worden maatregelen of voorzieningen getroffen,openai:gpt-4o
+22.73,prescriptive,exemption,22.63:exception; 22.71:exception,niet van toepassing op dagen of dagdelen in verband met de viering van,openai:gpt-4o
+22.74,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.75,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.76,prescriptive,obligation,,is het geluid ... ten hoogste 47 Lden en 41 Lnight,openai:gpt-4o
+22.77,prescriptive,obligation,,gegevens worden geregistreerd,openai:gpt-4o
+22.78,constitutive,,,meet- en rekenbepalingen,openai:gpt-4o
+22.79,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.8,prescriptive,obligation,,is aangesloten op het distributienet voor elektriciteit,openai:gpt-4o
+22.80,prescriptive,obligation,,"is het geluid ... ten hoogste 50 Bs,dan",openai:gpt-4o
+22.81,prescriptive,obligation,,gegevens worden geregistreerd,openai:gpt-4o
+22.82,constitutive,,,is artikel 6.9 van de Omgevingsregeling van toepassing,openai:gpt-4o
+22.83,constitutive,,,Deze paragraaf is van toepassing op,openai:gpt-4o
+22.84,constitutive,,,is deze paragraaf ook van toepassing op,openai:gpt-4o
+22.85,constitutive,,,als één activiteit beschouwd,openai:gpt-4o
+22.86,prescriptive,exemption,,zijn niet van toepassing op,openai:gpt-4o
+22.87,prescriptive,exemption,,waarden voor trillingen niet van toepassing,openai:gpt-4o
+22.88,prescriptive,obligation,,niet hoger dan de waarde A1 trillingssterkte Vmax,openai:gpt-4o
+22.89,constitutive,,,is artikel 6.11 van de Omgevingsregeling van toepassing,openai:gpt-4o
+22.9,prescriptive,obligation,,is een voorziening ... aangesloten op het distributienet voor gas,openai:gpt-4o
+22.90,constitutive,,,deze paragraaf is van toepassing op,openai:gpt-4o
+22.91,prescriptive,obligation,22.90:exception,"In afwijking van Artikel 22.90, tweede lid, zijn de waarden ... ook van toepassing",openai:gpt-4o
+22.92,constitutive,,,waarden en afstanden gelden,openai:gpt-4o
+22.93,prescriptive,exemption,22.245:exception,zijn niet van toepassing als het geurgevoelig object een functionele binding heeft,openai:gpt-4o
+22.94,prescriptive,exemption,22.245:exception,niet van toepassing op een geurgevoelig object,openai:gpt-4o
+22.95,constitutive,,,is geen rekening gehouden met de cumulatie van geur,openai:gpt-4o
+22.96,constitutive,,,Deze paragraaf is niet van toepassing op,openai:gpt-4o
+22.97,constitutive,,,Een afstand als bedoeld in deze paragraaf geldt vanaf het emissiepunt,openai:gpt-4o
+22.98,prescriptive,obligation,,is niet hoger dan de waarde,openai:gpt-4o
+22.99,prescriptive,permission,22.98:exception,in afwijking van Artikel 22.98,openai:gpt-4o
+23.1,constitutive,,,wordt aangehaald als,openai:gpt-4o

@@ -22,7 +22,50 @@ Run every command below **from this `prototype/` folder** (not from inside
 `scripts/`). The scripts find `../source_data` and `silver_deontic_v1.csv` relative
 to it.
 
-## Build the graph (for the demo)
+## Build the graph (normal path, LLM tags)
+
+This is the graph the findings and statistics are based on. Run from this
+folder, with Neo4j running and the virtual environment active.
+
+1. Start from an empty graph (Neo4j Browser): `MATCH (n) DETACH DELETE n;`
+2. Load the law delivery: `python scripts/build_graph.py`. This loads structure,
+   rule texts, activities, locations and the plain cross-references
+   (`VERWIJST_NAAR`). The delivery has no field for legal force, so no deontic
+   tags exist yet.
+3. Tag every article with gpt-4o (needs `OPENAI_API_KEY`, e.g. in `../.env`;
+   about 308 API calls):
+
+   ```
+   python scripts/deontic_extract.py --backend openai --model gpt-4o --write \
+     --out runs/gpt4o_<date>.csv --diary runs/extraction_diary.md
+   ```
+
+   This sets `statement_type`, `deontic`, `deontic_source` and a rationale on
+   each article and writes the force-bearing references as `OVERRIDES` edges. It
+   changes nothing loaded in step 2, and it replaces an article's earlier
+   `OVERRIDES` edges, so a rerun does not leave stale edges behind.
+4. Compose the net effect of each override: run `cypher/derive_overrides.cypher`.
+
+Do not run `cypher/build_and_tag.cypher` or the demo prep on this path; both are
+for the demo only (below).
+
+### How similar is a rerun?
+
+gpt-4o at temperature 0 is not deterministic, so a rerun gives a very similar
+but not identical graph. Measured over five full runs (findings 2026-11-01):
+
+- article labels: 95.5% of the 308 articles get the same label in every run
+  (Fleiss' kappa 0.97); accuracy against the silver sets moves by about one
+  article;
+- `OVERRIDES` edges are less stable: 29 source-target pairs appear in every run,
+  41 in at least one, and runs share on average 83% of their pairs; the
+  exception / restriction type differs between runs on 5 of the 29 stable pairs.
+
+The tags of the current graph are saved in `tags/gpt4o_2026-11-01.csv` (one row
+per article: statement type, deontic, overrides, rationale), so the exact graph
+can be compared with or checked against a rerun.
+
+## Build the graph (for the demo, no LLM)
 
 You do not need to run all the cypher. Steps 1–3 below build the structure and
 the tagging layer; that is enough for the demo. `scripts/deontic_extract.py`,
@@ -93,6 +136,7 @@ are the rest of the pipeline, not required for the demo.
 | `silver_deontic_v1.csv` | silver v1: 38 articles labelled by us, used to score the extractor |
 | `silver_deontic_v2.csv` | silver v2: 50 articles labelled by Claude, stratified by predicted tag, with v0-fit flags |
 | `silver_v2_annotation.xlsx` | the blind annotation sheet behind silver v2, with codebook |
+| `tags/gpt4o_2026-11-01.csv` | the gpt-4o tags and OVERRIDES of the current graph (rebuild of 2026-11-01) |
 | `silver_v2_strata.csv` | the stratum of each silver v2 article and the stratum sizes, needed for the weighted estimates |
 | `demo-script.md` | shot-by-shot 3-minute demo-video script, with the pre-recording graph prep |
 | `visualizations/maastricht-rule-graph.html` | self-contained interactive graph (open in a browser) |

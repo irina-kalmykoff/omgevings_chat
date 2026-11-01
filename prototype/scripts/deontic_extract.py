@@ -133,7 +133,12 @@ def classify(client, model, art):
 
 
 def write_back(driver, nummer, pred, source):
-    """Write deontic tags and OVERRIDES edges for one article back to Neo4j."""
+    """Write deontic tags and OVERRIDES edges for one article back to Neo4j.
+
+    The article's existing outgoing OVERRIDES are deleted first, so a re-run
+    replaces its edges instead of adding to edges from earlier runs, the
+    rule-based pass or manual edits.
+    """
     with driver.session() as session:
         session.run(
             """
@@ -141,6 +146,9 @@ def write_back(driver, nummer, pred, source):
             SET a.statement_type = $st, a.deontic = $deontic,
                 a.deontic_source = $src, a.deontic_rationale = $rat
             WITH a
+            OPTIONAL MATCH (a)-[old:OVERRIDES]->()
+            DELETE old
+            WITH DISTINCT a
             UNWIND $overrides AS ov
             MATCH (t:Artikel {nummer: ov.target})
             MERGE (a)-[o:OVERRIDES]->(t)
