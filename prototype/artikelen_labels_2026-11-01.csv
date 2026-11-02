@@ -1,0 +1,35 @@
+nummer,titel,statement_type,deontic,overrides,override_type,note,confidence_1_3
+22.62,Toepassingsbereik,constitutive,,,,"scope clause; lid 2 narrows the scope (maatwerk), still scope",3
+22.62a,(tijdelijke uitzondering windparken),constitutive,,,,"scope clause for the whole paragraph ('deze paragraaf is niet van toepassing'); title says 'uitzondering', so exemption is arguable, but the target is a paragraph, not an article",2
+22.63,Geluid: waarden voor geluidgevoelige gebouwen,prescriptive,obligation,,,"noise limits as plain statements ('niet hoger dan'); lid 2 changes the values of lid 1 for bedrijventerreinen, lid 4 switches off L_Amax for laden/lossen: both inside the same article",3
+22.64,Geluid: ... tankstation,prescriptive,obligation,22.63,exception,"replaces the values of 22.63 lid 1, 3, 4 for tankstations: really a modification (other values apply), not a pure lift; lid 2 own exemption for laden/lossen",3
+22.65,Geluid: ... agrarische activiteit,prescriptive,obligation,22.63,exception,replaces the values of 22.63 lid 1 and 3 for agrarische activiteiten: modification; lid 3 is a measurement convention,3
+22.66,Geluid: ... glastuinbouwbedrijf,prescriptive,obligation,22.63,exception,replaces the values of 22.63 lid 1 and 3 for glastuinbouw: modification; lid 3 measurement convention,3
+22.67,Geluid: waarden ... gemeentelijke verordening,prescriptive,obligation,22.63; 22.65; 22.66,exception; exception; exception,the values of an older municipal ordinance apply instead of 22.63 (lid 1) and 22.65/22.66 lid 1 (lid 2): modification and temporal (pre-Omgevingswet),2
+22.68,Geluid: waarden op drijvende woonfunctie voor 1 juli 2012,prescriptive,obligation,22.63; 22.64; 22.65; 22.66,exception; exception; exception; exception,value 5 dB higher than lid 1 of the four articles for floating homes: modification and temporal (before 1 July 2012),2
+22.69,Geluid: eerbiedigende werking,prescriptive,obligation,,,"old Activiteitenbesluit art. 2.17a keeps applying: temporal; the target is outside this plan, so no override",2
+22.70,Geluid: buiten beschouwing laten van geluidbronnen,constitutive,,,,measurement convention (which noise is left out when determining levels); lid 3 additionally switches off L_Amax of 22.63-22.69 for night-time loading under conditions: an exemption lid inside a convention article,2
+22.71,Geluid: waar waarden gelden ... gezoneerd industrieterrein,constitutive,,,,convention on where the values of 22.63/22.64 are measured (also at 50 m); arguably extends the obligation,2
+22.72,Geluid: maatregelen ... stomen van grond,prescriptive,obligation,,,"lid 1 is a measurement convention (steaming left out), lid 2 the duty to take measures; labelled by the duty, not lid 1, because the convention does not regulate conduct",2
+22.73,Geluid: festiviteiten,prescriptive,exemption,22.63; 22.64; 22.65; 22.66; 22.67; 22.68; 22.71,exception (all),the values of '22.63 tot en met 22.71' do not apply on festive days; listed the articles in that range that carry values; lid 2 is a counting convention,3
+22.74,Geluid: meet- en rekenbepalingen,constitutive,,,,"measurement convention, points to the Omgevingsregeling",3
+22.96,Toepassingsbereik,constitutive,,,,scope clause; lid 2 small-herd threshold is part of the scope,3
+22.97,Geur vanaf waar afstanden gelden,constitutive,,,,measurement convention (distance from the emission point),3
+22.98,Geur ... met geuremissiefactor: waarden,prescriptive,obligation,,,odour limit; lid 2 calculation convention,3
+22.99,Geur ... eerbiedigende werking bij waarden,prescriptive,exemption,22.98,exception,"grandfathering: a legal pre-existing exceedance of 22.98 may stay, but animals and odour may not increase (lid 1) and may grow only with a reducing measure (lid 2); temporal. Possible drafting error: lid 2 refers to 'de waarde, bedoeld in Artikel 22.96', but 22.96 is the scope clause; 22.98 seems meant",2
+22.100,Geur ... afstand tot bijzondere geurgevoelige objecten,prescriptive,exemption,22.98,exception,22.98 lid 1 does not apply above a distance,3
+22.101,Geur ... zonder geuremissiefactor: afstand,prescriptive,obligation,,,minimum distance,3
+22.102,Geur ... eerbiedigende werking voor afstand,prescriptive,exemption,22.101,exception,grandfathering (temporal); lid 2 adds a no-increase / no-decrease condition,3
+22.103,Geur ... afstand vanaf de gevel dierenverblijf,prescriptive,obligation,22.97,exception,"lid 1 minimum distance from the facade, 'onverminderd 22.98-22.102' (cumulative, not an override); lid 2 measures it from the facade instead of the emission point of 22.97: modification of a convention",2
+22.104,Geur ... met geuremissiefactor: eerbiedigende werking ... gevel,prescriptive,exemption,22.103,exception,"grandfathering of 22.103 (temporal), on condition that distance, odour and animals do not get worse",2
+22.105,Geur ... zonder geuremissiefactor: eerbiedigende werking ... gevel,prescriptive,exemption,22.103,exception,"as 22.104, for animals without emission factor and horses/ponies",2
+22.121,Toepassingsbereik,constitutive,,,,scope clause,3
+22.122,Geur zuiveringtechnisch werk: waarde,prescriptive,obligation,,,"odour limit; lid 2 other values for plants from before 1 Feb 1996 (modification inside the article, temporal); lid 3 calculation convention",3
+22.123,Geur zuiveringtechnisch werk: geen waarde ...,prescriptive,exemption,22.122,exception,values of 22.122 lid 1 do not apply for certain objects under an old permit: temporal,3
+22.124,Geur zuiveringtechnisch werk: eerbiedigende werking,prescriptive,obligation,22.123,restriction,"on changing a grandfathered plant (22.122 lid 2, 22.123) the odour may not exceed the earlier level unless the 22.122 lid 1 values are met: limits the grandfathering, but does not fully reinstate 22.122",1
+22.271,Toepassingsbereik,constitutive,,,,scope clause with 'tenzij' exclusions,3
+22.272,Binnenplanse vergunning ... geluid weg of spoorweg,prescriptive,prohibition,,,permit required (lid 1); lid 2 and 3 list exemptions inside the same article,3
+22.273,Aandachtsgebied,constitutive,,,,definition of the aandachtsgebied (distances),3
+22.274,Aanvraagvereisten ...,prescriptive,obligation,,,application requirements,3
+22.275,Beoordelingsregel aanvraag ...,prescriptive,prohibition,,,assessment rule addressed to the authority: the permit may only be granted if 70 L_den is not exceeded; none of the four tags fits an authority rule well,1
+22.276,Voorschriften binnenplanse omgevingsvergunning ...,prescriptive,obligation,,,the authority must attach conditions to the permit: addressed to the authority,2
