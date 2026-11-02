@@ -139,11 +139,13 @@ are the rest of the pipeline, not required for the demo.
 | `silver_v2_annotation.xlsx` | the blind annotation sheet behind silver v2, with codebook |
 | `tags/gpt4o_lids_pilot_2026-11-01.csv` | the per-lid gpt-4o tags of the lid pilot (50 articles, 142 lids) |
 | `tags/gpt4o_2026-11-01.csv` | the gpt-4o tags and OVERRIDES of the current graph (rebuild of 2026-11-01) |
+| `artikelen_labels_2026-11-01.csv` | blind labels (Claude, silver) for the 34 articles of the four use cases (22.62–22.74, 22.96–22.105, 22.121–22.124, 22.271–22.276), with a note and confidence per article |
 | `silver_v2_strata.csv` | the stratum of each silver v2 article and the stratum sizes, needed for the weighted estimates |
 | `demo-script.md` | shot-by-shot 3-minute demo-video script, with the pre-recording graph prep |
 | `visualizations/maastricht-rule-graph.html` | self-contained interactive graph (open in a browser) |
 | `visualizations/graph.json` | the subgraph that page draws (also embedded in the page) |
 | `FINDINGS.md` | running log of results and decisions |
+| `ONTOLOGY.md` | the deontic ontology: v0 (built into the graph) and the v1 draft (override operations, use-case candidates) |
 
 ## Deontic extraction and evaluation
 
