@@ -22,6 +22,9 @@ dependencies = [
     "pydantic>=2",
 ]
 
+[project.scripts]
+omgkg = "omgkg.cli:main"
+
 [dependency-groups]
 dev = [
     "lefthook>=2.1.17",
