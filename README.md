@@ -61,6 +61,7 @@ scripts/       one-off utilities
 notebooks/     exploration only
 tests/         pytest suite with small committed fixtures
 prototype/     the concept demonstrator (to be ported into src/omgkg)
+LLM_KG/        text-only LLM graph input pipeline (see LLM_KG/README.md)
 ```
 
 ## Experimental configurations

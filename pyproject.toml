@@ -59,9 +59,11 @@ sequence = ["lint", "format:check", "typecheck", "test"]
 target-version = "py311"
 line-length = 88
 src = ["src", "tests"]
-# The concept demonstrator is kept as-is until it is ported into src/omgkg.
+# The concept demonstrator and the LLM_KG text pipeline are kept as-is until they
+# are ported into src/omgkg (LLM_KG/scripts/clean_text.py hashes itself into its
+# committed manifest, so reformatting it would break that provenance).
 # Code blocks in Markdown are illustrative sketches, not code to format.
-extend-exclude = ["prototype", "*.md"]
+extend-exclude = ["prototype", "LLM_KG", "*.md"]
 
 [tool.ruff.format]
 line-ending = "lf"
