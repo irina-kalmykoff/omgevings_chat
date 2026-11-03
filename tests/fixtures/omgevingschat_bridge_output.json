@@ -1,0 +1,43 @@
+{
+  "latencyMs": 812.5,
+  "sources": [
+    {
+      "type": "DSO",
+      "id": "chunk-22.27",
+      "identifier": "/akn/nl/act/gm0935/2020/omgevingsplan",
+      "documentComponentId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27",
+      "documentKop": "Artikel 22.27 Dakkapel",
+      "title": "Omgevingsplan gemeente Maastricht",
+      "text": "Het is verboden zonder omgevingsvergunning ... geldt niet voor een dakkapel ...",
+      "url": "https://omgevingswet.overheid.nl/regels-op-de-kaart/documenten/example",
+      "score": 0.91,
+      "order": 1,
+      "citationId": "1",
+      "retrievalStage": "reranked"
+    },
+    {
+      "type": "BWB",
+      "id": "chunk-bbl-2.15",
+      "identifier": "BWBR0041297",
+      "title": "Besluit bouwwerken leefomgeving",
+      "text": "Artikel 2.15 ...",
+      "score": 0.64,
+      "order": 2,
+      "citationId": "2",
+      "retrievalStage": "reranked"
+    },
+    {
+      "type": "DSO",
+      "id": "chunk-22.28",
+      "identifier": "/akn/nl/act/gm0935/2020/omgevingsplan",
+      "documentComponentId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28",
+      "documentKop": "Artikel 22.28 Dakkapel, monument",
+      "title": "Omgevingsplan gemeente Maastricht",
+      "text": "Artikel 22.27 is alleen van toepassing voor zover ...",
+      "order": 3,
+      "citationId": "3",
+      "retrievalStage": "protected_recall",
+      "fieldOutsideOurContract": true
+    }
+  ]
+}
