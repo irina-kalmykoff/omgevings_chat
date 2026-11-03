@@ -30,6 +30,10 @@ dev = [
     "pytest-socket>=0.8.1",
     "ruff>=0.16.10",
 ]
+prototype = [
+    "openai>=3.40.0",
+    "openpyxl>=3.1.5",
+]
 
 [build-system]
 requires = ["uv_build>=0.12.23,<0.13.0"]
