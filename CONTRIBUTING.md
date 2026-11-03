@@ -20,7 +20,7 @@ only in documentation.
    same evidence type as the baseline (source-linked text passages), never raw
    triples.
 5. **Controlled experiment.** Corpus, chunking, embeddings, reranking, generator,
-   prompt and context budget are defined once in `configs/shared.yaml` and
+   prompt and context budget are defined once (`configs/`, `.env.example`) and
    reused by every configuration.
 6. **Reproducibility.** Every run stores its full config, graph ID and version,
    corpus snapshot ID and all outputs, and can be re-executed from that config.
