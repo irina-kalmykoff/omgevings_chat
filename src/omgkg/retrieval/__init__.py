@@ -1,1 +1,1 @@
-"""Retrievers: the text baseline and the graph-assisted retriever."""
+"""The RAG step: OmgevingsChat retrieval through the bridge, and its Qdrant index."""

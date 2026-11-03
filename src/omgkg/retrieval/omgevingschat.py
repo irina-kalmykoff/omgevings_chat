@@ -95,6 +95,7 @@ def bridge_transport(
     source_id: str,
     env_file: Path | None = None,
     metadata_schema: str = "v2",
+    qdrant_url: str | None = None,
 ) -> Transport:
     """Run the bridge inside a local omgevingschat-platform checkout.
 
@@ -110,6 +111,9 @@ def bridge_transport(
     }
     if env_file is not None:
         env["OMGKG_ENV_FILE"] = str(env_file.resolve())
+    if qdrant_url is not None:
+        # Wins over their .env file: the bridge reads the Qdrant we imported into.
+        env["QDRANT_URL"] = qdrant_url
     return subprocess_transport(
         ["pnpm", "--dir", str(service), "exec", "tsx", "src/omgkg-bridge.ts"], env=env
     )
