@@ -6,7 +6,7 @@
   "authority": "gm0935",
   "frbr_work": "/akn/nl/act/gm0935/2020/omgevingsplan",
   "frbr_expression": "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34",
-  "root": "data/raw",
+  "root": "source_data",
   "files": [
     {
       "path": "Maastricht-DSO-production-2026-10-02/Maastricht-boundary-RD.geojson",

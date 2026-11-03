@@ -1,1 +1,1 @@
-"""Answer generation from retrieved evidence, with citations."""
+"""The LLM step: a cited answer from the RAG + KG evidence."""

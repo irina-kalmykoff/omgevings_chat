@@ -23,25 +23,27 @@ never commit it). The bridge reads `OPENAI_API_KEY`, `COHERE_API_KEY` and
 
 ## Qdrant with the Maastricht snapshot
 
+From the knowledge-graph root:
+
 ```bash
-docker run -d --name qdrant -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant:latest
-curl -X POST "http://localhost:6333/collections/<collection>/snapshots/upload?priority=snapshot" \
-  -F "snapshot=@<file>.snapshot"
+docker compose up -d qdrant
+uv run omgkg import-snapshot <file>.snapshot --collection <collection>
 ```
 
 ## Check it works
 
-From the knowledge-graph root:
+From the knowledge-graph root, with `OMGKG_QDRANT_COLLECTION` set in `.env`:
 
 ```bash
-uv run python scripts/omgevingschat_smoke.py overlap --collection <collection>
-uv run python scripts/omgevingschat_smoke.py ask "mag ik een dakkapel bouwen?" --collection <collection>
+uv run omgkg overlap
+uv run omgkg ask "mag ik een dakkapel bouwen?" --no-kg
 ```
 
-`overlap` shows how many of their wIds exist in our 2026-10-02 snapshot; `ask`
-shows the top-5 evidence and whether each links to an article or lid in our
-graph. If `ask` finds no sources, check the source ID (`--source-id`) and
-metadata version (`--schema v1`) against the snapshot's payload.
+`overlap` shows how many of their wIds exist in our 2026-10-02 snapshot; `ask
+--no-kg` runs their retrieval and the answer step without our graph. If `ask`
+finds no sources, check `OMGKG_SOURCE_ID` and `OMGKG_METADATA_SCHEMA=v1`
+against the snapshot's payload. The bridge always reads the Qdrant at
+`OMGKG_QDRANT_URL` (default the local one), whatever their `.env.local` says.
 
 The bridge is copied into `apps/benchmark-service/src/` of their checkout when it
 runs; add `apps/benchmark-service/src/omgkg-bridge.ts` to their
