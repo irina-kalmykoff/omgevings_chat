@@ -1,4 +1,4 @@
-"""The repository skeleton is importable and the test-suite guards are active."""
+"""Every module imports, and the test-suite guards are active."""
 
 import importlib
 import socket
@@ -8,18 +8,16 @@ from pytest_socket import SocketBlockedError
 
 PACKAGES = [
     "omgkg",
+    "omgkg.cli",
+    "omgkg.pipeline",
     "omgkg.models",
-    "omgkg.ingest",
-    "omgkg.ingest.dso",
-    "omgkg.graph",
-    "omgkg.graph.dso_native",
-    "omgkg.graph.llm_induced",
-    "omgkg.graph.hybrid",
-    "omgkg.graph.fallback",
-    "omgkg.retrieval",
-    "omgkg.generation",
-    "omgkg.evaluation",
-    "omgkg.experiments",
+    "omgkg.ingest.dso.stop_tpod",
+    "omgkg.retrieval.omgevingschat",
+    "omgkg.retrieval.qdrant",
+    "omgkg.graph.build",
+    "omgkg.graph.knowledge_graph",
+    "omgkg.graph.kg_service",
+    "omgkg.generation.answer",
 ]
 
 
