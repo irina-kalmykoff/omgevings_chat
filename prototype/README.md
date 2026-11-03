@@ -79,12 +79,12 @@ are the rest of the pipeline, not required for the demo.
    user `neo4j`, password `testpassword` — so if yours differ, add
    `--uri/--user/--password` (Python) or edit the connection line (cypher-shell).
 
-2. **Python environment**, from this folder:
+2. **Python environment**, from this folder (installs neo4j, lxml, openai and
+   openpyxl at the versions pinned in `../uv.lock`):
 
    ```
-   python3 -m venv .venv
-   source .venv/bin/activate          # Windows: .venv\Scripts\activate
-   pip install neo4j lxml
+   uv sync --group prototype
+   source ../.venv/bin/activate       # Windows: ..\.venv\Scripts\activate
    ```
 
 3. **Load the structure** (reads `../source_data`, applies the schema
@@ -155,7 +155,7 @@ before any write (auto-on with `--write`), and `--write` clears an article's
 prior OVERRIDES so re-tagging replaces rather than accumulates.
 
 ```
-pip install openai neo4j
+uv sync --group prototype          # if not done in step 2 above
 # local (needs: ollama pull qwen2.5:32b)
 python scripts/deontic_extract.py --backend ollama --eval silver_deontic_v1.csv
 # hosted
