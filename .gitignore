@@ -237,3 +237,8 @@ runs/
 
 # JetBrains project folder
 .idea/
+
+# Carried over from the old omgevings_chat repo
+.DS_Store
+Claude outputs/
+prototype/mismatches.md
