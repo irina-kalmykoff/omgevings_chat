@@ -1,0 +1,31 @@
+{
+  "snapshot_id": "qdrant-kg-maastricht-2026-11-03",
+  "description": "Qdrant snapshot of the OmgevingsChat retrieval index used by the RAG step (configuration A): their chunks of the DSO and other sources for Maastricht, with dense and BM25 vectors.",
+  "source": "OmgevingsChat (IGNE Agency), handed to the team; not in git (company data)",
+  "created": "2026-11-03T11:05:21",
+  "received_on": "2026-11-11",
+  "collection": "kg-maastricht",
+  "import": "uv run omgkg import-snapshot Snapshot/<file> --collection kg-maastricht",
+  "file": {
+    "path": "Snapshot/kg-maastricht-3324020903494790-2026-11-03-11-05-21.snapshot",
+    "bytes": 1060033024,
+    "sha256": "6a267f6706083bad55e0e71c563c070d9071ca1fd9a93b528bf439bddd14c37a"
+  },
+  "vectors": {
+    "dense": "3072-dim, cosine (text-embedding-3-large)",
+    "sparse": "bm25 (idf)"
+  },
+  "points": 64745,
+  "points_by_type": {
+    "RP": 41868,
+    "DSO": 17423,
+    "CVDR": 4316,
+    "BWB": 1138
+  },
+  "maastricht_omgevingsplan": {
+    "source_id": "/akn/nl/act/gm0935/2020/omgevingsplan",
+    "expression": "nld@34 (same as maastricht-dso-2026-10-02)",
+    "points": 1017,
+    "chunking": "per lid for articles with leden, per article otherwise; explanatory notes and definitions as their own chunks"
+  }
+}
