@@ -19,7 +19,11 @@ from openai import OpenAI
 
 from omgkg.generation.answer import Answer, OpenAIModel
 from omgkg.graph import build, kg_service
-from omgkg.graph.knowledge_graph import KnowledgeGraph, Neo4jGraph
+from omgkg.graph.knowledge_graph import (
+    KnowledgeGraph,
+    Neo4jGraph,
+    explained_articles,
+)
 from omgkg.ingest.dso.stop_tpod import read_regeling
 from omgkg.models import TextComponent
 from omgkg.pipeline import ask
@@ -59,16 +63,20 @@ def neo4j_driver() -> Driver:
     )
 
 
-def articles(snapshot: Path) -> dict[str, TextComponent]:
-    return {
+def snapshot_articles() -> tuple[dict[str, TextComponent], dict[str, str]]:
+    """Articles by wId, and explanatory-note wId -> the article it explains."""
+    components = read_regeling(build.SNAPSHOT, DSO_SNAPSHOT_ID)
+    by_wid = {
         c.provenance.text_component_id or c.id: c
-        for c in read_regeling(snapshot, DSO_SNAPSHOT_ID)
+        for c in components
         if c.kind == "article"
     }
+    return by_wid, explained_articles(components)
 
 
 def knowledge_graph(driver: Driver, limit: int) -> KnowledgeGraph:
-    return KnowledgeGraph(Neo4jGraph(driver), articles(build.SNAPSHOT), limit=limit)
+    by_wid, explains = snapshot_articles()
+    return KnowledgeGraph(Neo4jGraph(driver), by_wid, explains, limit=limit)
 
 
 def rag() -> OmgevingsChatRetriever:
@@ -157,14 +165,28 @@ def cmd_overlap(args: argparse.Namespace) -> None:
         setting("OMGKG_QDRANT_URL", "http://localhost:6333"),
         os.environ.get("QDRANT_API_KEY"),
     )
-    ours = set()
-    for wid, article in articles(build.SNAPSHOT).items():
-        ours |= {wid, *(p.w_id for p in article.paragraphs)}
-    shared = theirs & ours
-    print(f"wIds in their index: {len(theirs)}; articles and lids in ours: {len(ours)}")
-    print(f"shared: {len(shared)} ({len(shared) / max(len(theirs), 1):.1%} of theirs)")
-    for wid in sorted(theirs - ours)[:20]:
-        print(f"  only theirs: {wid}")
+    # Their index holds many documents and chunks articles with leden per lid,
+    # so what counts is how many of *our* articles a RAG hit can lead to.
+    by_wid, explains = snapshot_articles()
+    direct = set(by_wid) & theirs
+    via_lid = {
+        wid
+        for wid, article in by_wid.items()
+        if wid not in direct and any(p.w_id in theirs for p in article.paragraphs)
+    }
+    via_note = {a for note, a in explains.items() if note in theirs}
+    via_note -= direct | via_lid
+    missing = sorted(by_wid.keys() - direct - via_lid - via_note)
+    print(f"wIds in their index (all documents): {len(theirs)}")
+    print(
+        f"our {len(by_wid)} articles reachable from a RAG hit: "
+        f"{len(by_wid) - len(missing)} ({len(direct)} as the article, "
+        f"{len(via_lid)} via one of its leden, {len(via_note)} only via its note)"
+    )
+    notes = sum(note in theirs for note in explains)
+    print(f"their index also holds {notes} of our {len(explains)} explanatory notes")
+    for wid in missing[:20]:
+        print(f"  not reachable: {by_wid[wid].heading}")
 
 
 def main(argv: list[str] | None = None) -> None:
