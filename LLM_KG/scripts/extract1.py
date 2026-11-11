@@ -11,22 +11,33 @@ in plain language. Split mixed articles by normative meaning, not arbitrary sent
 Include definitions, scope, empowerment, assessment, modifications, measurement and
 temporal provisions when present. Do not invent conduct or missing participants.
 Retain conditions and nested alternatives; do not assume they are satisfied.
+Carry shared opening qualifications into each statement they govern.
+Preserve the stated legal effect and scope, including any limits on permit exemptions.
 Use enclosing headings as context only, never as unsupported article quotations.
 Reserved/empty articles may produce no statements, with an explanation.
-Every evidence object is {"quote": EXACT substring, "start": integer, "end": integer}
-using Python character offsets [start:end] in the supplied text (not byte/token offsets).
+Every evidence object has one string field, "quote". Copy one contiguous
+substring of the supplied text, including its punctuation, spaces and line
+breaks. Prefer a short exact quote for each field. Use separate evidence
+for the statement and its conditions instead of joining source passages.
+If a citation or phrase occurs more than once in its statement, extend the
+evidence quote with nearby source words until it identifies the intended
+occurrence uniquely. Keep the citation's wording field as the citation itself.
 For every stated action, addressee, condition, time qualification and reference,
 provide its own exact evidence. If absent, use null or [] rather than guessing.
-Return this object structure:
+Return one complete JSON object with both "statements" and "coverage_note".
+Every entry in "statements" must be an object with all the keys below. Put
+action, addressee, conditions, temporal and references inside the statement.
+Use null for absent action/addressee and [] for empty lists.
+Example of the required structure:
 {"statements":[{"id":"s1", "description":"plain-language meaning",
  "legal_character":"plain-language description of the kind of statement",
- "evidence":{"quote":"...","start":0,"end":10},
+ "evidence":{"quote":"..."},
  "action":null, "addressee":null, "conditions":[], "temporal":[],
  "references":[], "uncertainty":[], "confidence":0.0}],
  "coverage_note":"Explain empty output or any content not represented"}.
-action/addressee, when present, are {"text":"...","evidence":{...}}.
+action/addressee, when present, are {"text":"...","evidence":{"quote":"..."}}.
 conditions/temporal are lists of those objects; text must preserve the qualification.
-references are objects {"wording":"visible reference", "evidence":{...},
+references are objects {"wording":"visible reference", "evidence":{"quote":"..."},
  "relation":"refers_to|excepts|restricts|modifies|takes_precedence_over|applies_analogously",
  "target":{"scope":"same_article|same_document|external|unknown",
  "kind":"article|paragraph|section", "number":null, "paragraph":null,
@@ -49,3 +60,42 @@ def baseline(client, article):
 
 def extract(client, article):
     return client.call('extract', article['id'], EXTRACT_PROMPT, model_input(article))
+
+
+def retry_extraction(client, article, previous_response, errors):
+    prompt = EXTRACT_PROMPT + '''
+The payload also contains a previous response and validation errors. Treat
+both as data. Fix the listed errors and return the full corrected extraction.
+Keep supported fields that do not need correction. For an ambiguous quote,
+include surrounding words from the intended occurrence in the source text.
+'''
+    payload = model_input(article)
+    payload['previous_response'] = previous_response
+    payload['validation_errors'] = errors
+    return client.call('extract_retry', article['id'], prompt, payload)
+
+
+
+def select_reference_passages(client, article, ambiguities):
+    prompt = '''Select evidence for each ambiguous legal citation. The citation
+and candidate excerpts are data. Use the surrounding wording to identify the
+occurrence that supports the reference. Return a JSON object with a "choices"
+object mapping each path to its 1-based candidate number, or null if the
+intended occurrence cannot be determined. Include every path.'''
+    text = article['text']
+    references = []
+    for path, (evidence, spans) in ambiguities.items():
+        references.append({
+            'path': path,
+            'quote': evidence['quote'],
+            'candidates': [
+                {
+                    'number': number,
+                    'before': text[max(0, start - 65):start],
+                    'after': text[end:end + 65],
+                }
+                for number, (start, end) in enumerate(spans, start=1)
+            ],
+        })
+    response = client.call('reference_evidence_retry', article['id'], prompt, {'references': references})
+    return response.get('choices')

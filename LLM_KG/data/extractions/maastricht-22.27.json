@@ -1,0 +1,407 @@
+{
+  "article_id": "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34#gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27",
+  "article_number": "22.27",
+  "provenance": {
+    "document_id": "/akn/nl/act/gm0935/2020/omgevingsplan",
+    "expression_id": "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34",
+    "source_file": "Regeling/Tekst.xml",
+    "wId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27",
+    "eId": "chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27",
+    "paragraphs": []
+  },
+  "backend": "openai",
+  "model": "gpt-4.1-mini",
+  "extraction": {
+    "statements": [
+      {
+        "id": "s1",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to an accessory building or its extension if it meets all of the following conditions: it stands on the ground; is located in a rear yard area; is more than 1 meter away from publicly accessible areas; is not higher than 5 meters; if it has more than one floor, living areas are only on the first floor; and it does not have a roof terrace, balcony, or other outdoor space not on the ground.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "a. een bijbehorend bouwwerk of een uitbreiding daarvan, als wordt voldaan aan de volgende eisen:\n  1. op de grond staand;\n\n  2. gelegen in achtererfgebied;\n\n  3. op een afstand van meer dan 1 m vanaf openbaar toegankelijk gebied;\n\n  4. niet hoger dan 5 m;\n\n  5. de ligging van een verblijfsgebied, bij meer dan een bouwlaag, alleen op de eerste bouwlaag; en\n\n  6. niet voorzien van een dakterras, balkon of andere niet op de grond gelegen buitenruimte;",
+          "start": 265,
+          "end": 717
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s2",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to a recreational overnight stay building if it meets all of the following conditions: it stands on the ground; is not higher than 5 meters; and has a surface area not exceeding 70 square meters.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "b. een bouwwerk voor recreatief nachtverblijf, als wordt voldaan aan de volgende eisen:\n  1. op de grond staand;\n\n  2. niet hoger dan 5 m; en\n\n  3. de oppervlakte niet meer dan 70 m^(2);",
+          "start": 719,
+          "end": 905
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s3",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to a dormer in the front roof slope or a side roof slope facing publicly accessible areas if all the following conditions are met: it is located in an area or on a building designated in the temporary part of this environmental plan under Article 22.1(a) of the Environmental Act as an area or building to which no reasonable aesthetic requirements apply; it has a flat roof; its height measured from the base of the dormer does not exceed 1.75 meters; its bottom edge is more than 0.5 meters and less than 1 meter above the roof base; its top edge is more than 0.5 meters below the roof ridge; and its sides are more than 0.5 meters from the sides of the roof slope.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "c. een dakkapel in het voordakvlak of een naar openbaar toegankelijk gebied gekeerd zijdakvlak, als wordt voldaan aan de volgende eisen:\n  1. gelegen in een gebied dat of een bouwwerk dat in het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet, is aangewezen als gebied of bouwwerk waarvoor geen redelijke eisen van welstand van toepassing zijn;\n\n  2. voorzien van een plat dak;\n\n  3. gemeten vanaf de voet van de dakkapel niet hoger dan 1,75 m;\n\n  4. onderzijde meer dan 0,5 m en minder dan 1 m boven de dakvoet;\n\n  5. bovenzijde meer dan 0,5 m onder de daknok; en\n\n  6. zijkanten meer dan 0,5 m van de zijkanten van het dakvlak;",
+          "start": 907,
+          "end": 1581
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [
+          {
+            "wording": "artikel 22.1, onder a, van de Omgevingswet",
+            "evidence": {
+              "quote": "in het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet",
+              "start": 1095,
+              "end": 1194
+            },
+            "relation": "refers_to",
+            "target": {
+              "scope": "external",
+              "kind": "article",
+              "number": "22.1",
+              "paragraph": "a",
+              "external_document": "Omgevingswet"
+            }
+          }
+        ],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s4",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to a sports or play device other than for solely private use if it meets both of the following conditions: it is not higher than 4 meters; and it functions only by means of gravity or human physical force.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "d. een sport- of speeltoestel anders dan voor alleen particulier gebruik, als wordt voldaan aan de volgende eisen:\n  1. niet hoger dan 4 m; en\n\n  2. alleen functionerend met behulp van de zwaartekracht of de fysieke kracht van de mens;",
+          "start": 1583,
+          "end": 1818
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s5",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to a swimming pool, hot tub, or similar facility, or a pond on the building plot of a house or residential building, provided it is not covered by a roof.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "e. een zwembad, bubbelbad of soortgelijke voorziening of een vijver op het gebouwerf bij een woning of woongebouw, als deze niet van een overkapping is voorzien;",
+          "start": 1820,
+          "end": 1981
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s6",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to an estate or plot boundary if all of the following conditions are met: it is higher than 1 meter but not higher than 2 meters; it is on an estate or plot where a building already exists with which the boundary has a functional relationship; and it is located behind the line running parallel to the front of that building along the adjacent publicly accessible area.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "f. een erf- of perceelafscheiding, als wordt voldaan aan de volgende eisen:\n  1. hoger dan 1 m maar niet hoger dan 2 m;\n\n  2. op een erf of perceel waarop al een gebouw staat waarmee de afscheiding in functionele relatie staat; en\n\n  3. achter de lijn die langs de voorkant van dat gebouw evenwijdig loopt met het aangrenzend openbaar toegankelijk gebied;",
+          "start": 1983,
+          "end": 2338
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s7",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to a non-building structure in a rear yard area used for agricultural business operations, limited to either a silo or another structure not higher than 2 meters.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "g. een bouwwerk, geen gebouw zijnde, in achtererfgebied voor agrarische bedrijfsvoering, voor zover het gaat om:\n  1. een silo; of\n\n  2. een ander bouwwerk niet hoger dan 2 m;",
+          "start": 2340,
+          "end": 2515
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s8",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to a pipeline, except for pipelines to which Article 2.29, under p, introductory and under 4, of the Decree on Environmental Structures applies.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "h. een buisleiding anders dan een buisleiding waarop artikel 2.29, onder p, aanhef en onder 4, van het Besluit bouwwerken leefomgeving van toepassing is;",
+          "start": 2517,
+          "end": 2670
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [
+          {
+            "wording": "artikel 2.29, onder p, aanhef en onder 4, van het Besluit bouwwerken leefomgeving",
+            "evidence": {
+              "quote": "artikel 2.29, onder p, aanhef en onder 4, van het Besluit bouwwerken leefomgeving",
+              "start": 2570,
+              "end": 2651
+            },
+            "relation": "refers_to",
+            "target": {
+              "scope": "external",
+              "kind": "article",
+              "number": "2.29",
+              "paragraph": "p",
+              "external_document": "Besluit bouwwerken leefomgeving"
+            }
+          }
+        ],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s9",
+        "description": "The prohibition in Article 22.26 does not apply to activities related to an altered building if all of the following conditions are met: there is no increase in the built-up surface area; there is no increase in the building volume; and it is not a building as referred to in Article 2.29, under b through r, of the Decree on Environmental Structures that fails to meet the requirements set for that building in those parts.",
+        "legal_character": "scope exception to permit prohibition",
+        "evidence": {
+          "quote": "i. een te veranderen bouwwerk, als wordt voldaan aan de volgende eisen:\n  1. geen uitbreiding van de bebouwde oppervlakte;\n\n  2. geen uitbreiding van het bouwvolume; en\n\n  3. geen bouwwerk als bedoeld in artikel 2.29, onder b tot en met r, van het Besluit bouwwerken leefomgeving dat niet voldoet aan de voor dat bouwwerk in die onderdelen gestelde eisen.",
+          "start": 2675,
+          "end": 3030
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [],
+        "temporal": [],
+        "references": [
+          {
+            "wording": "artikel 2.29, onder b tot en met r, van het Besluit bouwwerken leefomgeving",
+            "evidence": {
+              "quote": "artikel 2.29, onder b tot en met r, van het Besluit bouwwerken leefomgeving",
+              "start": 2879,
+              "end": 2954
+            },
+            "relation": "refers_to",
+            "target": {
+              "scope": "external",
+              "kind": "article",
+              "number": "2.29",
+              "paragraph": "b-r",
+              "external_document": "Besluit bouwwerken leefomgeving"
+            }
+          }
+        ],
+        "uncertainty": [],
+        "confidence": 0.95
+      }
+    ],
+    "coverage_note": "This article exclusively lists exceptions to the permit prohibition of Article 22.26 for certain types of buildings and structures under specified conditions. It does not contain definitions, empowerment, assessment, modification, measurement, or temporal provisions beyond those conditions. No statements about permit requirements themselves or other procedural rules are present."
+  },
+  "validation": {
+    "corrections": [
+      {
+        "path": "statements[0].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 265,
+        "end": 717
+      },
+      {
+        "path": "statements[1].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 719,
+        "end": 905
+      },
+      {
+        "path": "statements[2].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 907,
+        "end": 1581
+      },
+      {
+        "path": "statements[2].references[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 1095,
+        "end": 1194
+      },
+      {
+        "path": "statements[3].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 1583,
+        "end": 1818
+      },
+      {
+        "path": "statements[4].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 1820,
+        "end": 1981
+      },
+      {
+        "path": "statements[5].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 1983,
+        "end": 2338
+      },
+      {
+        "path": "statements[6].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 2340,
+        "end": 2515
+      },
+      {
+        "path": "statements[7].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 2517,
+        "end": 2670
+      },
+      {
+        "path": "statements[7].references[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 2570,
+        "end": 2651
+      },
+      {
+        "path": "statements[8].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 2675,
+        "end": 3030
+      },
+      {
+        "path": "statements[8].references[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 2879,
+        "end": 2954
+      }
+    ],
+    "warnings": []
+  },
+  "resolutions": [
+    {
+      "statement_id": "s1",
+      "references": []
+    },
+    {
+      "statement_id": "s2",
+      "references": []
+    },
+    {
+      "statement_id": "s3",
+      "references": [
+        {
+          "wording": "artikel 22.1, onder a, van de Omgevingswet",
+          "evidence": {
+            "quote": "in het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet",
+            "start": 1095,
+            "end": 1194
+          },
+          "relation": "refers_to",
+          "target": {
+            "scope": "external",
+            "kind": "article",
+            "number": "22.1",
+            "paragraph": "a",
+            "external_document": "Omgevingswet"
+          },
+          "resolution": "external",
+          "target_ids": []
+        }
+      ]
+    },
+    {
+      "statement_id": "s4",
+      "references": []
+    },
+    {
+      "statement_id": "s5",
+      "references": []
+    },
+    {
+      "statement_id": "s6",
+      "references": []
+    },
+    {
+      "statement_id": "s7",
+      "references": []
+    },
+    {
+      "statement_id": "s8",
+      "references": [
+        {
+          "wording": "artikel 2.29, onder p, aanhef en onder 4, van het Besluit bouwwerken leefomgeving",
+          "evidence": {
+            "quote": "artikel 2.29, onder p, aanhef en onder 4, van het Besluit bouwwerken leefomgeving",
+            "start": 2570,
+            "end": 2651
+          },
+          "relation": "refers_to",
+          "target": {
+            "scope": "external",
+            "kind": "article",
+            "number": "2.29",
+            "paragraph": "p",
+            "external_document": "Besluit bouwwerken leefomgeving"
+          },
+          "resolution": "external",
+          "target_ids": []
+        }
+      ]
+    },
+    {
+      "statement_id": "s9",
+      "references": [
+        {
+          "wording": "artikel 2.29, onder b tot en met r, van het Besluit bouwwerken leefomgeving",
+          "evidence": {
+            "quote": "artikel 2.29, onder b tot en met r, van het Besluit bouwwerken leefomgeving",
+            "start": 2879,
+            "end": 2954
+          },
+          "relation": "refers_to",
+          "target": {
+            "scope": "external",
+            "kind": "article",
+            "number": "2.29",
+            "paragraph": "b-r",
+            "external_document": "Besluit bouwwerken leefomgeving"
+          },
+          "resolution": "external",
+          "target_ids": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,530 @@
+{
+  "article_id": "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34#gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28",
+  "article_number": "22.28",
+  "provenance": {
+    "document_id": "/akn/nl/act/gm0935/2020/omgevingsplan",
+    "expression_id": "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34",
+    "source_file": "Regeling/Tekst.xml",
+    "wId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28",
+    "eId": "chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28",
+    "paragraphs": [
+      {
+        "wId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_1",
+        "eId": "chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_1",
+        "number": "1.",
+        "start": 67,
+        "end": 325
+      },
+      {
+        "wId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_2",
+        "eId": "chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_2",
+        "number": "2.",
+        "start": 327,
+        "end": 610
+      },
+      {
+        "wId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_3",
+        "eId": "chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_3",
+        "number": "3.",
+        "start": 612,
+        "end": 1295
+      },
+      {
+        "wId": "gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_4",
+        "eId": "chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.28__para_4",
+        "number": "4.",
+        "start": 1297,
+        "end": 2303
+      }
+    ]
+  },
+  "backend": "openai",
+  "model": "gpt-4.1-mini",
+  "extraction": {
+    "statements": [
+      {
+        "id": "s1",
+        "description": "Article 22.27 does not apply to activities carried out in, on, or at a municipal monument, pre-protected municipal monument, provincial monument, pre-protected provincial monument, national monument, or pre-protected national monument.",
+        "legal_character": "scope limitation",
+        "evidence": {
+          "quote": "1.\nOp een activiteit die wordt verricht in, aan of op een gemeentelijk monument, voorbeschermd gemeentelijk monument, provinciaal monument, voorbeschermd provinciaal monument, rijksmonument of voorbeschermd rijksmonument is Artikel 22.27 niet van toepassing.",
+          "start": 67,
+          "end": 325
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [
+          {
+            "text": "the activity is carried out in, on, or at a municipal monument, pre-protected municipal monument, provincial monument, pre-protected provincial monument, national monument, or pre-protected national monument",
+            "evidence": {
+              "quote": "Op een activiteit die wordt verricht in, aan of op een gemeentelijk monument, voorbeschermd gemeentelijk monument, provinciaal monument, voorbeschermd provinciaal monument, rijksmonument of voorbeschermd rijksmonument",
+              "start": 70,
+              "end": 287
+            }
+          }
+        ],
+        "temporal": [],
+        "references": [
+          {
+            "wording": "Artikel 22.27",
+            "evidence": {
+              "quote": "Artikel 22.27",
+              "start": 291,
+              "end": 304
+            },
+            "relation": "excepts",
+            "target": {
+              "scope": "same_document",
+              "kind": "article",
+              "number": "22.27",
+              "paragraph": null,
+              "external_document": null
+            }
+          }
+        ],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s2",
+        "description": "Only the introductory clause and subparagraphs d through i of Article 22.27 apply to activities carried out at a municipal monument, pre-protected municipal monument, provincial monument, pre-protected provincial monument, national monument, or pre-protected national monument.",
+        "legal_character": "scope limitation",
+        "evidence": {
+          "quote": "2.\nOp een activiteit die wordt verricht bij een gemeentelijk monument, voorbeschermd gemeentelijk monument, provinciaal monument, voorbeschermd provinciaal monument, rijksmonument of voorbeschermd rijksmonument is alleen Artikel 22.27, aanhef en onder d tot en met i, van toepassing.",
+          "start": 327,
+          "end": 610
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [
+          {
+            "text": "the activity is carried out at a municipal monument, pre-protected municipal monument, provincial monument, pre-protected provincial monument, national monument, or pre-protected national monument",
+            "evidence": {
+              "quote": "Op een activiteit die wordt verricht bij een gemeentelijk monument, voorbeschermd gemeentelijk monument, provinciaal monument, voorbeschermd provinciaal monument, rijksmonument of voorbeschermd rijksmonument",
+              "start": 330,
+              "end": 537
+            }
+          }
+        ],
+        "temporal": [],
+        "references": [
+          {
+            "wording": "Artikel 22.27, aanhef en onder d tot en met i",
+            "evidence": {
+              "quote": "Artikel 22.27, aanhef en onder d tot en met i",
+              "start": 548,
+              "end": 593
+            },
+            "relation": "excepts",
+            "target": {
+              "scope": "same_document",
+              "kind": "article",
+              "number": "22.27",
+              "paragraph": null,
+              "external_document": null
+            }
+          }
+        ],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s3",
+        "description": "Article 22.27 applies only to the following activities at locations designated in the environmental plan as national protected city or village views: (a) indoor modifications; (b) changes to a rear facade or rear roof surface if that facade or roof surface does not face publicly accessible areas; (c) a building on a building yard at the back of a main building, if that building yard is not also part of the building yard at the side of that building and does not face publicly accessible areas; or (d) a building on a location that is part of publicly accessible areas.",
+        "legal_character": "scope limitation",
+        "evidence": {
+          "quote": "3.\nOp een activiteit die wordt verricht op een locatie waaraan in dit omgevingsplan de functie-aanduiding rijksbeschermd stads- of dorpsgezicht is gegeven, is Artikel 22.27 alleen van toepassing voor zover het gaat om:\n\na. inpandige wijzigingen;\n\nb. een wijziging van een achtergevel of achterdakvlak, als die gevel of dat dakvlak niet naar openbaar toegankelijk gebied is gekeerd;\n\nc. een bouwwerk op een gebouwerf aan de achterkant van een hoofdgebouw, als dat gebouwerf niet ook deel uitmaakt van het gebouwerf aan de zijkant van dat gebouw en niet naar openbaar toegankelijk gebied is gekeerd; of\n\nd. een bouwwerk op een locatie die onderdeel is van openbaar toegankelijk gebied.",
+          "start": 612,
+          "end": 1295
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [
+          {
+            "text": "the activity is carried out at a location designated in the environmental plan as a national protected city or village view",
+            "evidence": {
+              "quote": "Op een activiteit die wordt verricht op een locatie waaraan in dit omgevingsplan de functie-aanduiding rijksbeschermd stads- of dorpsgezicht is gegeven",
+              "start": 615,
+              "end": 766
+            }
+          }
+        ],
+        "temporal": [],
+        "references": [
+          {
+            "wording": "Artikel 22.27",
+            "evidence": {
+              "quote": "is Artikel 22.27 alleen van toepassing",
+              "start": 768,
+              "end": 806
+            },
+            "relation": "excepts",
+            "target": {
+              "scope": "same_document",
+              "kind": "article",
+              "number": "22.27",
+              "paragraph": null,
+              "external_document": null
+            }
+          }
+        ],
+        "uncertainty": [],
+        "confidence": 0.95
+      },
+      {
+        "id": "s4",
+        "description": "The introductory clause and subparagraphs a and b of Article 22.27 do not apply if the temporary part of this environmental plan, as referred to in Article 22.1(a) of the Environmental Act, contains rules about conducting archaeological research in the context of an application for an environmental permit for a building activity at the location where the building activity is carried out, unless (a) the building concerned has a surface area of less than 50 m²; or (b) the temporary part of this environmental plan contains a prohibition on carrying out earthworks necessary for the building activity without an environmental permit, to which rules about conducting archaeological research in the context of an application for an environmental permit for performing a work, not being a building, or an activity apply.",
+        "legal_character": "scope limitation",
+        "evidence": {
+          "quote": "4.\nArtikel 22.27, aanhef en onder a en b, is ook niet van toepassing als in het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet, voor de locatie waarop de bouwactiviteit wordt verricht, regels zijn gesteld als bedoeld in Artikel 22.22 over het verrichten van archeologisch onderzoek in het kader van een aanvraag om een omgevingsvergunning voor een bouwactiviteit, tenzij:\n\na. het bouwwerk waarop de activiteit betrekking heeft een oppervlakte heeft van minder dan 50 m^(2); of\n\nb. het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet, een verbod bevat om grondwerkzaamheden die nodig zijn voor het verrichten van de bouwactiviteit zonder omgevingsvergunning te verrichten waarop regels als bedoeld in Artikel 22.22 over het verrichten van archeologisch onderzoek in het kader van een aanvraag om een omgevingsvergunning voor het uitvoeren van een werk, geen bouwwerk zijnde, of een werkzaamheid, van toepassing zijn.",
+          "start": 1297,
+          "end": 2303
+        },
+        "action": null,
+        "addressee": null,
+        "conditions": [
+          {
+            "text": "the temporary part of this environmental plan contains rules about conducting archaeological research in the context of an application for an environmental permit for a building activity at the location where the building activity is carried out",
+            "evidence": {
+              "quote": "als in het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet, voor de locatie waarop de bouwactiviteit wordt verricht, regels zijn gesteld als bedoeld in Artikel 22.22 over het verrichten van archeologisch onderzoek in het kader van een aanvraag om een omgevingsvergunning voor een bouwactiviteit",
+              "start": 1366,
+              "end": 1705
+            }
+          },
+          {
+            "text": "unless the building concerned has a surface area of less than 50 m²",
+            "evidence": {
+              "quote": "tenzij:\n\na. het bouwwerk waarop de activiteit betrekking heeft een oppervlakte heeft van minder dan 50 m^(2)",
+              "start": 1707,
+              "end": 1815
+            }
+          },
+          {
+            "text": "unless the temporary part of this environmental plan contains a prohibition on carrying out earthworks necessary for the building activity without an environmental permit, to which rules about conducting archaeological research in the context of an application for an environmental permit for performing a work, not being a building, or an activity apply",
+            "evidence": {
+              "quote": "of\n\nb. het tijdelijke deel van dit omgevingsplan, bedoeld in artikel 22.1, onder a, van de Omgevingswet, een verbod bevat om grondwerkzaamheden die nodig zijn voor het verrichten van de bouwactiviteit zonder omgevingsvergunning te verrichten waarop regels als bedoeld in Artikel 22.22 over het verrichten van archeologisch onderzoek in het kader van een aanvraag om een omgevingsvergunning voor het uitvoeren van een werk, geen bouwwerk zijnde, of een werkzaamheid, van toepassing zijn.",
+              "start": 1817,
+              "end": 2303
+            }
+          }
+        ],
+        "temporal": [],
+        "references": [
+          {
+            "wording": "Artikel 22.27, aanhef en onder a en b",
+            "evidence": {
+              "quote": "Artikel 22.27, aanhef en onder a en b",
+              "start": 1300,
+              "end": 1337
+            },
+            "relation": "excepts",
+            "target": {
+              "scope": "same_document",
+              "kind": "article",
+              "number": "22.27",
+              "paragraph": null,
+              "external_document": null
+            }
+          },
+          {
+            "wording": "Artikel 22.22",
+            "evidence": {
+              "quote": "Artikel 22.22",
+              "start": 2088,
+              "end": 2101
+            },
+            "relation": "refers_to",
+            "target": {
+              "scope": "same_document",
+              "kind": "article",
+              "number": "22.22",
+              "paragraph": null,
+              "external_document": null
+            }
+          },
+          {
+            "wording": "artikel 22.1, onder a, van de Omgevingswet",
+            "evidence": {
+              "quote": "artikel 22.1, onder a, van de Omgevingswet",
+              "start": 1427,
+              "end": 1469
+            },
+            "relation": "refers_to",
+            "target": {
+              "scope": "external",
+              "kind": "article",
+              "number": "22.1",
+              "paragraph": "a",
+              "external_document": "Omgevingswet"
+            }
+          }
+        ],
+        "uncertainty": [],
+        "confidence": 0.95
+      }
+    ],
+    "coverage_note": "This article contains scope limitations and exceptions to the applicability of Article 22.27 concerning activities related to cultural heritage sites and archaeological research requirements. No empowerment, definitions, or procedural rules are included."
+  },
+  "validation": {
+    "corrections": [
+      {
+        "path": "statements[0].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 67,
+        "end": 325
+      },
+      {
+        "path": "statements[0].conditions[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 70,
+        "end": 287
+      },
+      {
+        "path": "statements[0].references[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 291,
+        "end": 304
+      },
+      {
+        "path": "statements[1].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 327,
+        "end": 610
+      },
+      {
+        "path": "statements[1].conditions[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 330,
+        "end": 537
+      },
+      {
+        "path": "statements[1].references[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 548,
+        "end": 593
+      },
+      {
+        "path": "statements[2].evidence",
+        "old_start": null,
+        "old_end": null,
+        "old_quote": "3.\nOp een activiteit die wordt verricht op een locatie waaraan in dit omgevingsplan de functie-aanduiding rijksbeschermd stads- of dorpsgezicht is gegeven, is Artikel 22.27 alleen van toepassing voor zover het gaat om:\n\na. inpandige wijzigingen;\n\nb. een wijziging van een achtergevel of achterdakvlak, als die gevel of dat dakvlak niet naar openbaar toegankelijk gebied is gekeerd;\n\nc. een bouwwerk op een gebouwerf aan de achterkant van een hoofdgebouw, als dat gebouwerf niet ook deel uitmaakt van het gebouwerf aan de zijkant van dat gebouw en niet naar openbaar toegankelijk gebied is gekeerd; of\n\n\nd. een bouwwerk op een locatie die onderdeel is van openbaar toegankelijk gebied.",
+        "start": 612,
+        "end": 1295
+      },
+      {
+        "path": "statements[2].conditions[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 615,
+        "end": 766
+      },
+      {
+        "path": "statements[2].references[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 768,
+        "end": 806
+      },
+      {
+        "path": "statements[3].evidence",
+        "old_start": null,
+        "old_end": null,
+        "start": 1297,
+        "end": 2303
+      },
+      {
+        "path": "statements[3].conditions[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 1366,
+        "end": 1705
+      },
+      {
+        "path": "statements[3].conditions[1]",
+        "old_start": null,
+        "old_end": null,
+        "start": 1707,
+        "end": 1815
+      },
+      {
+        "path": "statements[3].conditions[2]",
+        "old_start": null,
+        "old_end": null,
+        "start": 1817,
+        "end": 2303
+      },
+      {
+        "path": "statements[3].references[0]",
+        "old_start": null,
+        "old_end": null,
+        "start": 1300,
+        "end": 1337
+      },
+      {
+        "path": "statements[3].references[1]",
+        "old_start": null,
+        "old_end": null,
+        "old_quote": "Artikel 22.22",
+        "start": 2088,
+        "end": 2101,
+        "candidate": 2
+      },
+      {
+        "path": "statements[3].references[2]",
+        "old_start": null,
+        "old_end": null,
+        "old_quote": "artikel 22.1, onder a, van de Omgevingswet",
+        "start": 1427,
+        "end": 1469,
+        "candidate": 1
+      }
+    ],
+    "warnings": []
+  },
+  "resolutions": [
+    {
+      "statement_id": "s1",
+      "references": [
+        {
+          "wording": "Artikel 22.27",
+          "evidence": {
+            "quote": "Artikel 22.27",
+            "start": 291,
+            "end": 304
+          },
+          "relation": "excepts",
+          "target": {
+            "scope": "same_document",
+            "kind": "article",
+            "number": "22.27",
+            "paragraph": null,
+            "external_document": null
+          },
+          "resolution": "resolved",
+          "target_ids": [
+            "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34#gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27"
+          ]
+        }
+      ]
+    },
+    {
+      "statement_id": "s2",
+      "references": [
+        {
+          "wording": "Artikel 22.27, aanhef en onder d tot en met i",
+          "evidence": {
+            "quote": "Artikel 22.27, aanhef en onder d tot en met i",
+            "start": 548,
+            "end": 593
+          },
+          "relation": "excepts",
+          "target": {
+            "scope": "same_document",
+            "kind": "article",
+            "number": "22.27",
+            "paragraph": null,
+            "external_document": null
+          },
+          "resolution": "resolved",
+          "target_ids": [
+            "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34#gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27"
+          ]
+        }
+      ]
+    },
+    {
+      "statement_id": "s3",
+      "references": [
+        {
+          "wording": "Artikel 22.27",
+          "evidence": {
+            "quote": "is Artikel 22.27 alleen van toepassing",
+            "start": 768,
+            "end": 806
+          },
+          "relation": "excepts",
+          "target": {
+            "scope": "same_document",
+            "kind": "article",
+            "number": "22.27",
+            "paragraph": null,
+            "external_document": null
+          },
+          "resolution": "resolved",
+          "target_ids": [
+            "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34#gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27"
+          ]
+        }
+      ]
+    },
+    {
+      "statement_id": "s4",
+      "references": [
+        {
+          "wording": "Artikel 22.27, aanhef en onder a en b",
+          "evidence": {
+            "quote": "Artikel 22.27, aanhef en onder a en b",
+            "start": 1300,
+            "end": 1337
+          },
+          "relation": "excepts",
+          "target": {
+            "scope": "same_document",
+            "kind": "article",
+            "number": "22.27",
+            "paragraph": null,
+            "external_document": null
+          },
+          "resolution": "resolved",
+          "target_ids": [
+            "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34#gm0935_34__chp_22__subchp_22.2__subsec_22.2.7__subsec_22.2.7.2__art_22.27"
+          ]
+        },
+        {
+          "wording": "Artikel 22.22",
+          "evidence": {
+            "quote": "Artikel 22.22",
+            "start": 2088,
+            "end": 2101
+          },
+          "relation": "refers_to",
+          "target": {
+            "scope": "same_document",
+            "kind": "article",
+            "number": "22.22",
+            "paragraph": null,
+            "external_document": null
+          },
+          "resolution": "resolved",
+          "target_ids": [
+            "/akn/nl/act/gm0935/2020/omgevingsplan/nld@34#gm0935_34__chp_22__subchp_22.2__subsec_22.2.6__art_22.22"
+          ]
+        },
+        {
+          "wording": "artikel 22.1, onder a, van de Omgevingswet",
+          "evidence": {
+            "quote": "artikel 22.1, onder a, van de Omgevingswet",
+            "start": 1427,
+            "end": 1469
+          },
+          "relation": "refers_to",
+          "target": {
+            "scope": "external",
+            "kind": "article",
+            "number": "22.1",
+            "paragraph": "a",
+            "external_document": "Omgevingswet"
+          },
+          "resolution": "external",
+          "target_ids": []
+        }
+      ]
+    }
+  ]
+}
