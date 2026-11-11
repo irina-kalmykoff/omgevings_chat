@@ -1,46 +1,56 @@
-# LLM KG — legal text preparation for the knowledge graph
+# LLM KG for the Maastricht omgevingsplan
 
-The text preparation stage of the independent LLM knowledge graph pipeline for
-the Maastricht omgevingsplan. It reads the same STOP/TPOD delivery package as the
-hybrid KG, and exports the cleaned legal text for LLM extraction
+This pipeline reads the same STOP/TPOD delivery package as the hybrid KG.
+It exports the cleaned legal text, extracts statements and references with an
+LLM, checks their evidence, and resolves references to stable article IDs.
+
 ## Layout
 
-```
-LLM_KG/
-  scripts/          Python: legal text exporter
-  tests/            regression checks for the exporter
-  data/cleaned/     generated article text, supporting text and export manifest
-```
+| Path | Purpose |
+| --- | --- |
+| `scripts/clean_text.py` | Exports cleaned articles, supporting text, and source provenance. |
+| `scripts/run_extract.py` | Runs extraction, validation, and reference resolution for the selected article. |
+| `scripts/extract1.py` | Defines the extraction prompt and requests exact quotes. |
+| `scripts/validate1.py` | Checks extraction structure and calculates evidence offsets from source quotes. |
+| `scripts/resolve1.py` | Resolves references to articles, numbered paragraphs, and sections. |
+| `scripts/verify1.py` | Provides model-based review for a separate verification stage. |
+| `tests/` | Regression checks for the text exporter. |
+| `data/cleaned/articles.jsonl` | One JSON object per article, in document order. |
+| `data/cleaned/articles.txt` | Readable article preview with section context. |
+| `data/cleaned/supporting_text.jsonl` | Appendix and explanatory notes. |
+| `data/cleaned/manifest.json` | Source and version IDs, hashes, counts, and audit results. |
+| `data/extractions/` | One extraction result per article, such as `maastricht-22.36.json`. |
+| `data/debug_Log/` | Per-article model-call logs, such as `maastricht-22.36.json.calls.jsonl`. |
 
-To run the exporter:
-   ```
-   python3 scripts/clean_text.py
-   ```
+## Run the pipeline for one article
 
-   On success it prints the article and supporting-text counts, confirms that
-   the text preservation and coverage audits passed, and shows the output folder.
-   Re-running replaces the generated files. The original source files are kept
-   unchanged.
+1. Run `python3 scripts/clean_text.py` from the `LLM_KG/` folder if you need to
+   regenerate the cleaned input. The exporter prints the counts, audit results,
+   and output directory.
+2. Set `ARTICLE_NUMBER`, `BACKEND`, and `MODEL` at the top of
+   `scripts/run_extract.py`. For the OpenAI backend, the run environment needs
+   `OPENAI_API_KEY`. In PyCharm, point the run configuration at your local
+   `.env` file.
+3. Run `scripts/run_extract.py` in PyCharm. The runner validates the model
+   response and calculates offsets for exact quotes. For a repeated quote, the
+   validator can use the parent statement's span to locate it. Validation
+   errors trigger one retry. When only ambiguous references fail, the retry
+   sends short candidate passages and asks for a choice for each citation.
+   Other validation failures use a full-response retry. If validation still
+   fails, the console prints the errors and the prior result is preserved.
+4. A successful run resolves references and saves the extraction, validation
+   corrections and warnings, and reference resolutions in `data/extractions/`.
+   The console prints the status of each citation. Review the descriptions for
+   meaning and coverage before using them in the graph.
 
+Each run appends its API attempts to the log in `data/debug_Log/`. Each log
+entry records the request, timing, outcome, and raw response when available.
 
-To use another delivery package or output folder:
+To export from another delivery package or to another folder, run
 
-```
+```sh
 python3 scripts/clean_text.py --package /path/to/package --out /path/to/output
 ```
-
-Generated data is ignored by Git and can be recreated with the command above.
-
-## Files
-
-| File | What it is |
-| --- | --- |
-| `scripts/clean_text.py` | reads the STOP legal text and document identifiers, exports cleaned text and provenance, and checks preservation and coverage |
-| `tests/test_clean_text.py` | regression checks for the text exporter |
-| `data/cleaned/articles.jsonl` | one JSON object per article, in document order |
-| `data/cleaned/articles.txt` | readable article preview, including section context |
-| `data/cleaned/supporting_text.jsonl` | appendix and explanatory notes, identified separately from articles |
-| `data/cleaned/manifest.json` | source/version IDs, input and exporter hashes, counts, input boundary and audit results |
 
 ## What cleaning keeps
 
