@@ -9,8 +9,10 @@ from omgkg.retrieval.base import Retriever
 from omgkg.retrieval.omgevingschat import (
     BRIDGE_SCRIPT,
     BridgeError,
+    BridgeSource,
     OmgevingsChatRetriever,
     bridge_transport,
+    label,
     select_sources,
     subprocess_transport,
 )
@@ -91,3 +93,40 @@ def test_bridge_transport_installs_script_into_checkout(tmp_path: Path) -> None:
     assert installed.read_text(encoding="utf-8") == BRIDGE_SCRIPT.read_text(
         encoding="utf-8"
     )
+
+
+@pytest.mark.parametrize(
+    ("wid", "kop", "expected"),
+    [
+        (
+            "gm0935_34__chp_22__art_22.28__para_2",
+            "2.",
+            "Artikel 22.28, lid 2",
+        ),
+        (
+            "gm0935_34__artrecital__content_288",
+            "Artikel 22.283 Toepassingsbereik",
+            "Toelichting bij Artikel 22.283 Toepassingsbereik",
+        ),
+        ("gm0935_34__genrecital__content_1", None, "Toelichting"),
+        (
+            "gm0935_34__chp_22__art_22.27",
+            "Artikel 22.27 Dakkapel",
+            "Artikel 22.27 Dakkapel",
+        ),
+    ],
+)
+def test_label_says_whether_a_passage_is_a_lid_or_a_note(
+    wid: str, kop: str | None, expected: str
+) -> None:
+    source = BridgeSource.model_validate(
+        {
+            "type": "DSO",
+            "id": "x",
+            "text": "t",
+            "order": 1,
+            "documentComponentId": wid,
+            "documentKop": kop,
+        }
+    )
+    assert label(source) == expected

@@ -242,3 +242,8 @@ runs/
 .DS_Store
 Claude outputs/
 prototype/mismatches.md
+
+# OmgevingsChat Qdrant snapshot (company data, ~1 GB): import it, never commit it
+Snapshot/
+__MACOSX/
+*.snapshot

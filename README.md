@@ -21,10 +21,17 @@ Query ──> RAG ──────────────────> KG ─
           bridge/omgevingschat    referred to by each hit   them as [n]
 ```
 
-RAG returns passages identified by their STOP wId; the graph is keyed on the same
-wIds, so the KG step joins on them directly. Example: RAG finds 22.27 (dakkapel
-permit-free); the graph adds 22.28, which switches that exemption off for
-monuments. Code: `src/omgkg/pipeline.py`, one function per step.
+RAG returns passages identified by their STOP wId: an article, a lid, or an
+explanatory note (toelichting) on an article. The KG step resolves each to its
+article, adds the article itself when RAG only found its note (a note is not a
+rule), then follows the graph: the rules that override it, the rules it
+overrides (one more override hop, to reach the base rule) and what it refers to.
+Each added article is placed right after the passage that pulled it in.
+
+Example: for "Mag ik een dakkapel plaatsen op een monument?" RAG finds lid 2 of
+22.28; the graph adds 22.27 (the permit-free dakkapel exemption that 22.28 switches
+off for monuments) and 22.26 (the permit requirement 22.27 is an exception to).
+Code: `src/omgkg/pipeline.py`, one function per step.
 
 The same KG step also runs as **OmgevingsChat's own KG endpoint** (`omgkg
 serve-kg`, below), so their platform can use our graph without code changes.
@@ -49,13 +56,20 @@ next to this one, installed once; see
 
 ## Run it
 
+Put the OmgevingsChat Qdrant snapshot (from the team's shared storage; company
+data, ~1 GB) in `Snapshot/`, which is gitignored. Then:
+
 ```bash
 docker compose up -d                                  # Qdrant + Neo4j
 uv run omgkg build-graph                              # KG from the committed DSO snapshot
-uv run omgkg import-snapshot <file>.snapshot --collection <name>   # RAG index
-# set OMGKG_QDRANT_COLLECTION=<name> in .env
+uv run omgkg import-snapshot Snapshot/kg-maastricht-*.snapshot --collection kg-maastricht
 uv run omgkg ask "Mag ik een dakkapel plaatsen op een monument?"
 ```
+
+The snapshot, its hash and what is in it are recorded in
+[`data/manifests/qdrant-kg-maastricht-2026-11-03.json`](data/manifests/qdrant-kg-maastricht-2026-11-03.json).
+`ask` takes about 5–10 s: their retrieval (embedding + Cohere rerank), the
+graph, and one gpt-4o call.
 
 - `build-graph` needs no LLM: it loads the structure from `source_data/`, the
   team's saved gpt-4o tags (deontic force and 38 `OVERRIDES` edges) and their
@@ -63,8 +77,10 @@ uv run omgkg ask "Mag ik een dakkapel plaatsen op een monument?"
 - `import-snapshot` restores the Qdrant snapshot of the OmgevingsChat index
   (from the company) into the local Qdrant; it replaces a collection of the same
   name.
-- `ask --no-kg` answers the same question without the graph (the baseline);
-  `omgkg overlap` shows how many wIds of their index our graph knows.
+- `ask --no-kg` answers the same question without the graph (the baseline).
+- `omgkg overlap` shows how many of our articles a hit in their index can lead
+  to: 304 of 308 for this snapshot (124 as the article, 180 via a lid; the other
+  4 are empty "Gereserveerd" articles).
 
 ### Our KG inside OmgevingsChat
 
@@ -80,11 +96,13 @@ and in their `apps/web/.env.local`:
 ```
 YDIGITAL_KG_API_URL=http://127.0.0.1:8765/api/query
 YDIGITAL_KG_API_KEY=<the same secret>
+YDIGITAL_KG_ONLY_LIMIT=8    # their default keeps only 3 graph sources
 ```
 
-with the knowledge graph enabled for the organisation. Candidates that take part
-in an override then skip their rerank, and the graph-linked articles are added as
-sources. The protocol is documented in `src/omgkg/graph/kg_service.py`.
+with the knowledge graph enabled for the organisation. Candidates that are an
+article or lid taking part in an override then skip their rerank (explanatory
+notes never do), and the graph-linked articles are added as sources, overrides
+first. The protocol is documented in `src/omgkg/graph/kg_service.py`.
 
 ## Everyday commands
 

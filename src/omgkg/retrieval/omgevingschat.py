@@ -15,6 +15,7 @@ source-bound, pinned to one document, so it makes no location or DSO API calls.
 """
 
 import os
+import re
 import shutil
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
@@ -119,6 +120,24 @@ def bridge_transport(
     )
 
 
+# STOP wIds: "...__art_22.28__para_2" is lid 2 of article 22.28; "__artrecital__"
+# (per article) and "__genrecital__" (general) mark the explanatory notes.
+LID = re.compile(r"__art_([^_]+)__para_(\d+)$")
+NOTE = re.compile(r"__(?:art|gen)recital__")
+
+
+def label(source: BridgeSource) -> str:
+    """What the passage is. Their ``documentKop`` names a lid "2." and gives a
+    note the heading of the article it explains, so neither says what it is."""
+    kop = source.document_kop or ""
+    wid = source.document_component_id or ""
+    if NOTE.search(wid):
+        return f"Toelichting bij {kop}" if kop else "Toelichting"
+    if lid := LID.search(wid):
+        return f"Artikel {lid[1]}, lid {lid[2]}"
+    return kop
+
+
 def select_sources(sources: list[BridgeSource], k: int) -> list[BridgeSource]:
     """Choose which of their sources become our top-k evidence, in rank order.
 
@@ -161,7 +180,7 @@ class OmgevingsChatRetriever:
                 source_type="dso_resource",
                 document_id=source.identifier or source.id,
                 text_component_id=source.document_component_id,
-                structural_path=source.document_kop or "",
+                structural_path=label(source),
                 source_uri=source.url,
                 snapshot_id=self._snapshot_id,
             ),

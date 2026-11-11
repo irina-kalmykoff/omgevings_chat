@@ -6,7 +6,9 @@ Sommige bronnen zijn toegevoegd via de kennisgraaf en dragen een label dat zegt 
 - "maakt een uitzondering op [n]": de regel in [n] geldt niet in de gevallen die deze bron noemt;
 - "maakt een inperking op [n]": deze bron perkt [n] in, bijvoorbeeld door een vrijstelling uit [n] weer op te heffen;
 - "[n] maakt hierop een uitzondering/inperking": deze bron is de regel waar [n] van afwijkt;
-- "verwijst naar"/"waarnaar [n] verwijst": de bronnen verwijzen naar elkaar.
-Een uitzondering of inperking kan het antwoord omdraaien; noem haar altijd als ze op de vraag van toepassing is.
+- "waarnaar [n] verwijst": de bronnen verwijzen naar elkaar;
+- "het artikel dat [n] toelicht": de regel zelf, bij de toelichting [n].
+Een bron die begint met "Toelichting bij" legt een artikel uit maar is zelf geen regel: baseer wat wel of niet mag op de artikelen, en gebruik een toelichting alleen om ze te verklaren.
+Een uitzondering of inperking kan het antwoord omdraaien; noem haar altijd als ze op de vraag van toepassing is. Staan er zo meerdere regels achter elkaar (een basisregel, een uitzondering daarop, en een inperking van die uitzondering), volg dan de hele keten en zeg welke regel uiteindelijk geldt en waarom, met de bron van elke stap.
 
 Is het antwoord niet uit de bronnen af te leiden, zeg dat dan en noem wat ontbreekt. Antwoord in het Nederlands, kort en concreet.

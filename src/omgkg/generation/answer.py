@@ -69,6 +69,7 @@ def _label(item: Evidence, number: dict[str, int]) -> str:
         "overridden_by": f"maakt een {kind} op [{n}]",
         "overrides": f"[{n}] maakt hierop een {kind}",
         "refers_to": f"waarnaar [{n}] verwijst",
+        "explains": f"het artikel dat [{n}] toelicht",
     }[relation]
     if len(detail) > 1 and detail[1] in EFFECT:
         text += f"; netto effect: {EFFECT[detail[1]]}"
