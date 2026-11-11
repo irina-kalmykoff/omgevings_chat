@@ -33,10 +33,15 @@ PHRASE = {
 
 def _title(link: Link, kg: KnowledgeGraph) -> str:
     target = kg.component(link.target)
-    source = kg.component(link.source.split("__para_", 1)[0])
+    if link.relation == "explains":
+        return (
+            f"{target.heading} (kennisgraaf: het artikel bij een gevonden toelichting)"
+        )
+    source = kg.article_of(link.source)
+    source_heading = kg.component(source).heading if source else link.source
     kind = "uitzondering" if link.override_type == "exception" else "inperking"
     relation = PHRASE[link.relation].format(kind=kind)
-    return f"{target.heading} (kennisgraaf: {relation} {source.heading})"
+    return f"{target.heading} (kennisgraaf: {relation} {source_heading})"
 
 
 def respond(body: Mapping[str, Any], kg: KnowledgeGraph) -> dict[str, Any]:

@@ -2,7 +2,7 @@
 
 | Folder | Contents | In git |
 | --- | --- | --- |
-| `manifests/` | one manifest per snapshot: source, download date, file hashes | yes |
+| `manifests/` | one manifest per snapshot (DSO and the OmgevingsChat Qdrant index): source, date, file hashes | yes |
 | `corpus/` | derived corpus output (`jsonl`), if you export one | no |
 
 Everything is built from a local snapshot recorded in `manifests/`. Graph
