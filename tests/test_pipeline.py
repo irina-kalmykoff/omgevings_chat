@@ -57,14 +57,19 @@ def test_ask_runs_rag_then_kg_then_llm() -> None:
         transport=lambda _: BRIDGE_OUTPUT.read_text(encoding="utf-8"), snapshot_id="q"
     )
     graph = kg(art27=REAL_27)
-    llm = FakeLLM("Nee, een vergunning is nodig [1][4].")
+    llm = FakeLLM("Nee, een vergunning is nodig [1][2].")
 
     result = ask("Mag ik een dakkapel bouwen?", rag, graph, llm, k=3)
 
-    rag_ids = [e.text_component_id for e in result.evidence[:3]]
-    assert rag_ids[0] == REAL_27
-    graph_ids = [e.text_component_id for e in result.evidence[3:]]
-    assert graph_ids == [ART.format(28), ART.format(26), ART.format(30)]
+    # Graph articles follow the RAG hit that pulled them in; the other two RAG
+    # hits (a Bbl chunk, and a 22.28 wId this fake graph lacks) come after.
+    assert [e.text_component_id for e in result.evidence[:4]] == [
+        REAL_27,
+        ART.format(28),
+        ART.format(26),
+        ART.format(30),
+    ]
+    assert len(result.evidence) == 6
     assert "(via kennisgraaf:" in llm.prompts[0]
     assert [e.text_component_id for e in result.citations] == [REAL_27, ART.format(28)]
 
