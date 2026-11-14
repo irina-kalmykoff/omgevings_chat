@@ -22,8 +22,10 @@
 
 
 // 1. Annotate every OVERRIDES edge with the target's deontic and the derived
-//    effect. Safe to re-run.
+//    effect. Safe to re-run. Edges from the manual correction layer
+//    (override_source 'manual:...', scripts/apply_corrections.py) keep their own effect.
 MATCH (:Artikel)-[o:OVERRIDES]->(tgt:Artikel)
+WHERE NOT coalesce(o.override_source, '') STARTS WITH 'manual:'
 SET o.target_deontic = tgt.deontic,
     o.derived_effect = CASE o.override_type + '|' + coalesce(tgt.deontic, '')
       WHEN 'exception|prohibition'   THEN 'exemption'
