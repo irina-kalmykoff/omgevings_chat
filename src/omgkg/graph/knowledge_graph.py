@@ -4,7 +4,7 @@ RAG returns passages identified by their STOP wId: an article, a lid, or an
 explanatory note (toelichting) on an article. Each resolves to its article; the
 graph, keyed on the same wIds, then adds the articles a reader must see next to
 them: the rules that override a retrieved rule (its exceptions and restrictions),
-the rules it overrides, and the articles it refers to. A retrieved note also
+the rules it overrides, and references in both directions. A retrieved note also
 brings in the article it explains, since a note is not itself a rule. A vector
 search sees separate paragraphs; the graph sees that 22.28 lifts the exemption
 in 22.27 from 22.26.
@@ -22,15 +22,17 @@ from neo4j import Driver
 
 from omgkg.models import Evidence, GraphPath, TextComponent
 
-Relation = Literal["overridden_by", "overrides", "explains", "refers_to"]
+Relation = Literal["overridden_by", "overrides", "explains", "refers_to", "referred_by"]
 # Exceptions to a retrieved rule change its answer most, references least.
 PRIORITY: dict[Relation, int] = {
     "overridden_by": 0,
     "overrides": 1,
     "explains": 2,
     "refers_to": 3,
+    "referred_by": 3,
 }
 OVERRIDE = ("overridden_by", "overrides")
+REFERENCE = ("refers_to", "referred_by")
 ARTICLE_HEADING = re.compile(r"^Artikel (\S+)")
 
 
@@ -43,6 +45,9 @@ class Link:
     relation: Relation
     override_type: str | None = None  # exception | restriction
     derived_effect: str | None = None  # net force, from derive_overrides.cypher
+    mechanism: str | None = None
+    temporal: bool | None = None
+    baseline: str | None = None
 
 
 class Graph(Protocol):
@@ -59,19 +64,29 @@ MATCH (a:Artikel {wId: wid})
 CALL (a) {
     MATCH (b:Artikel)-[o:OVERRIDES]->(a)
     RETURN b, 'overridden_by' AS relation, o.override_type AS type,
-           o.derived_effect AS effect
+           o.derived_effect AS effect, o.mechanism AS mechanism,
+           o.temporal AS temporal, o.baseline AS baseline
   UNION
     MATCH (a)-[o:OVERRIDES]->(b:Artikel)
     RETURN b, 'overrides' AS relation, o.override_type AS type,
-           o.derived_effect AS effect
+           o.derived_effect AS effect, o.mechanism AS mechanism,
+           o.temporal AS temporal, o.baseline AS baseline
   UNION
     MATCH (a)-[:BEVAT*0..1]->()-[:VERWIJST_NAAR]->(x)
     OPTIONAL MATCH (xp:Artikel)-[:BEVAT]->(x)
     WITH coalesce(xp, x) AS b WHERE b:Artikel
-    RETURN b, 'refers_to' AS relation, null AS type, null AS effect
+    RETURN b, 'refers_to' AS relation, null AS type, null AS effect,
+           null AS mechanism, null AS temporal, null AS baseline
+  UNION
+    MATCH (a)-[:BEVAT*0..1]->()<-[:VERWIJST_NAAR]-(x)
+    OPTIONAL MATCH (xp:Artikel)-[:BEVAT]->(x)
+    WITH coalesce(xp, x) AS b WHERE b:Artikel
+    RETURN b, 'referred_by' AS relation, null AS type, null AS effect,
+           null AS mechanism, null AS temporal, null AS baseline
 }
-WITH wid, a, b, relation, type, effect WHERE b <> a
-RETURN wid AS source, b.wId AS target, relation, type, effect
+WITH wid, a, b, relation, type, effect, mechanism, temporal, baseline WHERE b <> a
+RETURN DISTINCT wid AS source, b.wId AS target, relation, type, effect,
+       mechanism, temporal, baseline
 """
 
 
@@ -82,7 +97,16 @@ class Neo4jGraph:
     def links(self, wids: Sequence[str]) -> list[Link]:
         records, _, _ = self._driver.execute_query(LINKS_QUERY, wids=list(wids))
         return [
-            Link(r["source"], r["target"], r["relation"], r["type"], r["effect"])
+            Link(
+                source=r["source"],
+                target=r["target"],
+                relation=r["relation"],
+                override_type=r["type"],
+                derived_effect=r["effect"],
+                mechanism=r["mechanism"],
+                temporal=r["temporal"],
+                baseline=r["baseline"],
+            )
             for r in records
         ]
 
@@ -177,7 +201,7 @@ class KnowledgeGraph:
 
         first = self._ranked(self._links(wids), wids)
         for link in first:
-            if link.relation != "refers_to":
+            if link.relation not in REFERENCE:
                 add(link)
         hop = [t for t, link in chosen.items() if link.relation in OVERRIDE]
         if hop:
@@ -185,7 +209,7 @@ class KnowledgeGraph:
                 if link.relation in OVERRIDE:
                     add(link)
         for link in first:
-            if link.relation == "refers_to":
+            if link.relation in REFERENCE:
                 add(link)
         return list(chosen.values())
 
@@ -248,7 +272,21 @@ class KnowledgeGraph:
         return ordered
 
 
+def override_qualifiers(link: Link) -> list[str]:
+    """Named optional edge properties; an explicit false is not a missing value."""
+    qualifiers = []
+    if link.mechanism is not None:
+        qualifiers.append(f"mechanism={link.mechanism}")
+    if link.temporal is not None:
+        qualifiers.append(f"temporal={str(link.temporal).lower()}")
+    if link.baseline is not None:
+        qualifiers.append(f"baseline={link.baseline}")
+    return qualifiers
+
+
 def _describe(link: Link) -> str:
     """The relation, as the answer prompt explains it to the LLM."""
-    detail = ":".join(p for p in (link.override_type, link.derived_effect) if p)
-    return f"{link.relation}:{detail}" if detail else link.relation
+    parts = [link.relation]
+    parts.extend(p for p in (link.override_type, link.derived_effect) if p)
+    parts.extend(override_qualifiers(link))
+    return ":".join(parts)
