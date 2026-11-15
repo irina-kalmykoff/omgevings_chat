@@ -89,13 +89,24 @@ def parse_text(tekst_path):
         if parent:
             bevat.append((parent, wid))
 
+    # Use document order, including inserted articles such as 22.100a, rather
+    # than inventing numeric identifiers that may not exist in this delivery.
+    articles = [n["eId"] for n in nodes.values() if n["label"] == "Artikel"]
+    article_index = {eid: i for i, eid in enumerate(articles)}
     for ref in root.iter(_q("tekst", "IntRef")):
         src = _nearest_structural_wid(ref)
         target = ref.get("ref")
         if src and target:
             verwijst.append((src, target))
+            end = ref.getnext()
+            if (" ".join((ref.tail or "").split()).lower() == "tot en met"
+                    and end is not None and end.tag == _q("tekst", "IntRef")
+                    and target in article_index and end.get("ref") in article_index):
+                start_index = article_index[target]
+                end_index = article_index[end.get("ref")]
+                verwijst.extend((src, eid) for eid in articles[start_index + 1:end_index + 1])
 
-    return nodes, bevat, verwijst, eid_to_wid
+    return nodes, bevat, list(dict.fromkeys(verwijst)), eid_to_wid
 
 
 def parse_regelteksten(path):
