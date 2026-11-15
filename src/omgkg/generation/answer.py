@@ -69,10 +69,19 @@ def _label(item: Evidence, number: dict[str, int]) -> str:
         "overridden_by": f"maakt een {kind} op [{n}]",
         "overrides": f"[{n}] maakt hierop een {kind}",
         "refers_to": f"waarnaar [{n}] verwijst",
+        "referred_by": f"verwijst naar [{n}]",
         "explains": f"het artikel dat [{n}] toelicht",
     }[relation]
     if len(detail) > 1 and detail[1] in EFFECT:
         text += f"; netto effect: {EFFECT[detail[1]]}"
+    qualifiers = [
+        part
+        for part in detail
+        if part.partition("=")[0] in {"mechanism", "temporal", "baseline"}
+        and "=" in part
+    ]
+    if qualifiers:
+        text += "; " + "; ".join(qualifiers)
     return f" (via kennisgraaf: {text})"
 
 
