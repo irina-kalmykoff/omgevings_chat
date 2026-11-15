@@ -21,13 +21,14 @@ from collections.abc import Mapping
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 
-from omgkg.graph.knowledge_graph import KnowledgeGraph, Link
+from omgkg.graph.knowledge_graph import KnowledgeGraph, Link, override_qualifiers
 
 MAX_BODY_BYTES = 10_000_000
 PHRASE = {
     "overridden_by": "maakt een {kind} op",
     "overrides": "is de regel waarop een {kind} wordt gemaakt door",
     "refers_to": "waarnaar wordt verwezen door",
+    "referred_by": "verwijst naar",
 }
 
 
@@ -41,7 +42,9 @@ def _title(link: Link, kg: KnowledgeGraph) -> str:
     source_heading = kg.component(source).heading if source else link.source
     kind = "uitzondering" if link.override_type == "exception" else "inperking"
     relation = PHRASE[link.relation].format(kind=kind)
-    return f"{target.heading} (kennisgraaf: {relation} {source_heading})"
+    qualifiers = override_qualifiers(link)
+    detail = "; " + "; ".join(qualifiers) if qualifiers else ""
+    return f"{target.heading} (kennisgraaf: {relation} {source_heading}{detail})"
 
 
 def respond(body: Mapping[str, Any], kg: KnowledgeGraph) -> dict[str, Any]:
