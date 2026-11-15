@@ -1,12 +1,15 @@
 """The KG step and its OmgevingsChat endpoint, against a fake graph."""
 
+import importlib.util
 from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import Mock
 
-from omgkg.graph.build import DERIVE, TAGS, cypher_statements, read_tags
+from omgkg.generation.answer import build_prompt
+from omgkg.graph.build import DERIVE, PROTOTYPE, SNAPSHOT, TAGS, cypher_statements, read_tags
 from omgkg.graph.kg_service import respond
-from omgkg.graph.knowledge_graph import KnowledgeGraph, Link
+from omgkg.graph.knowledge_graph import KnowledgeGraph, Link, Neo4jGraph, _describe
 from omgkg.models import Evidence, Provenance, TextComponent
 
 ART = "gm0935_34__chp_22__art_22.{}"
@@ -224,3 +227,114 @@ def test_cypher_comments_are_not_statements(tmp_path: Path) -> None:
     script = tmp_path / "s.cypher"
     script.write_text("// a; comment\nMATCH (n) RETURN n;\n\n  // x\nRETURN 1;\n")
     assert cypher_statements(script) == ["MATCH (n) RETURN n", "RETURN 1"]
+
+
+def test_incoming_references_keep_direction_and_reference_priority() -> None:
+    graph = FakeGraph(ART.format(27))
+    graph.links_by_source[ART.format(27)].insert(
+        0, Link(ART.format(27), ART.format(31), "referred_by")
+    )
+    texts = {ART.format(n): component(str(n)) for n in (26, 27, 28, 30, 31)}
+    knowledge = KnowledgeGraph(graph, texts, limit=3)
+    assert [link.target for link in knowledge.related([ART.format(27)])] == [
+        ART.format(28),
+        ART.format(26),
+        ART.format(31),
+    ]
+    expanded = knowledge.expand([evidence(ART.format(27))])
+    assert expanded[-1].graph_paths[0].relations == ["referred_by"]
+    assert "verwijst naar [1]" in build_prompt("vraag", expanded)
+    result = respond(
+        {
+            "background_documents": [
+                {"id": "q", "meta": {"documentComponentId": ART.format(27)}}
+            ]
+        },
+        knowledge,
+    )
+    assert result["answer"][-1]["title"] == (
+        "Artikel 22.31 (kennisgraaf: verwijst naar Artikel 22.27)"
+    )
+
+
+def test_snapshot_reference_ranges_include_interior_articles() -> None:
+    spec = importlib.util.spec_from_file_location(
+        "build_graph", PROTOTYPE / "scripts" / "build_graph.py"
+    )
+    assert spec is not None and spec.loader is not None
+    loader = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(loader)
+    nodes, _, references, eid_to_wid = loader.parse_text(SNAPSHOT / "Regeling/Tekst.xml")
+    by_number = {n["nummer"]: n for n in nodes.values() if n["label"] == "Artikel"}
+    source = by_number["22.103"]["wId"] + "__para_1"
+    targets = {eid_to_wid[t] for s, t in references if s == source and t in eid_to_wid}
+    assert {by_number[f"22.{n}"]["wId"] for n in range(98, 103)} <= targets
+    assert by_number["22.104"]["wId"] not in targets
+    assert len(references) == len(set(references))
+    # Incoming traversal must also reach references to a main rule's lid.
+    for supporting, main in [(273, 272), (274, 272), (275, 272), (124, 122), (67, 63)]:
+        assert any(
+            s.split("__para_", 1)[0] == by_number[f"22.{supporting}"]["wId"]
+            and eid_to_wid.get(t, "").split("__para_", 1)[0]
+            == by_number[f"22.{main}"]["wId"]
+            for s, t in references
+        )
+
+
+def test_override_properties_reach_evidence_prompt_and_endpoint() -> None:
+    for relation in ("overridden_by", "overrides"):
+        for properties, suffix in [
+            ({}, ""),
+            ({"mechanism": "measurement"}, ":mechanism=measurement"),
+            (
+                {"temporal": True, "baseline": "prior_state"},
+                ":temporal=true:baseline=prior_state",
+            ),
+            ({"temporal": False}, ":temporal=false"),
+        ]:
+            driver = Mock()
+            driver.execute_query.return_value = (
+                [
+                    {
+                        "source": ART.format(27),
+                        "target": ART.format(28),
+                        "relation": relation,
+                        "type": "exception",
+                        "effect": "exemption",
+                        "mechanism": None,
+                        "temporal": None,
+                        "baseline": None,
+                        **properties,
+                    }
+                ],
+                None,
+                None,
+            )
+            graph = Neo4jGraph(driver)
+            (link,) = graph.links([ART.format(27)])
+            expected = f"{relation}:exception:exemption{suffix}"
+            assert _describe(link) == expected
+            # Keep this fixture to one hop so it models the actual query's source.
+            fake = FakeGraph(ART.format(27))
+            fake.links_by_source = {ART.format(27): [link]}
+            knowledge = KnowledgeGraph(
+                fake, {ART.format(n): component(str(n)) for n in (27, 28)}
+            )
+            expanded = knowledge.expand([evidence(ART.format(27))])
+            assert expanded[1].graph_paths[0].relations == [expected]
+            prompt = build_prompt("vraag", expanded)
+            result = respond(
+                {
+                    "background_documents": [
+                        {"id": "q", "meta": {"documentComponentId": ART.format(27)}}
+                    ]
+                },
+                knowledge,
+            )
+            title = result["answer"][-1]["title"]
+            for qualifier in suffix.split(":")[1:]:
+                assert qualifier in prompt
+                assert qualifier in title
+            if not properties:
+                assert "mechanism=" not in prompt
+                assert "temporal=" not in title
