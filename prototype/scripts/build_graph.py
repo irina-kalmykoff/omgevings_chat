@@ -12,7 +12,7 @@ Graph model:
     (RegelVoorIedereen)-[:GELDT_VOOR]->(Activiteit)
     (RegelVoorIedereen)-[:OP_LOCATIE]->(Locatie)
     (Activiteit)-[:VALT_ONDER]->(Activiteit)
-    (Artikel|Lid)-[:VERWIJST_NAAR]->(Artikel|Lid|Component)   from IntRef
+    (Artikel|Lid)-[:VERWIJST_NAAR]->(structure node|Component)   from IntRef
 
 Usage:
     pip install neo4j lxml
@@ -36,6 +36,9 @@ NS = {
 }
 STRUCT = {f"{{{NS['tekst']}}}{t}": t for t in
           ("Hoofdstuk", "Afdeling", "Paragraaf", "Subparagraaf", "Artikel", "Lid")}
+# Regeltekst nodes carry the wId of the Artikel or Lid they hold the text of, so a
+# match on wId alone also hits them: restrict wId matches to the structural labels
+STRUCT_LABELS = "|".join(STRUCT.values())
 # the OW files carry a malformed xmlns:schemaLocation, so parse them in recover mode
 RECOVER = etree.XMLParser(recover=True, huge_tree=True)
 
@@ -250,7 +253,8 @@ def load(driver, package, boundary=None):
         real = [(s_, t) for s_, t in verwijst_resolved if not t.startswith("component:")]
         comp = [(s_, t.split("component:", 1)[1]) for s_, t in verwijst_resolved if t.startswith("component:")]
         s.execute_write(_verwijst_real, real, nodes)
-        s.execute_write(_merge_edges, "Artikel", "wId", "VERWIJST_NAAR", "Component", "eId", comp)
+        # most references to other laws sit in a lid, so the source is an Artikel or a Lid
+        s.execute_write(_merge_edges, "Artikel|Lid", "wId", "VERWIJST_NAAR", "Component", "eId", comp)
         # regeltekst <-> text, via wId
         s.execute_write(_istekstvan, rt_rows, nodes)
         # rvi links
@@ -271,9 +275,9 @@ def _bevat_edges(tx, bevat, nodes):
     pairs = [{"s": s, "t": t, "sl": nodes[s]["label"], "tl": nodes[t]["label"]}
              for s, t in bevat if s in nodes and t in nodes]
     tx.run(
-        """
+        f"""
         UNWIND $pairs AS p
-        MATCH (a {wId: p.s}) MATCH (b {wId: p.t})
+        MATCH (a:{STRUCT_LABELS} {{wId: p.s}}) MATCH (b:{STRUCT_LABELS} {{wId: p.t}})
         MERGE (a)-[:BEVAT]->(b)
         """,
         pairs=pairs,
@@ -282,9 +286,9 @@ def _bevat_edges(tx, bevat, nodes):
 
 def _verwijst_real(tx, pairs, nodes):
     tx.run(
-        """
+        f"""
         UNWIND $pairs AS p
-        MATCH (a {wId: p.s}) MATCH (b {wId: p.t})
+        MATCH (a:{STRUCT_LABELS} {{wId: p.s}}) MATCH (b:{STRUCT_LABELS} {{wId: p.t}})
         MERGE (a)-[:VERWIJST_NAAR]->(b)
         """,
         pairs=[{"s": s, "t": t} for s, t in pairs if s in nodes and t in nodes],
@@ -293,9 +297,9 @@ def _verwijst_real(tx, pairs, nodes):
 
 def _istekstvan(tx, rt_rows, nodes):
     tx.run(
-        """
+        f"""
         UNWIND $pairs AS p
-        MATCH (rt:Regeltekst {id: p.id}) MATCH (n {wId: p.wId})
+        MATCH (rt:Regeltekst {{id: p.id}}) MATCH (n:{STRUCT_LABELS} {{wId: p.wId}})
         MERGE (rt)-[:IS_TEKST_VAN]->(n)
         """,
         pairs=[{"id": i, "wId": w} for i, w in rt_rows if w in nodes],
@@ -305,10 +309,10 @@ def _istekstvan(tx, rt_rows, nodes):
 def _regeling_roots(tx, regeling_id, roots):
     """Link the Regeling node to each top-level (parentless) structural node."""
     tx.run(
-        """
-        MATCH (r:Regeling {id: $rid})
+        f"""
+        MATCH (r:Regeling {{id: $rid}})
         UNWIND $roots AS w
-        MATCH (n {wId: w})
+        MATCH (n:{STRUCT_LABELS} {{wId: w}})
         MERGE (r)-[:BEVAT]->(n)
         """,
         rid=regeling_id, roots=roots,
